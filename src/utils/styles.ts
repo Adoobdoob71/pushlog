@@ -1,34 +1,6 @@
-import { StyleSheet } from "react-native"
-import { DarkTheme } from "@react-navigation/native"
-import { WIDTH } from "./constants"
-
-const styles = StyleSheet.create({
-  mainWrapper: {
-    flex: 1,
-  },
-  column: {
-    flexDirection: "column",
-  },
-  row: {
-    flexDirection: "row",
-  },
-  rowCenter: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  columnCenter: {
-    alignItems: "center",
-  },
-  center: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  flex: {
-    flex: 1,
-  },
-})
-
-export { styles }
+import { StyleSheet } from "react-native";
+import { DarkTheme } from "@react-navigation/native";
+import { WIDTH } from "./constants";
 
 const fontSizes = {
   FONT_6: WIDTH * (6 / 365),
@@ -49,7 +21,7 @@ const fontSizes = {
   FONT_52: WIDTH * (52 / 365),
   FONT_56: WIDTH * (56 / 365),
   FONT_60: WIDTH * (60 / 365),
-} as const
+} as const;
 
 const sizes = {
   SIZE_1: WIDTH * (1 / 365),
@@ -89,23 +61,55 @@ const sizes = {
   SIZE_180: WIDTH * (180 / 365),
   SIZE_190: WIDTH * (190 / 365),
   SIZE_200: WIDTH * (200 / 365),
-} as const
+} as const;
+
+export { fontSizes, sizes };
 
 const theme: typeof DarkTheme & {
-  colors: { primary_1: string; primary_2: string; primary_3: string }
+  colors: { primary_1: string; primary_2: string; primary_3: string };
 } = {
   dark: true,
   colors: {
-    background: "#ffffff",
-    card: "#fff",
-    primary: "#7f996c",
-    primary_1: "#7f996c",
-    primary_2: "#d0ac70",
-    primary_3: "#CC704B",
+    background: "#264653",
+    card: "#466673",
+    primary: "#E9C46A",
+    primary_1: "#E9C46A",
+    primary_2: "#e2b23e",
+    primary_3: "#dfaa27",
     border: "#aaaaaa",
-    text: "#000",
-    notification: "#fd926b",
+    text: "#fff",
+    notification: "#2A9D8F",
   },
-}
+};
 
-export { fontSizes, theme, sizes }
+const styles = StyleSheet.create({
+  mainWrapper: {
+    flex: 1,
+  },
+  column: {
+    flexDirection: "column",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  rowCenter: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  columnCenter: {
+    alignItems: "center",
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  flex: {
+    flex: 1,
+  },
+  text: {
+    color: theme.colors.primary,
+    fontWeight: "bold",
+  },
+});
+
+export { styles, theme };
