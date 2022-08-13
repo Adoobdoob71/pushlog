@@ -9,11 +9,11 @@ export default function App() {
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
   const [loaded] = useFonts({
     orbitronBlack: require("./assets/fonts/Orbitron-Black.ttf"),
-    orbitronBold: require("Orbitron-Bold.ttf"),
-    orbitronExtraBold: require("Orbitron-ExtraBold.ttf"),
-    orbitronMedium: require("Orbitron-Medium.ttf"),
-    orbitronRegular: require("Orbitron-Regular.ttf"),
-    orbitronSemiBold: require("Orbitron-SemiBold.ttf"),
+    orbitronBold: require("./assets/fonts/Orbitron-Bold.ttf"),
+    orbitronExtraBold: require("./assets/fonts/Orbitron-ExtraBold.ttf"),
+    orbitronMedium: require("./assets/fonts/Orbitron-Medium.ttf"),
+    orbitronRegular: require("./assets/fonts/Orbitron-Regular.ttf"),
+    orbitronSemiBold: require("./assets/fonts/Orbitron-SemiBold.ttf"),
   });
 
   return loaded ? (

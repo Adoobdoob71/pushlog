@@ -66,17 +66,23 @@ const sizes = {
 export { fontSizes, sizes };
 
 const theme: typeof DarkTheme & {
-  colors: { primary_1: string; primary_2: string; primary_3: string };
+  colors: {
+    primary_1: string;
+    primary_2: string;
+    primary_3: string;
+    wrapper: string;
+  };
 } = {
   dark: true,
   colors: {
     background: "#264653",
-    card: "#466673",
+    card: "#1a2f38",
+    wrapper: "#1a2f38",
     primary: "#E9C46A",
     primary_1: "#E9C46A",
     primary_2: "#e2b23e",
     primary_3: "#dfaa27",
-    border: "#aaaaaa",
+    border: "#959595",
     text: "#fff",
     notification: "#2A9D8F",
   },
@@ -85,6 +91,7 @@ const theme: typeof DarkTheme & {
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
+    backgroundColor: theme.colors.wrapper,
   },
   column: {
     flexDirection: "column",
