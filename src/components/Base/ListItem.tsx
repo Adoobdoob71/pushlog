@@ -7,11 +7,15 @@ interface Props {
   icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
   title: string;
   description: string;
+  onPress?: () => void;
 }
 
-const ListItem: FC<Props> = ({ icon, title, description }) => {
+const ListItem: FC<Props> = ({ icon, title, description, onPress }) => {
   return (
-    <TouchableOpacity style={[stylesheet.listItem, styles.rowCenter]}>
+    <TouchableOpacity
+      style={[stylesheet.listItem, styles.rowCenter]}
+      onPress={onPress}
+    >
       <MaterialCommunityIcons
         name={icon}
         size={sizes.SIZE_24}
