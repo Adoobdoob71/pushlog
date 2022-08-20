@@ -1852,6 +1852,11 @@
     "@urql/core" ">=2.3.1"
     wonka "^4.0.14"
 
+"@vseslav/react-native-horizontal-picker@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@vseslav/react-native-horizontal-picker/-/react-native-horizontal-picker-0.1.1.tgz#748b4cd287988de5e4ff76e2a6454c43e2d37478"
+  integrity sha512-fwnl4NRFxZkTAdLGrxHprsGAun221Q5pMkUyXCPxOBqE1jxDUfCLhhdywT4+KKIOqEx3zfOE1ZZZw45drCcADA==
+
 "@xmldom/xmldom@~0.7.0":
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.7.5.tgz#09fa51e356d07d0be200642b0e4f91d8e6dd408d"

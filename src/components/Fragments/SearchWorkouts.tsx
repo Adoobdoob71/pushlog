@@ -19,57 +19,60 @@ const SearchWorkouts: FC<Props> = ({ goBack, goNext }) => {
         What are you working on?
       </Text>
       <Text style={stylesheet.subtitle} numberOfLines={1}>
-        Choose one
+        Choose two
       </Text>
       <MasonryList
         data={[
           {
+            id: 1,
             workoutTitle: "Full Body",
             workoutImage:
               "https://wger.de/media/exercise-images/192/Bench-press-1.png",
           },
           {
+            id: 2,
             workoutTitle: "Upper Body",
             workoutImage:
               "https://wger.de/media/exercise-images/195/Push-ups-1.png",
           },
           {
+            id: 3,
             workoutTitle: "Lower Body",
             workoutImage:
               "https://wger.de/media/exercise-images/192/Bench-press-1.png",
           },
           {
+            id: 4,
             workoutTitle: "Legs & Abs",
             workoutImage:
-              "https://wger.de/media/exercise-images/91/Crunches-1.png",
+              "https://wger.de/media/exercise-images/192/Bench-press-1.png",
           },
           {
+            id: 5,
             workoutTitle: "Back & Chest",
             workoutImage:
               "https://wger.de/media/exercise-images/181/Chin-ups-2.png",
           },
           {
+            id: 6,
             workoutTitle: "Shoulders",
             workoutImage:
-              "https://wger.de/media/exercise-images/129/Standing-biceps-curl-1.png",
+              "https://wger.de/media/exercise-images/195/Push-ups-1.png",
           },
         ]}
         style={stylesheet.cardList}
-        renderItem={({ index, item }) => (
+        renderItem={({ item }) => (
           <WorkoutCard
-            active={index === activeCard}
+            active={item.id === activeCard}
             workoutImage={item.workoutImage}
             workoutTitle={item.workoutTitle}
-            onPress={() => changeActiveCard(index)}
+            onPress={() => changeActiveCard(item.id)}
           />
         )}
         numColumns={2}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
-          Back
-        </Button>
-        <Button mode="text" onPress={goNext} style={{ alignSelf: "flex-end" }}>
+        <Button mode="text" onPress={goNext} style={{ marginStart: "auto" }}>
           Next
         </Button>
       </View>
@@ -113,8 +116,8 @@ const WorkoutCard: FC<WorkoutCardProps> = ({
         }}
         style={{
           aspectRatio: aspectRatio,
-          width: sizes.SIZE_44,
-          height: undefined,
+          width: sizes.SIZE_60,
+          marginEnd: sizes.SIZE_8,
         }}
       />
       <Text style={stylesheet.cardTitle}>{workoutTitle}</Text>
@@ -157,7 +160,7 @@ const stylesheet = StyleSheet.create({
   cardTitle: {
     color: theme.colors.text,
     fontWeight: "bold",
-    fontSize: fontSizes.FONT_16,
+    fontSize: fontSizes.FONT_12,
   },
 });
 
