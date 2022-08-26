@@ -8,5 +8,4 @@ export { StyleProperty, TextStyleProperty };
 interface defaultProps {
   style?: StyleProperty;
 }
-
 export { defaultProps };
