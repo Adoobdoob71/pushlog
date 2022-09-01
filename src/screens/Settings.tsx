@@ -5,10 +5,12 @@ import { styles } from "utils/styles";
 
 const Settings = () => {
   const navigation = useNavigation();
-  const navigateToConfiguration = () =>
-    navigation.navigate({
-      name: "Configuration",
+
+  const navigateToWorkoutPlan = () =>
+    /* @ts-ignore */ navigation.navigate({
+      name: "WorkoutPlan",
     });
+
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
       <Header title="Settings" backButton />
@@ -17,7 +19,7 @@ const Settings = () => {
           icon="restart"
           title="Reconfigure workouts"
           description="Choose what workouts you want to do"
-          onPress={navigateToConfiguration}
+          onPress={navigateToWorkoutPlan}
         />
         <ListItem
           icon="delete"

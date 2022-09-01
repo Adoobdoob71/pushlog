@@ -3,9 +3,10 @@ import { theme } from "utils/styles";
 import * as NavigationBar from "expo-navigation-bar";
 import { useFonts } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { WorkoutRoutine } from "utils/types";
 
 function useApp() {
-  const [targetMuscles, setTargetMuscles] = useState<number[]>([]);
+  const [routine, setRoutine] = useState<WorkoutRoutine | null>(null);
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
   const [loaded] = useFonts({
@@ -18,20 +19,20 @@ function useApp() {
   });
 
   useEffect(() => {
-    AsyncStorage.getItem("targetMuscles").then((data) => {
-      data && setTargetMuscles(JSON.parse(data));
+    AsyncStorage.getItem("@workoutRoutine").then((data) => {
+      data && setRoutine(JSON.parse(data));
     });
   }, []);
 
-  const changeProgram = async (programArr: number[]) => {
-    const jsonArr = JSON.stringify(programArr);
-    await AsyncStorage.setItem("targetMuscles", jsonArr);
-    setTargetMuscles(programArr);
+  const changeRoutine = async (newRoutine: WorkoutRoutine) => {
+    const jsonArr = JSON.stringify(newRoutine);
+    await AsyncStorage.setItem("@workoutRoutine", jsonArr);
+    setRoutine(newRoutine);
   };
 
   return {
-    targetMuscles,
-    changeProgram,
+    routine,
+    changeRoutine,
     loaded,
   };
 }

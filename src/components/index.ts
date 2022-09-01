@@ -9,6 +9,3 @@ export { default as Button } from "./Base/Button";
 export { default as MasonryList } from "./Content/MasonryList";
 
 // Fragments
-export { default as SearchWorkouts } from "./Fragments/SearchWorkouts";
-export { default as WeightHeight } from "./Fragments/WeightHeight";
-export { default as WorkoutPlan } from "./Fragments/WorkoutPlan";

@@ -2,15 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { theme } from "utils/styles";
 import StackNavigator from "navigators/StackNavigator";
-import targetMuscles from "context/targetMuscles";
 import { useApp } from "hooks/useApp";
-import TargetMuscles from "context/targetMuscles";
+import WorkoutRoutine from "context/workoutRoutine";
 
 export default function App() {
   const { changeProgram, targetMuscles, loaded } = useApp();
 
   return loaded ? (
-    <TargetMuscles.Provider
+    <WorkoutRoutine.Provider
       value={{ musclesTargeted: targetMuscles, changeProgram }}
     >
       <NavigationContainer theme={theme}>
@@ -22,6 +21,6 @@ export default function App() {
         />
         <StackNavigator />
       </NavigationContainer>
-    </TargetMuscles.Provider>
+    </WorkoutRoutine.Provider>
   ) : null;
 }

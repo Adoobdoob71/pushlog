@@ -1,15 +1,17 @@
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { Text, View, StyleSheet, SectionList, Image } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
-import Button from "../Base/Button";
+import { Button } from "components/index";
 import CheckBox from "expo-checkbox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import workoutRoutine from "context/workoutRoutine";
+import { useWorkoutPlan } from "hooks/useWorkoutPlan";
 
-interface Props {
-  goNext: () => void;
-  goBack: () => void;
-}
+const WorkoutPlan = () => {
+  const { routine } = useContext(workoutRoutine);
 
-const WorkoutPlan: FC<Props> = ({ goBack, goNext }) => {
+  const { goBack, submitChanges } = useWorkoutPlan();
+
   return (
     <View style={[styles.flex, stylesheet.mainWrapper]}>
       <Text style={stylesheet.title} numberOfLines={1}>
@@ -175,10 +177,20 @@ const WorkoutPlan: FC<Props> = ({ goBack, goNext }) => {
         renderItem={({ item }) => <ExerciseCard {...item} />}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
-          Back
-        </Button>
-        <Button mode="text" onPress={goNext} style={{ marginStart: "auto" }}>
+        {!routine && (
+          <Button
+            mode="text"
+            onPress={goBack}
+            style={{ alignSelf: "flex-end" }}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button
+          mode="text"
+          onPress={submitChanges}
+          style={{ marginStart: "auto" }}
+        >
           Done
         </Button>
       </View>
