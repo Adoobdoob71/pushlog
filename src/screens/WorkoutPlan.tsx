@@ -1,19 +1,29 @@
 import { FC, useContext, useState } from "react";
-import { Text, View, StyleSheet, SectionList, Image } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  SectionList,
+  Image,
+  SafeAreaView,
+} from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { Button } from "components/index";
 import CheckBox from "expo-checkbox";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import workoutRoutine from "context/workoutRoutine";
 import { useWorkoutPlan } from "hooks/useWorkoutPlan";
+import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from "expo-navigation-bar";
 
 const WorkoutPlan = () => {
   const { routine } = useContext(workoutRoutine);
 
   const { goBack, submitChanges } = useWorkoutPlan();
 
+  NavigationBar.setBackgroundColorAsync(theme.colors.card);
+
   return (
-    <View style={[styles.flex, stylesheet.mainWrapper]}>
+    <SafeAreaView style={[styles.flex, stylesheet.mainWrapper]}>
       <Text style={stylesheet.title} numberOfLines={1}>
         Your workout plan
       </Text>
@@ -177,7 +187,7 @@ const WorkoutPlan = () => {
         renderItem={({ item }) => <ExerciseCard {...item} />}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        {!routine && (
+        {routine && (
           <Button
             mode="text"
             onPress={goBack}
@@ -194,7 +204,13 @@ const WorkoutPlan = () => {
           Done
         </Button>
       </View>
-    </View>
+      <StatusBar
+        backgroundColor={theme.colors.card}
+        style="light"
+        translucent={false}
+        animated
+      />
+    </SafeAreaView>
   );
 };
 
@@ -230,7 +246,8 @@ const ExerciseCard: FC<{ image: string; name: string; muscles: string }> = ({
 
 const stylesheet = StyleSheet.create({
   mainWrapper: {
-    paddingVertical: sizes.SIZE_100,
+    paddingVertical: sizes.SIZE_60,
+    backgroundColor: theme.colors.card,
   },
   title: {
     fontSize: fontSizes.FONT_24,

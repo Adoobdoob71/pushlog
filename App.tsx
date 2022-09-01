@@ -6,12 +6,10 @@ import { useApp } from "hooks/useApp";
 import WorkoutRoutine from "context/workoutRoutine";
 
 export default function App() {
-  const { changeProgram, targetMuscles, loaded } = useApp();
+  const { changeRoutine, routine, loaded } = useApp();
 
   return loaded ? (
-    <WorkoutRoutine.Provider
-      value={{ musclesTargeted: targetMuscles, changeProgram }}
-    >
+    <WorkoutRoutine.Provider value={{ routine: routine, changeRoutine }}>
       <NavigationContainer theme={theme}>
         <StatusBar
           style="light"

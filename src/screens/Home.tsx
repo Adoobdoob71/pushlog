@@ -10,10 +10,11 @@ import {
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { useHome } from "hooks/useHome";
 import { Agenda } from "react-native-calendars";
-import { Header, IconButton, ListGroup } from "components/index";
+import { Button, Header, IconButton, ListGroup } from "components/index";
 import { useNavigation } from "@react-navigation/native";
 import { FC, useState } from "react";
 import Checkbox from "expo-checkbox";
+import * as NavigationBar from "expo-navigation-bar";
 
 const Home = () => {
   const { currentDay, chosenDay, updateChosenDay } = useHome();
@@ -59,6 +60,11 @@ const Home = () => {
         pastScrollRange={18}
         futureScrollRange={18}
         showClosingKnob
+        onCalendarToggled={(enabled) =>
+          NavigationBar.setBackgroundColorAsync(
+            enabled ? theme.colors.background : theme.colors.card
+          )
+        }
         renderEmptyData={() => (
           <ScrollView style={[styles.flex, stylesheet.dayWrapper]}>
             <ListGroup groupTitle="Chest">
@@ -80,6 +86,27 @@ const Home = () => {
                 muscles="Triceps"
               />
             </ListGroup>
+            <ListGroup groupTitle="Triceps">
+              <ExerciseCard
+                name="Skull Crushers"
+                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
+                muscles="Triceps"
+              />
+            </ListGroup>
+            <ListGroup groupTitle="Triceps">
+              <ExerciseCard
+                name="Skull Crushers"
+                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
+                muscles="Triceps"
+              />
+            </ListGroup>
+            <Button
+              mode="text"
+              style={{ marginBottom: sizes.SIZE_28 }}
+              onPress={() => {}}
+            >
+              Start Workout
+            </Button>
           </ScrollView>
         )}
         onDayPress={updateChosenDay}

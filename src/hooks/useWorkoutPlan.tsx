@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { WorkoutRoutine } from "utils/types";
 
 function useWorkoutPlan() {
-  const { changeRoutine } = useContext(workoutRoutine);
+  const {} = useContext(workoutRoutine);
 
   const navigation = useNavigation();
 

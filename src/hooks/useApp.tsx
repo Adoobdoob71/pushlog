@@ -8,7 +8,8 @@ import { WorkoutRoutine } from "utils/types";
 function useApp() {
   const [routine, setRoutine] = useState<WorkoutRoutine | null>(null);
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  NavigationBar.setBackgroundColorAsync(theme.colors.card);
+
   const [loaded] = useFonts({
     orbitronBlack: require("../../assets/fonts/Orbitron-Black.ttf"),
     orbitronBold: require("../../assets/fonts/Orbitron-Bold.ttf"),

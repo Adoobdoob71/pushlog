@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { Header, ListGroup, ListItem } from "components/index";
 import { SafeAreaView, View } from "react-native";
-import { styles } from "utils/styles";
+import { styles, theme } from "utils/styles";
+import * as NavigationBar from "expo-navigation-bar";
 
 const Settings = () => {
   const navigation = useNavigation();
@@ -10,6 +11,8 @@ const Settings = () => {
     /* @ts-ignore */ navigation.navigate({
       name: "WorkoutPlan",
     });
+
+  NavigationBar.setBackgroundColorAsync(theme.colors.card);
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
