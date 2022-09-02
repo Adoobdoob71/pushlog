@@ -7,5 +7,6 @@ export { default as Button } from "./Base/Button";
 
 // Content
 export { default as MasonryList } from "./Content/MasonryList";
+export { default as TemplateCard } from './Content/TemplateCard';
 
 // Fragments

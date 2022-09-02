@@ -1,20 +1,13 @@
 import { FC, useContext, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  SectionList,
-  Image,
-  SafeAreaView,
-} from "react-native";
+import { Text, View, StyleSheet, Image, SafeAreaView } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { Button } from "components/index";
 import CheckBox from "expo-checkbox";
 import workoutRoutine from "context/workoutTemplates";
 import { useWorkoutPlan } from "hooks/useWorkoutPlan";
-import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
 import { ScrollView } from "react-native-gesture-handler";
+import { STATUSBAR_HEIGHT } from "utils/constants";
 
 const WorkoutPlan = () => {
   const { templates } = useContext(workoutRoutine);
@@ -32,7 +25,13 @@ const WorkoutPlan = () => {
         Customize to your liking
       </Text>
       <ScrollView style={{ marginVertical: sizes.SIZE_36 }}>
-        
+        {templates &&
+          Object.values(templates).map((value, index) => (
+            <Text key={value.id}>{value.name}</Text>
+          ))}
+        <Button mode="filled" onPress={() => {}}>
+          Add Template
+        </Button>
       </ScrollView>
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
         {templates && (
@@ -52,12 +51,6 @@ const WorkoutPlan = () => {
           Done
         </Button>
       </View>
-      <StatusBar
-        backgroundColor={theme.colors.card}
-        style="light"
-        translucent={false}
-        animated
-      />
     </SafeAreaView>
   );
 };
@@ -94,7 +87,8 @@ const ExerciseCard: FC<{ image: string; name: string; muscles: string }> = ({
 
 const stylesheet = StyleSheet.create({
   mainWrapper: {
-    paddingVertical: sizes.SIZE_60,
+    paddingTop: STATUSBAR_HEIGHT + sizes.SIZE_60,
+    paddingBottom: sizes.SIZE_60,
     backgroundColor: theme.colors.card,
   },
   title: {
