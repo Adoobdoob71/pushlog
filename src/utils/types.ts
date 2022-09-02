@@ -9,35 +9,24 @@ interface defaultProps {
   style?: StyleProperty;
 }
 
-interface WorkoutRoutine {
-  sunday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  monday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  tuesday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  wednesday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  thursday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  friday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
-  saturday: {
-    muscleGroups: number[];
-    exercises: number[];
-  };
+interface MuscleCategory {
+  id: number;
+  name: string;
 }
 
-export { defaultProps, WorkoutRoutine };
+interface Exercise {
+  id: number;
+  name: string;
+  description: string;
+  muscleCategories: MuscleCategory;
+  image: string;
+}
+
+interface WorkoutTemplate {
+  id: string;
+  name: string;
+  muscleCategories: MuscleCategory[];
+  exercises: Exercise[];
+}
+
+export { defaultProps, WorkoutTemplate, Exercise, MuscleCategory };

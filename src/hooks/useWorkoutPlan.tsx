@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import workoutRoutine from "context/workoutRoutine";
+import workoutRoutine from "context/workoutTemplates";
 import { useContext } from "react";
-import { WorkoutRoutine } from "utils/types";
+import { WorkoutTemplate } from "utils/types";
 
 function useWorkoutPlan() {
   const {} = useContext(workoutRoutine);

@@ -10,13 +10,14 @@ import {
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { Button } from "components/index";
 import CheckBox from "expo-checkbox";
-import workoutRoutine from "context/workoutRoutine";
+import workoutRoutine from "context/workoutTemplates";
 import { useWorkoutPlan } from "hooks/useWorkoutPlan";
 import { StatusBar } from "expo-status-bar";
 import * as NavigationBar from "expo-navigation-bar";
+import { ScrollView } from "react-native-gesture-handler";
 
 const WorkoutPlan = () => {
-  const { routine } = useContext(workoutRoutine);
+  const { templates } = useContext(workoutRoutine);
 
   const { goBack, submitChanges } = useWorkoutPlan();
 
@@ -30,164 +31,11 @@ const WorkoutPlan = () => {
       <Text style={stylesheet.subtitle} numberOfLines={1}>
         Customize to your liking
       </Text>
-      <SectionList
-        sections={[
-          {
-            day: "Sunday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Monday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Tuesday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Wednesday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Thursday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Friday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-          {
-            day: "Saturday",
-            exercise: "Chest & Triceps",
-            data: [
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-              {
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                muscles: "Chest, Triceps",
-              },
-            ],
-          },
-        ]}
-        renderSectionHeader={({ section: { day } }) => (
-          <Text style={stylesheet.sectionTitle}>{day}</Text>
-        )}
-        showsVerticalScrollIndicator={false}
-        SectionSeparatorComponent={() => (
-          <View style={{ height: sizes.SIZE_16 }}></View>
-        )}
-        contentContainerStyle={{
-          paddingHorizontal: sizes.SIZE_18,
-        }}
-        style={{
-          marginVertical: sizes.SIZE_36,
-        }}
-        renderItem={({ item }) => <ExerciseCard {...item} />}
-      />
+      <ScrollView style={{ marginVertical: sizes.SIZE_36 }}>
+        
+      </ScrollView>
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        {routine && (
+        {templates && (
           <Button
             mode="text"
             onPress={goBack}
