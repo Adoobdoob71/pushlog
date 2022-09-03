@@ -84,7 +84,7 @@ const theme: typeof DarkTheme & {
     primary_3: "#dfaa27",
     border: "#959595",
     text: "#fff",
-    notification: "#2A9D8F",
+    notification: "#457f96",
   },
 };
 

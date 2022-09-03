@@ -28,7 +28,7 @@ const Home = () => {
     textDisabledColor: theme.colors.card,
     agendaKnobColor: theme.colors.primary,
     indicatorColor: theme.colors.primary,
-    selectedDayBackgroundColor: theme.colors.primary_2,
+    selectedDayBackgroundColor: theme.colors.primary,
     dotColor: theme.colors.primary,
   };
 
