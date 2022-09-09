@@ -17,7 +17,14 @@ import Checkbox from "expo-checkbox";
 import * as NavigationBar from "expo-navigation-bar";
 
 const Home = () => {
-  const { currentDay, chosenDay, updateChosenDay } = useHome();
+  const {
+    currentDay,
+    chosenDay,
+    updateChosenDay,
+    activeTemplates,
+    addTemplate,
+    removeTemplate,
+  } = useHome();
 
   const agendaTheme = {
     calendarBackground: theme.colors.background,
@@ -36,6 +43,8 @@ const Home = () => {
 
   // @ts-ignore
   const goToSettings = () => navigation.navigate({ name: "Settings" });
+
+  const noTemplates = activeTemplates.length === 0;
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -66,82 +75,26 @@ const Home = () => {
           )
         }
         renderEmptyData={() => (
-          <ScrollView style={[styles.flex, stylesheet.dayWrapper]}>
-            <ListGroup groupTitle="Chest">
-              <ExerciseCard
-                name="Bench Press"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                muscles="Chest, Triceps"
-              />
-              <ExerciseCard
-                name="Incline Dumbell Press"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                muscles="Chest, Triceps"
-              />
-            </ListGroup>
-            <ListGroup groupTitle="Triceps">
-              <ExerciseCard
-                name="Skull Crushers"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                muscles="Triceps"
-              />
-            </ListGroup>
-            <ListGroup groupTitle="Triceps">
-              <ExerciseCard
-                name="Skull Crushers"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                muscles="Triceps"
-              />
-            </ListGroup>
-            <ListGroup groupTitle="Triceps">
-              <ExerciseCard
-                name="Skull Crushers"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                muscles="Triceps"
-              />
-            </ListGroup>
-            <Button
-              mode="text"
-              style={{ marginBottom: sizes.SIZE_28 }}
-              onPress={() => {}}
-            >
-              Start Workout
-            </Button>
+          <ScrollView
+            style={[styles.flex, stylesheet.dayWrapper]}
+            contentContainerStyle={noTemplates && { flexGrow: 1 }}
+          >
+            {noTemplates && (
+              <View style={[styles.flex, styles.center]}>
+                <Button
+                  mode="filled"
+                  style={{ marginBottom: sizes.SIZE_28 }}
+                  onPress={() => {}}
+                >
+                  Choose a workout
+                </Button>
+              </View>
+            )}
           </ScrollView>
         )}
         onDayPress={updateChosenDay}
       />
     </SafeAreaView>
-  );
-};
-
-const ExerciseCard: FC<{ image: string; name: string; muscles: string }> = ({
-  image,
-  name,
-  muscles,
-}) => {
-  const [aspectRatio, setAspectRatio] = useState(0);
-
-  Image.getSize(image, (width, height) => {
-    setAspectRatio(width / height);
-  });
-
-  return (
-    <TouchableOpacity style={[styles.rowCenter, stylesheet.workoutCard]}>
-      <Image
-        source={{ uri: image }}
-        style={{
-          aspectRatio: aspectRatio,
-          width: sizes.SIZE_60,
-          marginEnd: sizes.SIZE_8,
-        }}
-      />
-      <View style={[styles.column, { flex: 1 }]}>
-        <Text style={stylesheet.exerciseName}>{name}</Text>
-        <Text style={stylesheet.exerciseMuscles}>{muscles}</Text>
-      </View>
-      <Checkbox value={Math.random() > 0.5} color={theme.colors.primary} />
-    </TouchableOpacity>
   );
 };
 
@@ -159,24 +112,6 @@ const stylesheet = StyleSheet.create({
   dayWrapper: {
     backgroundColor: theme.colors.card,
     padding: sizes.SIZE_6,
-  },
-  workoutCard: {
-    padding: sizes.SIZE_12,
-    borderRadius: sizes.SIZE_6,
-    justifyContent: "space-between",
-    elevation: 4,
-    marginVertical: sizes.SIZE_6,
-    backgroundColor: "#324f5b",
-  },
-  exerciseName: {
-    fontSize: fontSizes.FONT_14,
-    color: theme.colors.text,
-    fontWeight: "bold",
-  },
-  exerciseMuscles: {
-    fontSize: fontSizes.FONT_12,
-    color: theme.colors.border,
-    fontWeight: "bold",
   },
 });
 

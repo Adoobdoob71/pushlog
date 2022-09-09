@@ -62,41 +62,72 @@ const WorkoutPlan = () => {
               marginBottom: sizes.SIZE_8,
               marginHorizontal: sizes.SIZE_20,
             }}
+            icon="plus"
             onPress={() => {}}
           >
-            +{"  "}Add Template
+            Add Template
           </Button>
         </View>
-        <TemplateCard
-          style={{
-            marginBottom: sizes.SIZE_18,
-            marginHorizontal: sizes.SIZE_20,
-          }}
-        />
-        <TemplateCard
-          style={{
-            marginBottom: sizes.SIZE_18,
-            marginHorizontal: sizes.SIZE_20,
-          }}
-        />
-        <TemplateCard
-          style={{
-            marginBottom: sizes.SIZE_18,
-            marginHorizontal: sizes.SIZE_20,
-          }}
-        />
-        <TemplateCard
-          style={{
-            marginBottom: sizes.SIZE_18,
-            marginHorizontal: sizes.SIZE_20,
-          }}
-        />
-        <TemplateCard
-          style={{
-            marginBottom: sizes.SIZE_18,
-            marginHorizontal: sizes.SIZE_20,
-          }}
-        />
+        {[1, 2, 3, 4, 5].map(() => (
+          <TemplateCard
+            style={{
+              marginBottom: sizes.SIZE_18,
+              marginHorizontal: sizes.SIZE_20,
+            }}
+            name="Getting shredded"
+            id="5"
+            description="Amazing chest workout you should defenitely try!"
+            exercises={[
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+              {
+                id: 2,
+                name: "Bench Press",
+                image:
+                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                completed: true,
+              },
+            ]}
+            tags={[
+              { id: "1", name: "chest" },
+              { id: "2", name: "triceps" },
+              { id: "3", name: "front delts" },
+            ]}
+          />
+        ))}
       </ScrollView>
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
         {templates && (

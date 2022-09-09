@@ -17,16 +17,23 @@ interface MuscleCategory {
 interface Exercise {
   id: number;
   name: string;
-  description: string;
-  muscleCategories: MuscleCategory;
-  image: string;
+  description?: string;
+  muscleCategories?: MuscleCategory;
+  image?: string;
+  completed?: boolean;
 }
 
 interface WorkoutTemplate {
   id: string;
   name: string;
+  description?: string;
   muscleCategories: MuscleCategory[];
   exercises: Exercise[];
 }
 
-export { defaultProps, WorkoutTemplate, Exercise, MuscleCategory };
+interface TagType {
+  id: string;
+  name: string;
+}
+
+export { defaultProps, WorkoutTemplate, Exercise, MuscleCategory, TagType };

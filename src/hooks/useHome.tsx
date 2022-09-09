@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { DateData } from "react-native-calendars";
-import Toast from "react-native-toast-message";
+
 function useHome() {
+  const [activeTemplates, setActiveTemplates] = useState([]);
+
+  const addTemplate = () => {};
+
+  const removeTemplate = () => {};
+
   const date = new Date();
   const currentDay = {
     day: date.getDate(),
@@ -18,6 +24,9 @@ function useHome() {
     currentDay,
     chosenDay,
     updateChosenDay,
+    activeTemplates,
+    addTemplate,
+    removeTemplate,
   };
 }
 

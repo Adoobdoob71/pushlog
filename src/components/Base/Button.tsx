@@ -1,22 +1,37 @@
-import { FC, ReactNode } from "react";
+import { ComponentProps, FC, ReactNode } from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 interface Props {
   mode: "filled" | "text";
   onPress: () => void;
   style?: StyleProperty;
   disabled?: boolean;
+  icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
   children: ReactNode;
 }
 
-const Button: FC<Props> = ({ mode, onPress, style, disabled, children }) => {
+const Button: FC<Props> = ({
+  mode,
+  onPress,
+  style,
+  disabled,
+  icon,
+  children,
+}) => {
+  const color = disabled
+    ? theme.colors.border
+    : mode === "filled"
+    ? "#FFF"
+    : theme.colors.primary;
+
   return (
     <View style={[style, { alignItems: "center" }]}>
       <TouchableOpacity
         style={[
-          styles.center,
+          icon ? styles.rowCenter : styles.center,
           stylesheet.buttonStyle,
           mode === "filled"
             ? disabled
@@ -27,14 +42,18 @@ const Button: FC<Props> = ({ mode, onPress, style, disabled, children }) => {
         disabled={disabled}
         onPress={onPress}
       >
+        {icon && (
+          <MaterialCommunityIcons
+            name={icon}
+            color={color}
+            style={{ marginEnd: sizes.SIZE_6 }}
+            size={sizes.SIZE_14}
+          />
+        )}
         <Text
           style={{
             fontSize: fontSizes.FONT_14,
-            color: disabled
-              ? theme.colors.border
-              : mode === "filled"
-              ? "#FFF"
-              : theme.colors.primary,
+            color: color,
             fontWeight: "bold",
           }}
         >

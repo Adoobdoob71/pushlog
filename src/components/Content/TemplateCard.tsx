@@ -1,87 +1,64 @@
 import { FC } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
-import { StyleProperty } from "utils/types";
+import { Exercise, StyleProperty, TagType } from "utils/types";
 import Tag from "../Base/Tag";
-import IconButton from "../Base/IconButton";
 
 interface Props {
+  id: string;
+  name: string;
+  tags: TagType[];
+  exercises: Exercise[];
+  description: string;
   style?: StyleProperty;
 }
 
-const TemplateCard: FC<Props> = ({ style }) => {
+const TemplateCard: FC<Props> = ({
+  id,
+  name,
+  tags,
+  exercises,
+  description,
+  style,
+}) => {
   return (
-    <View style={[stylesheet.templateCard, style]}>
-      <View style={[styles.rowCenter, { marginBottom: sizes.SIZE_4 }]}>
-        <Text style={stylesheet.templateName}>Getting Pecs</Text>
-        <IconButton
-          color={theme.colors.notification}
-          onPress={() => {}}
-          size={sizes.SIZE_18}
-          style={{ marginStart: "auto" }}
-          name="chevron-right"
-        />
-      </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ marginTop: sizes.SIZE_8 }}
-        contentContainerStyle={styles.rowCenter}
-      >
-        <ExerciseCard
-          image="https://wger.de/media/exercise-images/195/Push-ups-1.png"
-          completed={Math.random() > 0.5}
-        />
-        <ExerciseCard
-          image="https://wger.de/media/exercise-images/88/Narrow-grip-bench-press-1.png"
-          completed={Math.random() > 0.5}
-        />
-        <ExerciseCard
-          image="https://wger.de/media/exercise-images/86/Bicep-hammer-curl-1.png"
-          completed={Math.random() > 0.5}
-        />
-        <ExerciseCard
-          image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-          completed={Math.random() > 0.5}
-        />
-        <ExerciseCard
-          image="https://wger.de/media/exercise-images/91/Crunches-2.png"
-          completed={Math.random() > 0.5}
-        />
-      </ScrollView>
-      <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
-        <Tag text="Chest" style={{ marginEnd: sizes.SIZE_8 }} />
-        <Tag text="Triceps" style={{ marginEnd: sizes.SIZE_8 }} />
-      </View>
-    </View>
-  );
-};
-
-interface ExerciseCardProps {
-  image: string;
-  completed: boolean;
-}
-
-const ExerciseCard: FC<ExerciseCardProps> = ({ image, completed }) => {
-  return (
-    <View
-      style={[
-        stylesheet.exerciseImageBackground,
-        {
-          backgroundColor: completed ? theme.colors.primary : theme.colors.card,
-          elevation: completed ? sizes.SIZE_4 : 0,
-        },
-      ]}
+    <TouchableOpacity
+      style={[stylesheet.templateCard, style, styles.rowCenter]}
+      key={id}
     >
+      <View style={{ flex: 1.5 }}>
+        <Text style={stylesheet.templateName}>{name}</Text>
+        <Text style={stylesheet.templateDescription} numberOfLines={3}>
+          {description}
+        </Text>
+        <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
+          {tags.slice(0, 2).map((value, index) => (
+            <Tag
+              text={value.name}
+              key={index}
+              onRemove={() => {}}
+              style={{ marginEnd: sizes.SIZE_8 }}
+            />
+          ))}
+          {tags.length > 2 && (
+            <View style={stylesheet.tagNumberPlusWrapper}>
+              <Text style={stylesheet.tagNumberPlus}>
+                {"+ " + `${tags.length - 2}`}
+              </Text>
+            </View>
+          )}
+        </View>
+      </View>
       <Image
-        style={stylesheet.exerciseImage}
         source={{
-          uri: image,
+          uri: exercises[Math.trunc(Math.random() * (exercises.length - 1))]
+            ?.image,
         }}
+        style={stylesheet.templateImage}
         resizeMode="contain"
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -97,20 +74,28 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.primary,
     fontSize: fontSizes.FONT_14,
     fontWeight: "bold",
+    marginBottom: sizes.SIZE_4,
   },
-  subtitle: {
+  templateDescription: {
     fontSize: fontSizes.FONT_12,
     color: theme.colors.border,
     fontWeight: "bold",
   },
-  exerciseImageBackground: {
-    borderRadius: sizes.SIZE_8,
-    marginEnd: sizes.SIZE_12,
-    padding: sizes.SIZE_3,
+  tagNumberPlusWrapper: {
+    backgroundColor: theme.colors.card,
+    borderRadius: sizes.SIZE_4,
+    paddingHorizontal: sizes.SIZE_6,
+    paddingVertical: sizes.SIZE_4,
   },
-  exerciseImage: {
-    width: sizes.SIZE_52,
-    height: sizes.SIZE_52,
+  tagNumberPlus: {
+    fontSize: fontSizes.FONT_10,
+    color: theme.colors.text,
+  },
+  templateImage: {
+    width: sizes.SIZE_100,
+    height: sizes.SIZE_100,
+    alignSelf: "center",
+    flex: 1,
   },
 });
 
