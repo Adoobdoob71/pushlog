@@ -14,7 +14,7 @@ interface Props {
 
 const IconButton: FC<Props> = ({ name, style, size, color, onPress }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={style}>
+    <TouchableOpacity onPress={onPress} style={style} activeOpacity={0.5}>
       <MaterialCommunityIcons
         name={name}
         size={size ? size : sizes.SIZE_24}

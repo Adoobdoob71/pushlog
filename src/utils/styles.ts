@@ -70,28 +70,28 @@ const theme: typeof DarkTheme & {
     primary_1: string;
     primary_2: string;
     primary_3: string;
-    wrapper: string;
+    background_2: string;
   };
 } = {
   dark: true,
   colors: {
-    background: "#264653",
-    card: "#1a2f38",
-    wrapper: "#1a2f38",
+    background: "#1a2f38",
+    card: "#264653",
     primary: "#E9C46A",
     primary_1: "#E9C46A",
     primary_2: "#e2b23e",
     primary_3: "#dfaa27",
     border: "#959595",
     text: "#fff",
-    notification: "#457f96",
+    background_2: "#122027",
+    notification: ""
   },
 };
 
 const styles = StyleSheet.create({
   mainWrapper: {
     flex: 1,
-    backgroundColor: theme.colors.wrapper,
+    backgroundColor: theme.colors.background,
   },
   column: {
     flexDirection: "column",

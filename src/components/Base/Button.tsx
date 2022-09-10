@@ -40,6 +40,7 @@ const Button: FC<Props> = ({
             : stylesheet.textMode,
         ]}
         disabled={disabled}
+        activeOpacity={0.5}
         onPress={onPress}
       >
         {icon && (

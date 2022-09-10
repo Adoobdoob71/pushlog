@@ -36,7 +36,7 @@ const Header: FC<Props> = ({ style, backButton, title, right, left }) => {
 
 const stylesheet = StyleSheet.create({
   header: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.card,
     paddingHorizontal: sizes.SIZE_18,
     paddingBottom: sizes.SIZE_20,
     paddingTop: STATUSBAR_HEIGHT + sizes.SIZE_20,

@@ -21,7 +21,7 @@ const WorkoutPlan = () => {
 
   const { goBack, submitChanges } = useWorkoutPlan();
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.card);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
   return (
     <SafeAreaView style={[styles.flex, stylesheet.mainWrapper]}>
@@ -32,14 +32,12 @@ const WorkoutPlan = () => {
         Customize to your liking
       </Text>
       <View style={stylesheet.searchBar}>
-        <KeyboardAvoidingView behavior="position">
-          <TextInput
-            placeholder="Search any template..."
-            placeholderTextColor={theme.colors.border}
-            style={stylesheet.searchBarInput}
-            selectionColor={theme.colors.primary_3}
-          />
-        </KeyboardAvoidingView>
+        <TextInput
+          placeholder="Search any template..."
+          placeholderTextColor={theme.colors.border}
+          style={stylesheet.searchBarInput}
+          selectionColor={theme.colors.primary_3}
+        />
       </View>
       <ScrollView
         style={{
@@ -54,7 +52,7 @@ const WorkoutPlan = () => {
             <Text key={value.id}>{value.name}</Text>
           ))} */}
 
-        <View style={{ backgroundColor: theme.colors.card }}>
+        <View style={{ backgroundColor: theme.colors.background }}>
           <Button
             mode="text"
             style={{
@@ -155,7 +153,7 @@ const stylesheet = StyleSheet.create({
   mainWrapper: {
     paddingTop: STATUSBAR_HEIGHT + sizes.SIZE_60,
     paddingBottom: sizes.SIZE_36,
-    backgroundColor: theme.colors.card,
+    backgroundColor: theme.colors.background,
   },
   title: {
     fontSize: fontSizes.FONT_24,

@@ -12,7 +12,7 @@ const Settings = () => {
       name: "WorkoutPlan",
     });
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.card);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>

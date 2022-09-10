@@ -26,6 +26,7 @@ const TemplateCard: FC<Props> = ({
     <TouchableOpacity
       style={[stylesheet.templateCard, style, styles.rowCenter]}
       key={id}
+      activeOpacity={0.7}
     >
       <View style={{ flex: 1.5 }}>
         <Text style={stylesheet.templateName}>{name}</Text>
@@ -64,7 +65,7 @@ const TemplateCard: FC<Props> = ({
 
 const stylesheet = StyleSheet.create({
   templateCard: {
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.card,
     borderRadius: sizes.SIZE_8,
     paddingVertical: sizes.SIZE_12,
     paddingHorizontal: sizes.SIZE_16,
@@ -82,7 +83,7 @@ const stylesheet = StyleSheet.create({
     fontWeight: "bold",
   },
   tagNumberPlusWrapper: {
-    backgroundColor: theme.colors.card,
+    backgroundColor: theme.colors.background,
     borderRadius: sizes.SIZE_4,
     paddingHorizontal: sizes.SIZE_6,
     paddingVertical: sizes.SIZE_4,
@@ -94,7 +95,6 @@ const stylesheet = StyleSheet.create({
   templateImage: {
     width: sizes.SIZE_100,
     height: sizes.SIZE_100,
-    alignSelf: "center",
     flex: 1,
   },
 });

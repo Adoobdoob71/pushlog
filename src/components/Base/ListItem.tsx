@@ -15,6 +15,7 @@ const ListItem: FC<Props> = ({ icon, title, description, onPress }) => {
     <TouchableOpacity
       style={[stylesheet.listItem, styles.rowCenter]}
       onPress={onPress}
+      activeOpacity={0.5}
     >
       <MaterialCommunityIcons
         name={icon}

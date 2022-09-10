@@ -1,8 +1,17 @@
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { DateData } from "react-native-calendars";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 function useHome() {
   const [activeTemplates, setActiveTemplates] = useState([]);
+
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const snapPoints = useMemo(() => ["50%", "85%"], []);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetRef.current?.snapToIndex(0);
+  }, []);
 
   const addTemplate = () => {};
 
@@ -27,6 +36,9 @@ function useHome() {
     activeTemplates,
     addTemplate,
     removeTemplate,
+    bottomSheetRef,
+    snapPoints,
+    handlePresentModalPress,
   };
 }
 

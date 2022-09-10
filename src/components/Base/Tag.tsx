@@ -8,29 +8,37 @@ interface Props {
   text: string;
   onRemove?: () => void;
   style?: StyleProperty;
+  backgroundColor?: string;
 }
 
-const Tag: FC<Props> = ({ text, onRemove, style }) => {
+const Tag: FC<Props> = ({ text, onRemove, style, backgroundColor }) => {
   return (
-    <View style={[style]}>
-      <TouchableOpacity
-        onPress={onRemove}
-        style={[styles.rowCenter, stylesheet.tag]}
-      >
-        <Text style={stylesheet.tagText}>{text}</Text>
-        <MaterialCommunityIcons
-          name="close"
-          color={theme.colors.text}
-          size={sizes.SIZE_8}
-        />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity
+      onPress={onRemove}
+      activeOpacity={0.5}
+      style={[
+        styles.rowCenter,
+        style,
+        stylesheet.tag,
+        {
+          backgroundColor: backgroundColor
+            ? backgroundColor
+            : theme.colors.background,
+        },
+      ]}
+    >
+      <Text style={stylesheet.tagText}>{text}</Text>
+      <MaterialCommunityIcons
+        name="close"
+        color={theme.colors.text}
+        size={sizes.SIZE_8}
+      />
+    </TouchableOpacity>
   );
 };
 
 const stylesheet = StyleSheet.create({
   tag: {
-    backgroundColor: theme.colors.card,
     borderRadius: sizes.SIZE_4,
     paddingHorizontal: sizes.SIZE_8,
     paddingVertical: sizes.SIZE_4,

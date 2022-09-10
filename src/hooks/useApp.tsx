@@ -4,12 +4,15 @@ import * as NavigationBar from "expo-navigation-bar";
 import { useFonts } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WorkoutTemplate } from "utils/types";
-import Toast from 'react-native-toast-message'
+import Toast from "react-native-toast-message";
 
 function useApp() {
-  const [templates, setTemplates] = useState<Map<string, WorkoutTemplate> | null>(null);
+  const [templates, setTemplates] = useState<Map<
+    string,
+    WorkoutTemplate
+  > | null>(null);
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.card);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
   const [loaded] = useFonts({
     orbitronBlack: require("../../assets/fonts/Orbitron-Black.ttf"),
@@ -37,13 +40,13 @@ function useApp() {
         type: "success",
         text1: "Amazing!",
         text2: "Added the new workout template 🎉",
-      })
-      }catch(error) {
-        Toast.show({
-          type: "error",
-          text1: "Uh oh...",
-          text2: "Something went wrong 😥",
-        })
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Uh oh...",
+        text2: "Something went wrong 😥",
+      });
     }
   };
 
@@ -52,42 +55,42 @@ function useApp() {
       const newTemplateMap = templates;
       newTemplateMap.delete(templateId);
       const jsonMap = JSON.stringify(templates);
-      await AsyncStorage.setItem("@workoutTemplates", jsonMap)
+      await AsyncStorage.setItem("@workoutTemplates", jsonMap);
       setTemplates(newTemplateMap);
       Toast.show({
         type: "success",
         text1: "Amazing!",
         text2: "Added the new workout template 🎉",
-      })
-    }catch(error) {
+      });
+    } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      })
+      });
     }
-  }
+  };
 
   const modifyTemplate = async (modifiedTemplate: WorkoutTemplate) => {
     try {
       const newTemplateMap = templates;
       newTemplateMap.set(modifiedTemplate.id, modifiedTemplate);
       const jsonMap = JSON.stringify(newTemplateMap);
-      await AsyncStorage.setItem("@workoutTemplates", jsonMap)
+      await AsyncStorage.setItem("@workoutTemplates", jsonMap);
       setTemplates(newTemplateMap);
       Toast.show({
         type: "success",
         text1: "Amazing!",
         text2: "Added the new workout template 🎉",
-      })
-    }catch(error) {
+      });
+    } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      })
+      });
     }
-  }
+  };
 
   return {
     templates,

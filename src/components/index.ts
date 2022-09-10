@@ -9,5 +9,6 @@ export { default as Tag } from './Base/Tag';
 // Content
 export { default as MasonryList } from "./Content/MasonryList";
 export { default as TemplateCard } from './Content/TemplateCard';
+export { default as ExerciseCard } from './Content/ExerciseCard';
 
 // Fragments

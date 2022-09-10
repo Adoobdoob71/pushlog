@@ -5,13 +5,14 @@ import StackNavigator from "navigators/StackNavigator";
 import { useApp } from "hooks/useApp";
 import WorkoutRoutine from "context/workoutTemplates";
 import Toast, { BaseToast } from "react-native-toast-message";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
   const { templates, addTemplate, modifyTemplate, removeTemplate, loaded } =
     useApp();
 
   return loaded ? (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <WorkoutRoutine.Provider
         value={{ templates, addTemplate, modifyTemplate, removeTemplate }}
       >
@@ -72,6 +73,6 @@ export default function App() {
           ),
         }}
       />
-    </>
+    </GestureHandlerRootView>
   ) : null;
 }
