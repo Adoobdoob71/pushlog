@@ -18,7 +18,7 @@ interface Exercise {
   id: number;
   name: string;
   description?: string;
-  muscleCategories?: MuscleCategory;
+  muscleCategories?: MuscleCategory[];
   image?: string;
   completed?: boolean;
 }
