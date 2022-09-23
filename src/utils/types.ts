@@ -20,7 +20,6 @@ interface Exercise {
   description?: string;
   muscleCategories?: MuscleCategory[];
   image?: string;
-  completed?: boolean;
 }
 
 interface WorkoutTemplate {

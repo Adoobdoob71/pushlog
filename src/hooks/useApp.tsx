@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { theme } from "utils/styles";
 import * as NavigationBar from "expo-navigation-bar";
 import { useFonts } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WorkoutTemplate } from "utils/types";
 import Toast from "react-native-toast-message";
+import Realm from "realm";
+import { Exercise, MuscleCategory, Workout } from "src/database/schemas";
+import realmDB from "context/realmDB";
 
 function useApp() {
   const [templates, setTemplates] = useState<Map<
@@ -23,10 +26,31 @@ function useApp() {
     orbitronSemiBold: require("../../assets/fonts/Orbitron-SemiBold.ttf"),
   });
 
+  const realmdb = useContext(realmDB);
+
+  const openRealm = async () => {
+    try {
+      const realm = await Realm.open({
+        schema: [Workout, Exercise, MuscleCategory],
+      });
+      realmdb.DB = realm;
+    } catch (err) {
+      Toast.show({
+        type: "error",
+        text1: "Uh oh...",
+        text2: "Something went wrong 😥",
+      });
+    }
+  };
+
   useEffect(() => {
     AsyncStorage.getItem("@workoutTemplates").then((data) => {
       data && setTemplates(JSON.parse(data));
     });
+    openRealm();
+    return () => {
+      realmdb.DB.close();
+    };
   }, []);
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
@@ -98,6 +122,7 @@ function useApp() {
     removeTemplate,
     modifyTemplate,
     loaded,
+    realmdb,
   };
 }
 

@@ -81,42 +81,36 @@ const WorkoutPlan = () => {
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
               {
                 id: 2,
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
               {
                 id: 2,
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
               {
                 id: 2,
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
               {
                 id: 2,
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
               {
                 id: 2,
                 name: "Bench Press",
                 image:
                   "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                completed: true,
               },
             ]}
             tags={[

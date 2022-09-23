@@ -6,21 +6,30 @@ import { useApp } from "hooks/useApp";
 import WorkoutRoutine from "context/workoutTemplates";
 import Toast, { BaseToast } from "react-native-toast-message";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import RealmDB from "context/realmDB";
 
 export default function App() {
-  const { templates, addTemplate, modifyTemplate, removeTemplate, loaded } =
-    useApp();
+  const {
+    templates,
+    addTemplate,
+    modifyTemplate,
+    removeTemplate,
+    loaded,
+    realmdb,
+  } = useApp();
 
   return loaded ? (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <WorkoutRoutine.Provider
-        value={{ templates, addTemplate, modifyTemplate, removeTemplate }}
-      >
-        <NavigationContainer theme={theme}>
-          <StatusBar style="light" translucent={true} animated />
-          <StackNavigator />
-        </NavigationContainer>
-      </WorkoutRoutine.Provider>
+      <RealmDB.Provider value={realmdb}>
+        <WorkoutRoutine.Provider
+          value={{ templates, addTemplate, modifyTemplate, removeTemplate }}
+        >
+          <NavigationContainer theme={theme}>
+            <StatusBar style="light" translucent={true} animated />
+            <StackNavigator />
+          </NavigationContainer>
+        </WorkoutRoutine.Provider>
+      </RealmDB.Provider>
       <Toast
         config={{
           success: (props) => (
