@@ -13,26 +13,24 @@ import { useNavigation } from "@react-navigation/native";
 import * as NavigationBar from "expo-navigation-bar";
 import BottomSheet, {
   BottomSheetBackdrop,
-  BottomSheetFlatList,
-  BottomSheetScrollView,
   BottomSheetTextInput,
-  BottomSheetVirtualizedList,
 } from "@gorhom/bottom-sheet";
 import { FlatList } from "react-native-gesture-handler";
 import { useMemo } from "react";
+import { useContext } from "react";
+import workoutTemplates from "context/workoutTemplates";
 
 const Home = () => {
   const {
     currentDay,
     chosenDay,
     updateChosenDay,
-    activeTemplates,
-    addTemplate,
-    removeTemplate,
     bottomSheetRef,
     snapPoints,
     handlePresentModalPress,
   } = useHome();
+
+  const { templates, addTemplate } = useContext(workoutTemplates);
 
   const agendaTheme = {
     calendarBackground: theme.colors.card,
@@ -52,7 +50,9 @@ const Home = () => {
   // @ts-ignore
   const goToSettings = () => navigation.navigate({ name: "Settings" });
 
-  const noTemplates = activeTemplates.length === 0;
+  const noTemplates = templates?.size === 0;
+
+  const templatesArr = Array.from(templates, ([key, value]) => value);
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -87,12 +87,37 @@ const Home = () => {
             style={[styles.flex, stylesheet.dayWrapper]}
             contentContainerStyle={noTemplates && { flexGrow: 1 }}
           >
-            {noTemplates ? (
+            {true ? (
               <View style={[styles.flex, styles.center]}>
                 <Button
                   mode="filled"
                   style={{ marginBottom: sizes.SIZE_28 }}
-                  onPress={handlePresentModalPress}
+                  onPress={() => {
+                    handlePresentModalPress();
+                    addTemplate({
+                      name: "Getting dem pecs",
+                      description: "Amazing chest workout!",
+                      id: `${Math.random() * 1000}`,
+                      exercises: [
+                        {
+                          id: "1",
+                          name: "Bench Press",
+                          image:
+                            "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+                          muscleCategories: [
+                            { id: "2", name: "chest" },
+                            { id: "3", name: "triceps" },
+                            { id: "4", name: "front delts" },
+                          ],
+                        },
+                      ],
+                      muscleCategories: [
+                        { id: "2", name: "chest" },
+                        { id: "3", name: "triceps" },
+                        { id: "4", name: "front delts" },
+                      ],
+                    });
+                  }}
                 >
                   Choose a workout
                 </Button>
@@ -145,76 +170,20 @@ const Home = () => {
             />
           </View>
           <FlatList
-            data={useMemo(
-              () =>
-                Array(15)
-                  .fill(0)
-                  .map((_, index) => `index-${index}`),
-              []
-            )}
+            data={templatesArr}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={() => (
               <View style={{ height: sizes.SIZE_100 }}></View>
             )}
-            keyExtractor={(item, index) => item}
-            renderItem={() => (
+            keyExtractor={(item) => item.id}
+            renderItem={({ item, index }) => (
               <TemplateCard
                 style={{
                   marginBottom: sizes.SIZE_18,
                   marginHorizontal: sizes.SIZE_20,
                 }}
-                name="Getting shredded"
-                id="5"
-                description="Amazing chest workout you should defenitely try!"
-                exercises={[
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                  {
-                    id: 2,
-                    name: "Bench Press",
-                    image:
-                      "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                    completed: true,
-                  },
-                ]}
-                tags={[
-                  { id: "1", name: "chest" },
-                  { id: "2", name: "triceps" },
-                  { id: "3", name: "front delts" },
-                ]}
+                {...item}
+                tags={item.muscleCategories}
               />
             )}
           />

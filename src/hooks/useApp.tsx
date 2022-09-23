@@ -5,15 +5,12 @@ import { useFonts } from "expo-font";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { WorkoutTemplate } from "utils/types";
 import Toast from "react-native-toast-message";
-import Realm from "realm";
-import { Exercise, MuscleCategory, Workout } from "src/database/schemas";
-import realmDB from "context/realmDB";
 
 function useApp() {
   const [templates, setTemplates] = useState<Map<
     string,
     WorkoutTemplate
-  > | null>(null);
+  > | null>(new Map<string, WorkoutTemplate>());
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
@@ -26,40 +23,62 @@ function useApp() {
     orbitronSemiBold: require("../../assets/fonts/Orbitron-SemiBold.ttf"),
   });
 
-  const realmdb = useContext(realmDB);
-
-  const openRealm = async () => {
-    try {
-      const realm = await Realm.open({
-        schema: [Workout, Exercise, MuscleCategory],
-      });
-      realmdb.DB = realm;
-    } catch (err) {
-      Toast.show({
-        type: "error",
-        text1: "Uh oh...",
-        text2: "Something went wrong 😥",
-      });
-    }
-  };
-
   useEffect(() => {
     AsyncStorage.getItem("@workoutTemplates").then((data) => {
-      data && setTemplates(JSON.parse(data));
+      data !== null && setTemplates(JSON.parse(data));
     });
-    openRealm();
-    return () => {
-      realmdb.DB.close();
-    };
+    addTemplate({
+      name: "Turtle Back",
+      description: "Massive lats workout!",
+      id: "anotherSomething",
+      exercises: [
+        {
+          id: "1",
+          name: "Bench Press",
+          image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+          muscleCategories: [
+            { id: "2", name: "chest" },
+            { id: "3", name: "triceps" },
+            { id: "4", name: "front delts" },
+          ],
+        },
+      ],
+      muscleCategories: [
+        { id: "5", name: "lats" },
+        { id: "6", name: "upper-back" },
+        { id: "7", name: "biceps" },
+      ],
+    });
+    addTemplate({
+      name: "Getting dem pecs",
+      description: "Amazing chest workout!",
+      id: "anotherSomethingElseee",
+      exercises: [
+        {
+          id: "1",
+          name: "Bench Press",
+          image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
+          muscleCategories: [
+            { id: "2", name: "chest" },
+            { id: "3", name: "triceps" },
+            { id: "4", name: "front delts" },
+          ],
+        },
+      ],
+      muscleCategories: [
+        { id: "2", name: "chest" },
+        { id: "3", name: "triceps" },
+        { id: "4", name: "front delts" },
+      ],
+    });
   }, []);
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
     try {
-      const newTemplateMap = templates;
+      const newTemplateMap = new Map<string, WorkoutTemplate>();
       newTemplateMap.set(newTemplate.id, newTemplate);
       const jsonMap = JSON.stringify(newTemplateMap);
       await AsyncStorage.setItem("@workoutTemplates", jsonMap);
-      setTemplates(newTemplateMap);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -71,6 +90,7 @@ function useApp() {
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
       });
+      console.error(error);
     }
   };
 
@@ -122,7 +142,6 @@ function useApp() {
     removeTemplate,
     modifyTemplate,
     loaded,
-    realmdb,
   };
 }
 

@@ -10,12 +10,12 @@ interface defaultProps {
 }
 
 interface MuscleCategory {
-  id: number;
+  id: string;
   name: string;
 }
 
 interface Exercise {
-  id: number;
+  id: string;
   name: string;
   description?: string;
   muscleCategories?: MuscleCategory[];

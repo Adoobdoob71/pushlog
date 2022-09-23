@@ -9,7 +9,8 @@
       "hooks/*": ["src/hooks/*"],
       "navigators/*": ["src/navigators/*"],
       "screens/*": ["src/screens/*"],
-      "utils/*": ["src/utils/*"]
+      "utils/*": ["src/utils/*"],
+      "database/*": ["src/database/*"],
     }
   }
 }

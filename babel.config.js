@@ -13,6 +13,7 @@ module.exports = function (api) {
             navigators: "./src/navigators",
             screens: "./src/screens",
             utils: "./src/utils",
+            database: "./src/database"
           },
         },
       ],

@@ -10,7 +10,7 @@ interface Props {
   name: string;
   tags: TagType[];
   exercises: Exercise[];
-  description: string;
+  description?: string;
   style?: StyleProperty;
 }
 
