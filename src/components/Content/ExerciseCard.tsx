@@ -7,8 +7,8 @@ import Tag from "../Base/Tag";
 interface Props {
   image?: string;
   name: string;
-  volume: { sets: number; reps: number };
-  weight: number;
+  volume?: { sets: number; reps: number };
+  weight?: number;
   tags: TagType[];
   style?: StyleProperty;
 }
@@ -22,7 +22,7 @@ const ExerciseCard: FC<Props> = ({
   style,
 }) => {
   return (
-    <View style={[styles.rowCenter, stylesheet.exerciseWrapper, style]}>
+    <View style={[styles.rowCenter, style]}>
       <View style={stylesheet.exerciseImageBackground}>
         <Image
           source={{ uri: image }}
@@ -60,9 +60,6 @@ const ExerciseCard: FC<Props> = ({
 };
 
 const stylesheet = StyleSheet.create({
-  exerciseWrapper: {
-    padding: sizes.SIZE_12,
-  },
   exerciseImageBackground: {
     backgroundColor: `${theme.colors.card}50`,
     padding: sizes.SIZE_8,

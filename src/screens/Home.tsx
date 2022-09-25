@@ -50,9 +50,7 @@ const Home = () => {
   // @ts-ignore
   const goToSettings = () => navigation.navigate({ name: "Settings" });
 
-  const noTemplates = templates?.size === 0;
-
-  const templatesArr = Array.from(templates, ([key, value]) => value);
+  const noTemplates = templates.length === 0;
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -87,37 +85,12 @@ const Home = () => {
             style={[styles.flex, stylesheet.dayWrapper]}
             contentContainerStyle={noTemplates && { flexGrow: 1 }}
           >
-            {true ? (
+            {noTemplates ? (
               <View style={[styles.flex, styles.center]}>
                 <Button
                   mode="filled"
                   style={{ marginBottom: sizes.SIZE_28 }}
-                  onPress={() => {
-                    handlePresentModalPress();
-                    addTemplate({
-                      name: "Getting dem pecs",
-                      description: "Amazing chest workout!",
-                      id: `${Math.random() * 1000}`,
-                      exercises: [
-                        {
-                          id: "1",
-                          name: "Bench Press",
-                          image:
-                            "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-                          muscleCategories: [
-                            { id: "2", name: "chest" },
-                            { id: "3", name: "triceps" },
-                            { id: "4", name: "front delts" },
-                          ],
-                        },
-                      ],
-                      muscleCategories: [
-                        { id: "2", name: "chest" },
-                        { id: "3", name: "triceps" },
-                        { id: "4", name: "front delts" },
-                      ],
-                    });
-                  }}
+                  onPress={handlePresentModalPress}
                 >
                   Choose a workout
                 </Button>
@@ -133,7 +106,7 @@ const Home = () => {
                   { id: "2", name: "triceps" },
                   { id: "3", name: "front delts" },
                 ]}
-                style={{ marginBottom: sizes.SIZE_16 }}
+                style={{ marginBottom: sizes.SIZE_16, padding: sizes.SIZE_12 }}
               />
             )}
           </ScrollView>
@@ -170,7 +143,7 @@ const Home = () => {
             />
           </View>
           <FlatList
-            data={templatesArr}
+            data={templates}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={() => (
               <View style={{ height: sizes.SIZE_100 }}></View>
@@ -182,6 +155,7 @@ const Home = () => {
                   marginBottom: sizes.SIZE_18,
                   marginHorizontal: sizes.SIZE_20,
                 }}
+                templateData={item}
                 {...item}
                 tags={item.muscleCategories}
               />

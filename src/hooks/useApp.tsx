@@ -7,10 +7,7 @@ import { WorkoutTemplate } from "utils/types";
 import Toast from "react-native-toast-message";
 
 function useApp() {
-  const [templates, setTemplates] = useState<Map<
-    string,
-    WorkoutTemplate
-  > | null>(new Map<string, WorkoutTemplate>());
+  const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([]);
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
@@ -27,58 +24,15 @@ function useApp() {
     AsyncStorage.getItem("@workoutTemplates").then((data) => {
       data !== null && setTemplates(JSON.parse(data));
     });
-    addTemplate({
-      name: "Turtle Back",
-      description: "Massive lats workout!",
-      id: "anotherSomething",
-      exercises: [
-        {
-          id: "1",
-          name: "Bench Press",
-          image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-          muscleCategories: [
-            { id: "2", name: "chest" },
-            { id: "3", name: "triceps" },
-            { id: "4", name: "front delts" },
-          ],
-        },
-      ],
-      muscleCategories: [
-        { id: "5", name: "lats" },
-        { id: "6", name: "upper-back" },
-        { id: "7", name: "biceps" },
-      ],
-    });
-    addTemplate({
-      name: "Getting dem pecs",
-      description: "Amazing chest workout!",
-      id: "anotherSomethingElseee",
-      exercises: [
-        {
-          id: "1",
-          name: "Bench Press",
-          image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-          muscleCategories: [
-            { id: "2", name: "chest" },
-            { id: "3", name: "triceps" },
-            { id: "4", name: "front delts" },
-          ],
-        },
-      ],
-      muscleCategories: [
-        { id: "2", name: "chest" },
-        { id: "3", name: "triceps" },
-        { id: "4", name: "front delts" },
-      ],
-    });
   }, []);
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
     try {
-      const newTemplateMap = new Map<string, WorkoutTemplate>();
-      newTemplateMap.set(newTemplate.id, newTemplate);
-      const jsonMap = JSON.stringify(newTemplateMap);
-      await AsyncStorage.setItem("@workoutTemplates", jsonMap);
+      const newTemplateArr = templates;
+      newTemplateArr.push(newTemplate);
+      const jsonArr = JSON.stringify(newTemplateArr);
+      await AsyncStorage.setItem("@workoutTemplates", jsonArr);
+      setTemplates(newTemplateArr);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -96,11 +50,13 @@ function useApp() {
 
   const removeTemplate = async (templateId: string) => {
     try {
-      const newTemplateMap = templates;
-      newTemplateMap.delete(templateId);
-      const jsonMap = JSON.stringify(templates);
-      await AsyncStorage.setItem("@workoutTemplates", jsonMap);
-      setTemplates(newTemplateMap);
+      let newTemplateArr = templates;
+      newTemplateArr = newTemplateArr.filter(
+        (template) => template.id !== templateId
+      );
+      const jsonArr = JSON.stringify(newTemplateArr);
+      await AsyncStorage.setItem("@workoutTemplates", jsonArr);
+      setTemplates(newTemplateArr);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -117,11 +73,14 @@ function useApp() {
 
   const modifyTemplate = async (modifiedTemplate: WorkoutTemplate) => {
     try {
-      const newTemplateMap = templates;
-      newTemplateMap.set(modifiedTemplate.id, modifiedTemplate);
-      const jsonMap = JSON.stringify(newTemplateMap);
-      await AsyncStorage.setItem("@workoutTemplates", jsonMap);
-      setTemplates(newTemplateMap);
+      let newTemplateArr = templates;
+      const index = newTemplateArr.findIndex(
+        (template) => template?.id === modifiedTemplate.id
+      );
+      newTemplateArr[index] = modifiedTemplate;
+      const jsonArr = JSON.stringify(newTemplateArr);
+      await AsyncStorage.setItem("@workoutTemplates", jsonArr);
+      setTemplates(newTemplateArr);
       Toast.show({
         type: "success",
         text1: "Amazing!",

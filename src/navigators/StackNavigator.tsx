@@ -2,14 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "screens/Home";
 import Settings from "screens/Settings";
 import WorkoutPlan from "screens/WorkoutPlan";
-import WorkoutTemplate from "screens/WorkoutTemplate";
-
-type RootStackParamList = {
-  Home: undefined;
-  Settings: undefined;
-  WorkoutPlan: undefined;
-  WorkoutTemplate: { templateName: string; templateId: string };
-};
+import CustomizeTemplate from "screens/CustomizeTemplate";
+import { WorkoutTemplate, RootStackParamList } from "utils/types";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -22,7 +16,7 @@ const StackNavigator = () => {
       <Stack.Screen component={Home} name="Home" />
       <Stack.Screen component={Settings} name="Settings" />
       <Stack.Screen component={WorkoutPlan} name="WorkoutPlan" />
-      <Stack.Screen component={WorkoutTemplate} name="WorkoutTemplate" />
+      <Stack.Screen component={CustomizeTemplate} name="CustomizeTemplate" />
     </Stack.Navigator>
   );
 };

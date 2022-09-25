@@ -1,14 +1,15 @@
 import { StyleProp, TextStyle, ViewStyle } from "react-native";
 
+// style types
 type StyleProperty = StyleProp<ViewStyle>;
 type TextStyleProperty = StyleProp<TextStyle>;
-export { StyleProperty, TextStyleProperty };
-
-// default props to components
 interface defaultProps {
   style?: StyleProperty;
 }
 
+export { StyleProperty, TextStyleProperty, defaultProps };
+
+// database types
 interface MuscleCategory {
   id: string;
   name: string;
@@ -35,4 +36,14 @@ interface TagType {
   name: string;
 }
 
-export { defaultProps, WorkoutTemplate, Exercise, MuscleCategory, TagType };
+export { WorkoutTemplate, Exercise, MuscleCategory, TagType };
+
+// navigation types
+type RootStackParamList = {
+  Home: undefined;
+  Settings: undefined;
+  WorkoutPlan: undefined;
+  CustomizeTemplate: { template?: WorkoutTemplate };
+};
+
+export { RootStackParamList };

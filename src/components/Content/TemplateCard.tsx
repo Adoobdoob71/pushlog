@@ -1,8 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
-import { Exercise, StyleProperty, TagType } from "utils/types";
+import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types";
 import Tag from "../Base/Tag";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
   tags: TagType[];
   exercises: Exercise[];
   description?: string;
+  templateData: WorkoutTemplate;
   style?: StyleProperty;
 }
 
@@ -20,12 +22,22 @@ const TemplateCard: FC<Props> = ({
   tags,
   exercises,
   description,
+  templateData,
   style,
 }) => {
+  const navigation = useNavigation();
+  const navigateToCustomizeTemplate = () =>
+    navigation.navigate({
+      // @ts-ignore
+      name: "CustomizeTemplate",
+      // @ts-ignore
+      params: { template: templateData },
+    });
   return (
     <TouchableOpacity
       style={[stylesheet.templateCard, style, styles.rowCenter]}
       key={id}
+      onPress={navigateToCustomizeTemplate}
       activeOpacity={0.7}
     >
       <View style={{ flex: 1.5 }}>

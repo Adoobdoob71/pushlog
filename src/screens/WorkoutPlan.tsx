@@ -1,20 +1,13 @@
-import { FC, useContext, useState } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  KeyboardAvoidingView,
-} from "react-native";
+import { useContext } from "react";
+import { Text, View, StyleSheet, SafeAreaView } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { Button, TemplateCard } from "components/index";
-import CheckBox from "expo-checkbox";
 import workoutRoutine from "context/workoutTemplates";
 import { useWorkoutPlan } from "hooks/useWorkoutPlan";
 import * as NavigationBar from "expo-navigation-bar";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { FlatList, TextInput } from "react-native-gesture-handler";
 import { STATUSBAR_HEIGHT } from "utils/constants";
+import { useNavigation } from "@react-navigation/native";
 
 const WorkoutPlan = () => {
   const { templates } = useContext(workoutRoutine);
@@ -23,13 +16,19 @@ const WorkoutPlan = () => {
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
+  const navigation = useNavigation();
+
+  const navigateToCustomizeTemplate = () =>
+    /* @ts-ignore */
+    navigation.navigate({ name: "CustomizeTemplate" });
+
   return (
     <SafeAreaView style={[styles.flex, stylesheet.mainWrapper]}>
       <Text style={stylesheet.title} numberOfLines={1}>
         Your workout templates
       </Text>
       <Text style={stylesheet.subtitle} numberOfLines={1}>
-        Customize to your liking
+        In all their glory!
       </Text>
       <View style={stylesheet.searchBar}>
         <TextInput
@@ -39,88 +38,43 @@ const WorkoutPlan = () => {
           selectionColor={theme.colors.primary_3}
         />
       </View>
-      <ScrollView
+      <FlatList
+        data={templates}
         style={{
           marginVertical: sizes.SIZE_18,
         }}
         showsVerticalScrollIndicator={false}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
-      >
-        {/* {templates &&
-          Object.values(templates).map((value, index) => (
-            <Text key={value.id}>{value.name}</Text>
-          ))} */}
-
-        <View style={{ backgroundColor: theme.colors.background }}>
-          <Button
-            mode="text"
-            style={{
-              marginStart: "auto",
-              marginBottom: sizes.SIZE_8,
-              marginHorizontal: sizes.SIZE_20,
-            }}
-            icon="plus"
-            onPress={() => {}}
-          >
-            Add Template
-          </Button>
-        </View>
-        {[1, 2, 3, 4, 5].map(() => (
+        ListHeaderComponent={() => (
+          <View style={{ backgroundColor: theme.colors.background }}>
+            <Button
+              mode="text"
+              style={{
+                marginStart: "auto",
+                marginBottom: sizes.SIZE_8,
+                marginHorizontal: sizes.SIZE_20,
+              }}
+              icon="plus"
+              onPress={navigateToCustomizeTemplate}
+            >
+              Add Template
+            </Button>
+          </View>
+        )}
+        renderItem={({ item, index }) => (
           <TemplateCard
             style={{
               marginBottom: sizes.SIZE_18,
               marginHorizontal: sizes.SIZE_20,
             }}
-            name="Getting shredded"
-            id="5"
-            description="Amazing chest workout you should defenitely try!"
-            exercises={[
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-              {
-                id: 2,
-                name: "Bench Press",
-                image:
-                  "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-              },
-            ]}
-            tags={[
-              { id: "1", name: "chest" },
-              { id: "2", name: "triceps" },
-              { id: "3", name: "front delts" },
-            ]}
+            templateData={item}
+            key={index}
+            {...item}
+            tags={item.muscleCategories}
           />
-        ))}
-      </ScrollView>
+        )}
+      />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
         {templates && (
           <Button

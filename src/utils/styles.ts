@@ -84,7 +84,7 @@ const theme: typeof DarkTheme & {
     border: "#959595",
     text: "#fff",
     background_2: "#122027",
-    notification: ""
+    notification: "",
   },
 };
 
@@ -116,6 +116,17 @@ const styles = StyleSheet.create({
   text: {
     color: theme.colors.primary,
     fontWeight: "bold",
+  },
+  textInputWrapper: {
+    backgroundColor: "#132831",
+    borderRadius: sizes.SIZE_4,
+    paddingVertical: sizes.SIZE_6,
+    paddingHorizontal: sizes.SIZE_12,
+  },
+  textInput: {
+    textAlignVertical: "center",
+    color: theme.colors.text,
+    fontSize: fontSizes.FONT_12,
   },
 });
 
