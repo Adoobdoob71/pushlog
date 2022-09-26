@@ -29,6 +29,7 @@ function useApp() {
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
     try {
       const newTemplateArr = templates;
+      newTemplate.id = new Date().getTime().toString();
       newTemplateArr.push(newTemplate);
       const jsonArr = JSON.stringify(newTemplateArr);
       await AsyncStorage.setItem("@workoutTemplates", jsonArr);

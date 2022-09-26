@@ -4,6 +4,7 @@ import Settings from "screens/Settings";
 import WorkoutPlan from "screens/WorkoutPlan";
 import CustomizeTemplate from "screens/CustomizeTemplate";
 import { WorkoutTemplate, RootStackParamList } from "utils/types";
+import ExerciseInfo from "screens/ExerciseInfo";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -17,6 +18,7 @@ const StackNavigator = () => {
       <Stack.Screen component={Settings} name="Settings" />
       <Stack.Screen component={WorkoutPlan} name="WorkoutPlan" />
       <Stack.Screen component={CustomizeTemplate} name="CustomizeTemplate" />
+      <Stack.Screen component={ExerciseInfo} name="ExerciseInfo" />
     </Stack.Navigator>
   );
 };

@@ -17,6 +17,7 @@ interface MuscleCategory {
 
 interface Exercise {
   id: string;
+  exerciseNumber: number;
   name: string;
   description?: string;
   muscleCategories?: MuscleCategory[];
@@ -36,7 +37,16 @@ interface TagType {
   name: string;
 }
 
-export { WorkoutTemplate, Exercise, MuscleCategory, TagType };
+interface ExerciseSet {
+  id: string;
+  exerciseNumber: number;
+  exerciseId: string;
+  setNumber: number;
+  reps: number;
+  weight: number;
+}
+
+export { WorkoutTemplate, Exercise, MuscleCategory, TagType, ExerciseSet };
 
 // navigation types
 type RootStackParamList = {
@@ -44,6 +54,7 @@ type RootStackParamList = {
   Settings: undefined;
   WorkoutPlan: undefined;
   CustomizeTemplate: { template?: WorkoutTemplate };
+  ExerciseInfo: { exercise: Exercise };
 };
 
 export { RootStackParamList };

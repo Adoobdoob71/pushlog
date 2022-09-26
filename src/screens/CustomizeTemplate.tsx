@@ -28,7 +28,7 @@ const CustomizeTemplate: FC = () => {
             />
           </View>
         </View>
-        <View style={{ marginTop: sizes.SIZE_16 }}>
+        <View style={{ marginVertical: sizes.SIZE_16 }}>
           <Text style={stylesheet.textInputTitle}>Description</Text>
           <View style={styles.textInputWrapper}>
             <TextInput
@@ -44,7 +44,9 @@ const CustomizeTemplate: FC = () => {
         </View>
       </View>
       <FlatList
-        data={workout.exercises}
+        data={workout.exercises.concat(
+          workout.exercises.concat(workout.exercises.concat(workout.exercises))
+        )}
         contentContainerStyle={{ padding: sizes.SIZE_6 }}
         ListHeaderComponent={() => (
           <ScrollView style={stylesheet.tagList} horizontal>
@@ -73,6 +75,16 @@ const CustomizeTemplate: FC = () => {
               paddingHorizontal: sizes.SIZE_20,
             }}
           />
+        )}
+        ListFooterComponent={() => (
+          <Button
+            mode="text"
+            style={{ marginBottom: sizes.SIZE_12 }}
+            icon="plus"
+            onPress={() => {}}
+          >
+            Add Exercise
+          </Button>
         )}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
@@ -113,7 +125,7 @@ const stylesheet = StyleSheet.create({
     padding: sizes.SIZE_6,
   },
   tagList: {
-    paddingVertical: sizes.SIZE_16,
+    paddingBottom: sizes.SIZE_16,
     paddingHorizontal: sizes.SIZE_20,
     backgroundColor: theme.colors.background,
   },
