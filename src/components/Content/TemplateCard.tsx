@@ -7,7 +7,7 @@ import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types";
 import Tag from "../Base/Tag";
 
 interface Props {
-  id: string;
+  id?: string;
   name: string;
   tags: TagType[];
   exercises: Exercise[];

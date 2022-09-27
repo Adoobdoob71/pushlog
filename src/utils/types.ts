@@ -11,7 +11,7 @@ export { StyleProperty, TextStyleProperty, defaultProps };
 
 // database types
 interface MuscleCategory {
-  id: string;
+  id: number;
   name: string;
 }
 
@@ -22,10 +22,12 @@ interface Exercise {
   description?: string;
   muscleCategories?: MuscleCategory[];
   image?: string;
+  exerciseSets: Promise<ExerciseSet[]>;
+  when: Date;
 }
 
 interface WorkoutTemplate {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
   muscleCategories: MuscleCategory[];
@@ -33,7 +35,7 @@ interface WorkoutTemplate {
 }
 
 interface TagType {
-  id: string;
+  id: number;
   name: string;
 }
 
@@ -44,6 +46,7 @@ interface ExerciseSet {
   setNumber: number;
   reps: number;
   weight: number;
+  when: Date;
 }
 
 export { WorkoutTemplate, Exercise, MuscleCategory, TagType, ExerciseSet };

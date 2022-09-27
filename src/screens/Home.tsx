@@ -102,9 +102,9 @@ const Home = () => {
                 volume={{ sets: 4, reps: 12 }}
                 weight={15}
                 tags={[
-                  { id: "1", name: "chest" },
-                  { id: "2", name: "triceps" },
-                  { id: "3", name: "front delts" },
+                  { id: 1, name: "chest" },
+                  { id: 2, name: "triceps" },
+                  { id: 3, name: "front delts" },
                 ]}
                 style={{ marginBottom: sizes.SIZE_16, padding: sizes.SIZE_12 }}
               />
@@ -113,7 +113,7 @@ const Home = () => {
         )}
         onDayPress={updateChosenDay}
       />
-      <BottomSheet
+      {/* <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         keyboardBehavior="extend"
@@ -162,7 +162,7 @@ const Home = () => {
             )}
           />
         </View>
-      </BottomSheet>
+      </BottomSheet> */}
     </SafeAreaView>
   );
 };
