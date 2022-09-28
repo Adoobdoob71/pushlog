@@ -12,6 +12,12 @@ const CustomizeTemplate: FC = () => {
 
   return (
     <SafeAreaView style={stylesheet.mainWrapper}>
+      <Text style={stylesheet.title} numberOfLines={1}>
+        Customize your workout
+      </Text>
+      <Text style={stylesheet.subtitle} numberOfLines={1}>
+        What are we hitting?
+      </Text>
       <View style={stylesheet.inputsWrapper}>
         <View>
           <Text style={stylesheet.textInputTitle}>Title</Text>
@@ -44,9 +50,7 @@ const CustomizeTemplate: FC = () => {
         </View>
       </View>
       <FlatList
-        data={workout.exercises.concat(
-          workout.exercises.concat(workout.exercises.concat(workout.exercises))
-        )}
+        data={workout.exercises}
         contentContainerStyle={{ padding: sizes.SIZE_6 }}
         ListHeaderComponent={() => (
           <ScrollView style={stylesheet.tagList} horizontal>
@@ -60,6 +64,7 @@ const CustomizeTemplate: FC = () => {
             ))}
           </ScrollView>
         )}
+        style={{ marginBottom: sizes.SIZE_12 }}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={false}
@@ -67,9 +72,6 @@ const CustomizeTemplate: FC = () => {
           <ExerciseCard
             {...item}
             key={index}
-            volume={{ sets: 4, reps: 12 }}
-            weight={15}
-            tags={item.muscleCategories}
             style={{
               marginBottom: sizes.SIZE_16,
               paddingHorizontal: sizes.SIZE_20,
@@ -114,9 +116,23 @@ const stylesheet = StyleSheet.create({
     backgroundColor: theme.colors.background,
     flex: 1,
   },
+  title: {
+    fontSize: fontSizes.FONT_24,
+    fontWeight: "bold",
+    color: theme.colors.primary,
+    alignSelf: "center",
+  },
+  subtitle: {
+    fontSize: fontSizes.FONT_14,
+    color: theme.colors.border,
+    fontWeight: "bold",
+    marginTop: sizes.SIZE_18,
+    alignSelf: "center",
+  },
   inputsWrapper: {
     justifyContent: "space-around",
     marginHorizontal: sizes.SIZE_28,
+    marginTop: sizes.SIZE_16,
   },
   textInputTitle: {
     fontSize: fontSizes.FONT_10,

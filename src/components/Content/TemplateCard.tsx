@@ -13,6 +13,8 @@ interface Props {
   exercises: Exercise[];
   description?: string;
   templateData: WorkoutTemplate;
+  onPress?: () => void;
+  onLongPress?: () => void;
   style?: StyleProperty;
 }
 
@@ -23,6 +25,8 @@ const TemplateCard: FC<Props> = ({
   exercises,
   description,
   templateData,
+  onPress,
+  onLongPress,
   style,
 }) => {
   const navigation = useNavigation();
@@ -37,7 +41,8 @@ const TemplateCard: FC<Props> = ({
     <TouchableOpacity
       style={[stylesheet.templateCard, style, styles.rowCenter]}
       key={id}
-      onPress={navigateToCustomizeTemplate}
+      onPress={onPress ? onPress : navigateToCustomizeTemplate}
+      onLongPress={onLongPress}
       activeOpacity={0.7}
     >
       <View style={{ flex: 1.5 }}>

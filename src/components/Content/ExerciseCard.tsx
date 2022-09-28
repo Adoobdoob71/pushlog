@@ -1,67 +1,82 @@
+import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
-import { StyleProperty, TagType } from "utils/types";
+import {
+  StyleProperty,
+  TagType,
+  MuscleCategory,
+  ExerciseSet,
+} from "utils/types";
 import Tag from "../Base/Tag";
 
 interface Props {
-  image?: string;
+  id: string;
+  exerciseNumber: number;
   name: string;
-  volume?: { sets: number; reps: number };
-  weight?: number;
-  tags: TagType[];
+  description?: string;
+  muscleCategories: MuscleCategory[];
+  image?: string;
+  exerciseSets?: Promise<ExerciseSet[]>;
+  when: Date;
   style?: StyleProperty;
 }
 
 const ExerciseCard: FC<Props> = ({
-  image,
+  id,
+  exerciseNumber,
   name,
-  volume,
-  weight,
-  tags,
+  description,
+  muscleCategories,
+  image,
+  exerciseSets,
+  when,
   style,
 }) => {
+  const navigation = useNavigation();
+
+  const navigateToExerciseInfo = () =>
+    /* @ts-ignore */
+    navigation.navigate("ExerciseInfo", { params: {} });
   return (
-    <View style={[styles.rowCenter, style]}>
-      <View style={stylesheet.exerciseImageBackground}>
-        <Image
-          source={{ uri: image }}
-          resizeMode="contain"
-          style={stylesheet.exerciseImage}
-        />
-      </View>
-      <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
-        <Text style={stylesheet.exerciseName}>{name}</Text>
-        <Text style={stylesheet.sets}>
-          {volume.sets} sets of {volume.reps}
-        </Text>
-        <Text style={stylesheet.exerciseWeight}>Weight: {weight}kgs</Text>
-        <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
-          {tags.slice(0, 2).map(({ id, name }) => (
-            <Tag
-              key={id}
-              text={name}
-              backgroundColor={theme.colors.background_2}
-              onRemove={() => {}}
-              style={{ marginEnd: sizes.SIZE_8 }}
-            />
-          ))}
-          {tags.length > 2 && (
-            <View style={stylesheet.tagNumberPlusWrapper}>
-              <Text style={stylesheet.tagNumberPlus}>
-                {"+ " + `${tags.length - 2}`}
-              </Text>
-            </View>
-          )}
+    <TouchableOpacity onPress={navigateToExerciseInfo}>
+      <View style={[styles.rowCenter, style]}>
+        <View style={stylesheet.exerciseImageBackground}>
+          <Image
+            source={{ uri: image }}
+            resizeMode="contain"
+            style={stylesheet.exerciseImage}
+          />
+        </View>
+        <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
+          <Text style={stylesheet.exerciseName}>{name}</Text>
+          <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
+            {muscleCategories.slice(0, 2).map(({ id, name }) => (
+              <Tag
+                key={id}
+                text={name}
+                backgroundColor={theme.colors.background_2}
+                onRemove={() => {}}
+                style={{ marginEnd: sizes.SIZE_8 }}
+              />
+            ))}
+            {muscleCategories.length > 2 && (
+              <View style={stylesheet.tagNumberPlusWrapper}>
+                <Text style={stylesheet.tagNumberPlus}>
+                  {"+ " + `${muscleCategories.length - 2}`}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 const stylesheet = StyleSheet.create({
   exerciseImageBackground: {
-    backgroundColor: `${theme.colors.card}50`,
+    backgroundColor: `${theme.colors.primary}30`,
     padding: sizes.SIZE_8,
     borderRadius: sizes.SIZE_8,
   },

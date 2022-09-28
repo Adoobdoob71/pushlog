@@ -16,9 +16,10 @@ import BottomSheet, {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import { FlatList } from "react-native-gesture-handler";
-import { useMemo } from "react";
 import { useContext } from "react";
 import workoutTemplates from "context/workoutTemplates";
+import { WorkoutTemplate } from "utils/types";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Home = () => {
   const {
@@ -28,6 +29,8 @@ const Home = () => {
     bottomSheetRef,
     snapPoints,
     handlePresentModalPress,
+    activeTemplates,
+    updateActiveTemplates,
   } = useHome();
 
   const { templates, addTemplate } = useContext(workoutTemplates);
@@ -43,6 +46,10 @@ const Home = () => {
     indicatorColor: theme.colors.primary,
     selectedDayBackgroundColor: theme.colors.primary,
     dotColor: theme.colors.primary,
+    textDayFontWeight: "bold",
+    textDayHeaderFontWeight: "bold",
+    textMonthFontWeight: "bold",
+    todayButtonFontWeight: "bold",
   };
 
   const navigation = useNavigation();
@@ -50,7 +57,16 @@ const Home = () => {
   // @ts-ignore
   const goToSettings = () => navigation.navigate({ name: "Settings" });
 
-  const noTemplates = templates.length === 0;
+  const noTemplates = activeTemplates.length === 0;
+
+  const navigateToCustomizeTemplate = (template: WorkoutTemplate) =>
+    // @ts-ignore
+    navigation.navigate({
+      // @ts-ignore
+      name: "CustomizeTemplate",
+      // @ts-ignore
+      params: { template: template },
+    });
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -71,6 +87,7 @@ const Home = () => {
         }
       />
       <Agenda
+        // @ts-ignore
         theme={agendaTheme}
         pastScrollRange={18}
         futureScrollRange={18}
@@ -85,35 +102,33 @@ const Home = () => {
             style={[styles.flex, stylesheet.dayWrapper]}
             contentContainerStyle={noTemplates && { flexGrow: 1 }}
           >
-            {noTemplates ? (
+            {activeTemplates.length === 0 ? (
               <View style={[styles.flex, styles.center]}>
-                <Button
-                  mode="filled"
-                  style={{ marginBottom: sizes.SIZE_28 }}
-                  onPress={handlePresentModalPress}
-                >
-                  Choose a workout
-                </Button>
+                <MaterialCommunityIcons
+                  name="sleep"
+                  color={theme.colors.border}
+                  size={sizes.SIZE_40}
+                />
+                <Text style={stylesheet.noTemplatesText}>
+                  At last, a rest day
+                </Text>
               </View>
             ) : (
-              <ExerciseCard
-                name="Bench Press"
-                image="https://wger.de/media/exercise-images/192/Bench-press-1.png"
-                volume={{ sets: 4, reps: 12 }}
-                weight={15}
-                tags={[
-                  { id: 1, name: "chest" },
-                  { id: 2, name: "triceps" },
-                  { id: 3, name: "front delts" },
-                ]}
-                style={{ marginBottom: sizes.SIZE_16, padding: sizes.SIZE_12 }}
-              />
+              activeTemplates.map((template) =>
+                template.exercises.map((item) => (
+                  <ExerciseCard
+                    {...item}
+                    key={item.id}
+                    style={{ padding: sizes.SIZE_8 }}
+                  />
+                ))
+              )
             )}
           </ScrollView>
         )}
         onDayPress={updateChosenDay}
       />
-      {/* <BottomSheet
+      <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         keyboardBehavior="extend"
@@ -128,7 +143,10 @@ const Home = () => {
           />
         )}
         handleIndicatorStyle={{ backgroundColor: theme.colors.primary }}
-        backgroundStyle={{ backgroundColor: theme.colors.background }}
+        backgroundStyle={{
+          backgroundColor: theme.colors.background,
+        }}
+        containerStyle={{ zIndex: 2 }}
       >
         <View style={{ paddingVertical: sizes.SIZE_12 }}>
           <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
@@ -155,6 +173,9 @@ const Home = () => {
                   marginBottom: sizes.SIZE_18,
                   marginHorizontal: sizes.SIZE_20,
                 }}
+                key={index}
+                onPress={() => updateActiveTemplates(item)}
+                onLongPress={() => navigateToCustomizeTemplate(item)}
                 templateData={item}
                 {...item}
                 tags={item.muscleCategories}
@@ -162,7 +183,23 @@ const Home = () => {
             )}
           />
         </View>
-      </BottomSheet> */}
+      </BottomSheet>
+      <IconButton
+        name="pencil"
+        color={theme.colors.text}
+        onPress={handlePresentModalPress}
+        size={sizes.SIZE_24}
+        style={{
+          backgroundColor: theme.colors.primary,
+          position: "absolute",
+          bottom: sizes.SIZE_24,
+          end: sizes.SIZE_24,
+          padding: sizes.SIZE_10,
+          borderRadius: sizes.SIZE_8,
+          elevation: sizes.SIZE_4,
+          zIndex: 1,
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -181,6 +218,11 @@ const stylesheet = StyleSheet.create({
   dayWrapper: {
     backgroundColor: theme.colors.background,
     padding: sizes.SIZE_6,
+  },
+  noTemplatesText: {
+    fontWeight: "bold",
+    color: theme.colors.border,
+    fontSize: fontSizes.FONT_14,
   },
   bottomSheetTitle: {
     color: theme.colors.primary,

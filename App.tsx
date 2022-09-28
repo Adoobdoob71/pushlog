@@ -41,6 +41,7 @@ export default function App() {
                 borderLeftWidth: sizes.SIZE_8,
                 borderRadius: sizes.SIZE_8,
                 backgroundColor: "transparent",
+                elevation: sizes.SIZE_4,
               }}
               text1Style={{
                 color: theme.colors.text,
@@ -51,7 +52,7 @@ export default function App() {
                 fontSize: fontSizes.FONT_12,
               }}
               contentContainerStyle={{
-                backgroundColor: theme.colors.card,
+                backgroundColor: theme.colors.background_2,
                 borderTopRightRadius: sizes.SIZE_8,
                 borderBottomRightRadius: sizes.SIZE_8,
               }}
@@ -65,6 +66,7 @@ export default function App() {
                 borderLeftWidth: sizes.SIZE_8,
                 borderRadius: sizes.SIZE_8,
                 backgroundColor: "transparent",
+                elevation: sizes.SIZE_4,
               }}
               text1Style={{
                 color: theme.colors.text,
@@ -75,7 +77,7 @@ export default function App() {
                 fontSize: fontSizes.FONT_12,
               }}
               contentContainerStyle={{
-                backgroundColor: theme.colors.card,
+                backgroundColor: theme.colors.background_2,
                 borderTopRightRadius: sizes.SIZE_8,
                 borderBottomRightRadius: sizes.SIZE_8,
               }}

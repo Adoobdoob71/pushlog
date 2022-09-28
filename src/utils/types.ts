@@ -20,7 +20,7 @@ interface Exercise {
   exerciseNumber: number;
   name: string;
   description?: string;
-  muscleCategories?: MuscleCategory[];
+  muscleCategories: MuscleCategory[];
   image?: string;
   exerciseSets: Promise<ExerciseSet[]>;
   when: Date;
