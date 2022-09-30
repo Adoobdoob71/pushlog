@@ -29,7 +29,7 @@ function useApp() {
 
   useEffect(() => {
     const dataSource = new DataSource({
-      database: "ten22",
+      database: "f",
       driver: require("expo-sqlite"),
       entities: [Workout, Exercise, MuscleCategory, ExerciseSet],
       synchronize: true, // DISABLE WHEN PRODUCTION IS ON!
@@ -44,36 +44,11 @@ function useApp() {
     if (dbConnector) readTemplates();
   }, [dbConnector]);
 
+  useEffect(() => console.log(templates), [templates]);
+
   const readTemplates = async () => {
     const templatesData = await dbConnector.manager.find(Workout);
     setTemplates(templatesData);
-    console.log(templatesData);
-    if (templatesData.length === 0) {
-      const muscleCategory1 = dbConnector.manager.create(MuscleCategory, {
-        id: 2,
-        name: "chest",
-      });
-      const muscleCategory2 = dbConnector.manager.create(MuscleCategory, {
-        id: 3,
-        name: "triceps",
-      });
-      const muscleCategory3 = dbConnector.manager.create(MuscleCategory, {
-        id: 4,
-        name: "front delts",
-      });
-      const exercise = dbConnector.manager.create(Exercise, {
-        name: "Bench Press",
-        exerciseNumber: 192,
-        muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-        image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-      });
-      await addTemplate({
-        name: "Turtle Back",
-        description: "Lats babyyyyyyy",
-        exercises: [exercise],
-        muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-      });
-    }
   };
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {

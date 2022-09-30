@@ -4,9 +4,8 @@ import {
   Column,
   OneToMany,
   CreateDateColumn,
-  PrimaryColumn,
-  JoinColumn,
   ManyToOne,
+  JoinColumn,
 } from "typeorm";
 
 @Entity()
@@ -74,22 +73,31 @@ export class Exercise {
   @JoinColumn()
   exerciseSets: Promise<ExerciseSet[]>;
 
-  @ManyToOne((type) => Workout, (workout) => workout.exercises)
+  @ManyToOne((type) => Workout, (workout) => workout.exercises, {
+    onDelete: "CASCADE",
+  })
   workout: Workout;
 }
 
 @Entity()
 export class MuscleCategory {
-  @PrimaryColumn({ unique: true })
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
+
+  @Column()
+  muscleId: number;
 
   @Column()
   name: string;
 
-  @ManyToOne((type) => Workout, (workout) => workout.muscleCategories)
+  @ManyToOne((type) => Workout, (workout) => workout.muscleCategories, {
+    onDelete: "CASCADE",
+  })
   workout: Workout;
 
-  @ManyToOne((type) => Exercise, (exercise) => exercise.muscleCategories)
+  @ManyToOne((type) => Exercise, (exercise) => exercise.muscleCategories, {
+    onDelete: "CASCADE",
+  })
   exercise: Exercise;
 }
 

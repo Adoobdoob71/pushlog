@@ -11,7 +11,8 @@ export { StyleProperty, TextStyleProperty, defaultProps };
 
 // database types
 interface MuscleCategory {
-  id: number;
+  id?: string;
+  muscleId: number;
   name: string;
 }
 
@@ -35,7 +36,8 @@ interface WorkoutTemplate {
 }
 
 interface TagType {
-  id: number;
+  id?: string;
+  muscleId: number;
   name: string;
 }
 

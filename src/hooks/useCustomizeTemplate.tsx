@@ -19,9 +19,9 @@ function useCustomizeTemplate() {
 
   useEffect(() => {
     const newTags = workout.exercises.reduce(
-      (previousValue, currentValue, index, array) => {
+      (previousValue, currentValue, _index, _array) => {
         const newTagsArr = currentValue.muscleCategories.filter(
-          (val) => !previousValue.includes(val)
+          (val) => !previousValue.some((item) => item.muscleId === val.muscleId)
         );
         const nextValue = previousValue.concat(newTagsArr);
         return nextValue;

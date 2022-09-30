@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { useHome } from "hooks/useHome";
 import { Agenda } from "react-native-calendars";
@@ -7,6 +7,7 @@ import {
   ExerciseCard,
   Header,
   IconButton,
+  Tag,
   TemplateCard,
 } from "components/index";
 import { useNavigation } from "@react-navigation/native";
@@ -15,7 +16,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { useContext } from "react";
 import workoutTemplates from "context/workoutTemplates";
 import { WorkoutTemplate } from "utils/types";
@@ -30,7 +31,8 @@ const Home = () => {
     snapPoints,
     handlePresentModalPress,
     activeTemplates,
-    updateActiveTemplates,
+    addActiveTemplates,
+    removeActiveTemplates,
   } = useHome();
 
   const { templates, addTemplate } = useContext(workoutTemplates);
@@ -166,20 +168,55 @@ const Home = () => {
             ListFooterComponent={() => (
               <View style={{ height: sizes.SIZE_100 }}></View>
             )}
+            nestedScrollEnabled
+            stickyHeaderIndices={[0]}
+            stickyHeaderHiddenOnScroll
+            ListHeaderComponent={() => (
+              <View
+                style={stylesheet.tagList}
+                onStartShouldSetResponder={() => true}
+              >
+                <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    marginTop: sizes.SIZE_10,
+                    marginBottom: sizes.SIZE_20,
+                  }}
+                  horizontal
+                >
+                  <View style={{ width: sizes.SIZE_16 }}></View>
+                  {activeTemplates.map((item, _index) => (
+                    <Tag
+                      text={item.name}
+                      backgroundColor={theme.colors.background_2}
+                      key={item.id}
+                      onRemove={() => removeActiveTemplates(item.id)}
+                      style={{ marginEnd: sizes.SIZE_8 }}
+                    />
+                  ))}
+                  <View style={{ width: sizes.SIZE_16 }}></View>
+                </ScrollView>
+              </View>
+            )}
             keyExtractor={(item) => item.id}
             renderItem={({ item, index }) => (
-              <TemplateCard
-                style={{
-                  marginBottom: sizes.SIZE_18,
-                  marginHorizontal: sizes.SIZE_20,
-                }}
-                key={index}
-                onPress={() => updateActiveTemplates(item)}
-                onLongPress={() => navigateToCustomizeTemplate(item)}
-                templateData={item}
-                {...item}
-                tags={item.muscleCategories}
-              />
+              <View
+                style={[
+                  stylesheet.templateActive,
+                  activeTemplates.some((tem) => tem.id === item.id) && {
+                    borderColor: theme.colors.primary,
+                  },
+                ]}
+              >
+                <TemplateCard
+                  key={index}
+                  onPress={() => addActiveTemplates(item)}
+                  onLongPress={() => navigateToCustomizeTemplate(item)}
+                  templateData={item}
+                  {...item}
+                  tags={item.muscleCategories}
+                />
+              </View>
             )}
           />
         </View>
@@ -224,6 +261,17 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.border,
     fontSize: fontSizes.FONT_14,
   },
+  templateActive: {
+    borderColor: "transparent",
+    borderWidth: sizes.SIZE_2,
+    borderRadius: sizes.SIZE_8,
+    marginBottom: sizes.SIZE_18,
+    marginHorizontal: sizes.SIZE_20,
+  },
+  tagList: {
+    backgroundColor: theme.colors.background,
+    flex: 1,
+  },
   bottomSheetTitle: {
     color: theme.colors.primary,
     fontWeight: "bold",
@@ -237,7 +285,7 @@ const stylesheet = StyleSheet.create({
     borderRadius: sizes.SIZE_4,
     paddingVertical: sizes.SIZE_6,
     paddingHorizontal: sizes.SIZE_12,
-    marginBottom: sizes.SIZE_24,
+    marginBottom: sizes.SIZE_10,
   },
   bottomSheetSearchBarInput: {
     textAlignVertical: "center",

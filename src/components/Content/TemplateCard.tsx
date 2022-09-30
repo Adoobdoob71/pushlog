@@ -68,14 +68,16 @@ const TemplateCard: FC<Props> = ({
           )}
         </View>
       </View>
-      <Image
-        source={{
-          uri: exercises[Math.trunc(Math.random() * (exercises.length - 1))]
-            ?.image,
-        }}
-        style={stylesheet.templateImage}
-        resizeMode="contain"
-      />
+      {exercises[0].image && (
+        <Image
+          source={{
+            uri: exercises[Math.trunc(Math.random() * (exercises.length - 1))]
+              ?.image,
+          }}
+          style={stylesheet.templateImage}
+          resizeMode="contain"
+        />
+      )}
     </TouchableOpacity>
   );
 };
