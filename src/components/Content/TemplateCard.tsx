@@ -71,8 +71,7 @@ const TemplateCard: FC<Props> = ({
       {exercises[0].image && (
         <Image
           source={{
-            uri: exercises[Math.trunc(Math.random() * (exercises.length - 1))]
-              ?.image,
+            uri: exercises[0].image,
           }}
           style={stylesheet.templateImage}
           resizeMode="contain"

@@ -3,9 +3,9 @@ import { WorkoutTemplate } from "utils/types";
 
 export default createContext<{
   templates: (WorkoutTemplate | null)[];
-  addTemplate: (newTemplate: WorkoutTemplate) => void;
-  removeTemplate: (templateId: string) => void;
-  modifyTemplate: (modifiedTemplate: WorkoutTemplate) => void;
+  addTemplate: (newTemplate: WorkoutTemplate) => Promise<void>;
+  removeTemplate: (templateId: string) => Promise<void>;
+  modifyTemplate: (modifiedTemplate: WorkoutTemplate) => Promise<void>;
 }>({
   templates: [],
   addTemplate: async (newTemplate: WorkoutTemplate) => {},

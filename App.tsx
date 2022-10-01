@@ -62,7 +62,7 @@ export default function App() {
             <BaseToast
               {...props}
               style={{
-                borderLeftColor: "#FF8585",
+                borderLeftColor: theme.colors.danger,
                 borderLeftWidth: sizes.SIZE_8,
                 borderRadius: sizes.SIZE_8,
                 backgroundColor: "transparent",

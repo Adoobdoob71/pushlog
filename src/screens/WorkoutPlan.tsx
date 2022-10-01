@@ -8,19 +8,30 @@ import * as NavigationBar from "expo-navigation-bar";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { STATUSBAR_HEIGHT } from "utils/constants";
 import { useNavigation } from "@react-navigation/native";
+import { WorkoutTemplate } from "utils/types";
 
 const WorkoutPlan = () => {
   const { templates } = useContext(workoutRoutine);
 
-  const { goBack, submitChanges } = useWorkoutPlan();
+  const {
+    goBack,
+    submitChanges,
+    templatesForRemoval,
+    toggleTemplateForRemoval,
+    deleteTemplates,
+  } = useWorkoutPlan();
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
 
   const navigation = useNavigation();
 
-  const navigateToCustomizeTemplate = () =>
-    /* @ts-ignore */
-    navigation.navigate({ name: "CustomizeTemplate" });
+  const navigateToCustomizeTemplate = (item?: WorkoutTemplate) =>
+    navigation.navigate({
+      // @ts-ignore
+      name: "CustomizeTemplate",
+      // @ts-ignore
+      params: { template: item },
+    });
 
   return (
     <SafeAreaView style={[styles.flex, stylesheet.mainWrapper]}>
@@ -47,7 +58,28 @@ const WorkoutPlan = () => {
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
         ListHeaderComponent={() => (
-          <View style={{ backgroundColor: theme.colors.background }}>
+          <View
+            style={[
+              styles.rowCenter,
+              {
+                justifyContent: "space-between",
+                backgroundColor: theme.colors.background,
+              },
+            ]}
+          >
+            {templatesForRemoval.length > 0 && (
+              <Button
+                mode="text"
+                style={{
+                  marginBottom: sizes.SIZE_8,
+                  marginHorizontal: sizes.SIZE_20,
+                }}
+                icon="trash-can"
+                onPress={deleteTemplates}
+              >
+                Delete
+              </Button>
+            )}
             <Button
               mode="text"
               style={{
@@ -56,41 +88,35 @@ const WorkoutPlan = () => {
                 marginHorizontal: sizes.SIZE_20,
               }}
               icon="plus"
-              onPress={navigateToCustomizeTemplate}
+              onPress={() => navigateToCustomizeTemplate(undefined)}
             >
               Add Template
             </Button>
           </View>
         )}
         renderItem={({ item, index }) => (
-          <TemplateCard
-            style={{
-              marginBottom: sizes.SIZE_18,
-              marginHorizontal: sizes.SIZE_20,
-            }}
-            templateData={item}
-            key={index}
-            {...item}
-            tags={item.muscleCategories}
-          />
+          <View
+            style={[
+              stylesheet.templateActive,
+              templatesForRemoval.some((temp) => temp === item.id) && {
+                borderColor: theme.colors.danger,
+              },
+            ]}
+          >
+            <TemplateCard
+              key={item.id}
+              onPress={() => navigateToCustomizeTemplate(item)}
+              onLongPress={() => toggleTemplateForRemoval(item.id)}
+              templateData={item}
+              {...item}
+              tags={item.muscleCategories}
+            />
+          </View>
         )}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        {templates && (
-          <Button
-            mode="text"
-            onPress={goBack}
-            style={{ alignSelf: "flex-end" }}
-          >
-            Cancel
-          </Button>
-        )}
-        <Button
-          mode="text"
-          onPress={submitChanges}
-          style={{ marginStart: "auto" }}
-        >
-          Done
+        <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
+          Back
         </Button>
       </View>
     </SafeAreaView>
@@ -128,6 +154,13 @@ const stylesheet = StyleSheet.create({
     textAlignVertical: "center",
     color: theme.colors.text,
     fontSize: fontSizes.FONT_12,
+  },
+  templateActive: {
+    borderColor: "transparent",
+    borderWidth: sizes.SIZE_2,
+    borderRadius: sizes.SIZE_8,
+    marginBottom: sizes.SIZE_18,
+    marginHorizontal: sizes.SIZE_20,
   },
   buttonView: {
     justifyContent: "space-between",

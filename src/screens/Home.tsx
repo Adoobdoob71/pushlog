@@ -24,8 +24,6 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Home = () => {
   const {
-    currentDay,
-    chosenDay,
     updateChosenDay,
     bottomSheetRef,
     snapPoints,
@@ -35,7 +33,7 @@ const Home = () => {
     removeActiveTemplates,
   } = useHome();
 
-  const { templates, addTemplate } = useContext(workoutTemplates);
+  const { templates } = useContext(workoutTemplates);
 
   const agendaTheme = {
     calendarBackground: theme.colors.card,

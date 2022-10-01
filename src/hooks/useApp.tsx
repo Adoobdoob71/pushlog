@@ -44,8 +44,6 @@ function useApp() {
     if (dbConnector) readTemplates();
   }, [dbConnector]);
 
-  useEffect(() => console.log(templates), [templates]);
-
   const readTemplates = async () => {
     const templatesData = await dbConnector.manager.find(Workout);
     setTemplates(templatesData);
@@ -61,7 +59,6 @@ function useApp() {
         text1: "Amazing!",
         text2: "Added the new workout template 🎉",
       });
-      return temp;
     } catch (error) {
       Toast.show({
         type: "error",

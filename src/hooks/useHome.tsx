@@ -1,4 +1,11 @@
-import { useCallback, useContext, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { DateData } from "react-native-calendars";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { WorkoutTemplate } from "utils/types";
@@ -15,45 +22,10 @@ function useHome() {
   const snapPoints = useMemo(() => ["50%", "85%"], []);
 
   const { connector } = useContext(sqliteDB);
-  const { addTemplate } = useContext(workoutTemplates);
+  const { templates, addTemplate, removeTemplate } =
+    useContext(workoutTemplates);
 
   const handlePresentModalPress = () => {
-    // const muscleCategory1 = {
-    //   muscleId: 5,
-    //   name: "lats",
-    // };
-    // const muscleCategory2 = {
-    //   muscleId: 6,
-    //   name: "biceps",
-    // };
-    // const muscleCategory3 = {
-    //   muscleId: 7,
-    //   name: "rear-delts",
-    // };
-    // const exercise = connector?.manager.create(Exercise, {
-    //   name: "Bent Over Barbell Row",
-    //   exerciseNumber: 412,
-    //   muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-    //   image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-    // });
-    // const exercise2 = connector?.manager.create(Exercise, {
-    //   name: "Chin Ups",
-    //   exerciseNumber: 181,
-    //   muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-    //   image: "https://wger.de/media/exercise-images/181/Chin-ups-2.png",
-    // });
-    // const exercise3 = connector?.manager.create(Exercise, {
-    //   name: "Muscle Up",
-    //   exerciseNumber: 626,
-    //   muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-    //   image: "https://wger.de/media/exercise-images/192/Bench-press-1.png",
-    // });
-    // addTemplate({
-    //   name: "Swing dem wings",
-    //   description: "Grow a big back with biceps along the way",
-    //   exercises: [exercise, exercise2, exercise3],
-    //   muscleCategories: [muscleCategory1, muscleCategory2, muscleCategory3],
-    // });
     bottomSheetRef.current?.snapToIndex(0);
   };
 
@@ -68,6 +40,13 @@ function useHome() {
   const [chosenDay, setChosenDay] = useState<DateData>(currentDay);
 
   const updateChosenDay = (day: DateData) => setChosenDay(day);
+
+  useEffect(() => {
+    activeTemplates.forEach((item) => {
+      const exists = templates.some((tem) => tem.id === item.id);
+      if (!exists) removeActiveTemplates(item.id);
+    });
+  }, [templates]);
 
   const removeActiveTemplates = (templateId: string) => {
     try {

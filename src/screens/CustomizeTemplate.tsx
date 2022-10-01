@@ -6,10 +6,27 @@ import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
 import { STATUSBAR_HEIGHT } from "utils/constants";
 import { useCustomizeTemplate } from "hooks/useCustomizeTemplate";
 
-const CustomizeTemplate: FC = () => {
-  const { tags, workout, templates, currentTemplate, goBack } =
-    useCustomizeTemplate();
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
 
+const CustomizeTemplate: FC = () => {
+  const {
+    tags,
+    workout,
+    templates,
+    goBack,
+    handleDescription,
+    handleName,
+    handlePresentModalPress,
+    bottomSheetRef,
+    snapPoints,
+    exercisesToAdd,
+    exercisesQueryData,
+    exerciseSearch,
+    changeExerciseQuery,
+  } = useCustomizeTemplate();
   return (
     <SafeAreaView style={stylesheet.mainWrapper}>
       <Text style={stylesheet.title} numberOfLines={1}>
@@ -29,7 +46,8 @@ const CustomizeTemplate: FC = () => {
               }
               placeholderTextColor={theme.colors.border}
               style={styles.textInput}
-              value={currentTemplate.name}
+              value={workout.name}
+              onChangeText={(value) => handleName(value)}
               selectionColor={theme.colors.primary_3}
             />
           </View>
@@ -42,8 +60,10 @@ const CustomizeTemplate: FC = () => {
                 templates[Math.trunc(Math.random() * templates.length - 1)]
                   ?.description
               }
+              value={workout.description}
               placeholderTextColor={theme.colors.border}
               style={styles.textInput}
+              onChangeText={(value) => handleDescription(value)}
               selectionColor={theme.colors.primary_3}
             />
           </View>
@@ -51,9 +71,13 @@ const CustomizeTemplate: FC = () => {
       </View>
       <FlatList
         data={workout.exercises}
-        contentContainerStyle={{ padding: sizes.SIZE_6 }}
+        contentContainerStyle={{ paddingVertical: sizes.SIZE_6 }}
         ListHeaderComponent={() => (
-          <ScrollView style={stylesheet.tagList} horizontal>
+          <ScrollView
+            style={stylesheet.tagList}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+          >
             {tags.map((item, index) => (
               <Tag
                 text={item.name}
@@ -62,6 +86,7 @@ const CustomizeTemplate: FC = () => {
                 style={{ marginEnd: sizes.SIZE_8 }}
               />
             ))}
+            <View style={{ width: sizes.SIZE_24 }}></View>
           </ScrollView>
         )}
         style={{ marginBottom: sizes.SIZE_12 }}
@@ -83,26 +108,94 @@ const CustomizeTemplate: FC = () => {
             mode="text"
             style={{ marginBottom: sizes.SIZE_12 }}
             icon="plus"
-            onPress={() => {}}
+            onPress={handlePresentModalPress}
           >
             Add Exercise
           </Button>
         )}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
-        {templates && (
-          <Button
-            mode="text"
-            onPress={goBack}
-            style={{ alignSelf: "flex-end" }}
-          >
-            Cancel
-          </Button>
-        )}
+        <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
+          Cancel
+        </Button>
         <Button mode="text" onPress={() => {}} style={{ marginStart: "auto" }}>
           Done
         </Button>
       </View>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        keyboardBehavior="extend"
+        enablePanDownToClose={true}
+        snapPoints={snapPoints}
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            {...props}
+            appearsOnIndex={0}
+            disappearsOnIndex={-1}
+            opacity={0.65}
+          />
+        )}
+        handleIndicatorStyle={{ backgroundColor: theme.colors.primary }}
+        backgroundStyle={{
+          backgroundColor: theme.colors.background,
+        }}
+      >
+        <View style={{ paddingVertical: sizes.SIZE_12 }}>
+          <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
+            Add exercises to your workout
+          </Text>
+          <View style={stylesheet.bottomSheetSearchBar}>
+            <BottomSheetTextInput
+              placeholder="Search any exercise..."
+              placeholderTextColor={theme.colors.border}
+              value={exerciseSearch}
+              onChangeText={changeExerciseQuery}
+              style={stylesheet.bottomSheetSearchBarInput}
+              selectionColor={theme.colors.primary_3}
+            />
+          </View>
+          <FlatList
+            data={exercisesQueryData}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={() => (
+              <View style={{ height: sizes.SIZE_100 }}></View>
+            )}
+            nestedScrollEnabled
+            stickyHeaderIndices={[0]}
+            stickyHeaderHiddenOnScroll
+            renderItem={() => null}
+            ListHeaderComponent={() => (
+              <View
+                style={stylesheet.tagList}
+                onStartShouldSetResponder={() => true}
+              >
+                <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    marginTop: sizes.SIZE_10,
+                    marginBottom: sizes.SIZE_20,
+                  }}
+                  horizontal
+                >
+                  <View style={{ width: sizes.SIZE_16 }}></View>
+                  {exercisesToAdd.map((item, _index) => (
+                    <Tag
+                      text={item.name}
+                      backgroundColor={theme.colors.background_2}
+                      key={item.id}
+                      // onRemove={() => removeExercisesToAdd(item.id)}
+                      style={{ marginEnd: sizes.SIZE_8 }}
+                    />
+                  ))}
+                  <View style={{ width: sizes.SIZE_16 }}></View>
+                </ScrollView>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      </BottomSheet>
     </SafeAreaView>
   );
 };
@@ -149,5 +242,25 @@ const stylesheet = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: sizes.SIZE_40,
     marginTop: "auto",
+  },
+  bottomSheetTitle: {
+    color: theme.colors.primary,
+    fontWeight: "bold",
+    fontSize: fontSizes.FONT_20,
+    alignSelf: "center",
+  },
+  bottomSheetSearchBar: {
+    backgroundColor: "#132831",
+    marginHorizontal: sizes.SIZE_36,
+    marginTop: sizes.SIZE_20,
+    borderRadius: sizes.SIZE_4,
+    paddingVertical: sizes.SIZE_6,
+    paddingHorizontal: sizes.SIZE_12,
+    marginBottom: sizes.SIZE_10,
+  },
+  bottomSheetSearchBarInput: {
+    textAlignVertical: "center",
+    color: theme.colors.text,
+    fontSize: fontSizes.FONT_12,
   },
 });

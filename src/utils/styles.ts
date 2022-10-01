@@ -71,6 +71,7 @@ const theme: typeof DarkTheme & {
     primary_2: string;
     primary_3: string;
     background_2: string;
+    danger: string;
   };
 } = {
   dark: true,
@@ -85,6 +86,7 @@ const theme: typeof DarkTheme & {
     text: "#fff",
     background_2: "#122027",
     notification: "",
+    danger: "#FF8585",
   },
 };
 

@@ -14,6 +14,7 @@ module.exports = function (api) {
             screens: "./src/screens",
             utils: "./src/utils",
             database: "./src/database",
+            api: "./src/api",
           },
         },
       ],
