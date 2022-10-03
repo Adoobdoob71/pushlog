@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Button, ExerciseCard, Tag } from "components/index";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
@@ -10,6 +10,7 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import workoutTemplates from "context/workoutTemplates";
 
 const CustomizeTemplate: FC = () => {
   const {
@@ -22,11 +23,17 @@ const CustomizeTemplate: FC = () => {
     handlePresentModalPress,
     bottomSheetRef,
     snapPoints,
-    exercisesToAdd,
     exercisesQueryData,
     exerciseSearch,
     changeExerciseQuery,
+    addExercise,
+    navigateToExerciseInfo,
+    toggleExerciseForRemoval,
+    exercisesForRemoval,
+    deleteExercises,
+    submitWorkout,
   } = useCustomizeTemplate();
+
   return (
     <SafeAreaView style={stylesheet.mainWrapper}>
       <Text style={stylesheet.title} numberOfLines={1}>
@@ -71,37 +78,67 @@ const CustomizeTemplate: FC = () => {
       </View>
       <FlatList
         data={workout.exercises}
-        contentContainerStyle={{ paddingVertical: sizes.SIZE_6 }}
         ListHeaderComponent={() => (
-          <ScrollView
-            style={stylesheet.tagList}
-            showsHorizontalScrollIndicator={false}
-            horizontal
+          <View
+            style={[
+              styles.rowCenter,
+              {
+                paddingBottom:
+                  exercisesForRemoval.length === 0 ? sizes.SIZE_10 : 0,
+                backgroundColor: theme.colors.background,
+              },
+            ]}
           >
-            {tags.map((item, index) => (
-              <Tag
-                text={item.name}
-                backgroundColor={theme.colors.background_2}
-                key={index}
-                style={{ marginEnd: sizes.SIZE_8 }}
-              />
-            ))}
-            <View style={{ width: sizes.SIZE_24 }}></View>
-          </ScrollView>
+            {exercisesForRemoval.length > 0 && (
+              <Button
+                mode="text"
+                style={{
+                  marginBottom: sizes.SIZE_8,
+                  marginHorizontal: sizes.SIZE_20,
+                }}
+                icon="trash-can"
+                onPress={deleteExercises}
+              >
+                Delete
+              </Button>
+            )}
+            <ScrollView
+              style={stylesheet.tagList}
+              showsHorizontalScrollIndicator={false}
+              horizontal
+            >
+              {tags.map((item, index) => (
+                <Tag
+                  text={item.name}
+                  backgroundColor={theme.colors.background_2}
+                  key={index}
+                  style={{ marginEnd: sizes.SIZE_8 }}
+                />
+              ))}
+              <View style={{ width: sizes.SIZE_24 }}></View>
+            </ScrollView>
+          </View>
         )}
         style={{ marginBottom: sizes.SIZE_12 }}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={false}
         renderItem={({ item, index }) => (
-          <ExerciseCard
-            {...item}
-            key={index}
-            style={{
-              marginBottom: sizes.SIZE_16,
-              paddingHorizontal: sizes.SIZE_20,
-            }}
-          />
+          <View
+            style={[
+              stylesheet.exerciseActive,
+              exercisesForRemoval.some((ex) => ex === item.exerciseNumber) && {
+                borderColor: theme.colors.danger,
+              },
+            ]}
+          >
+            <ExerciseCard
+              {...item}
+              key={index}
+              onPress={navigateToExerciseInfo}
+              onLongPress={() => toggleExerciseForRemoval(item.exerciseNumber)}
+            />
+          </View>
         )}
         ListFooterComponent={() => (
           <Button
@@ -118,7 +155,11 @@ const CustomizeTemplate: FC = () => {
         <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
           Cancel
         </Button>
-        <Button mode="text" onPress={() => {}} style={{ marginStart: "auto" }}>
+        <Button
+          mode="text"
+          onPress={submitWorkout}
+          style={{ marginStart: "auto" }}
+        >
           Done
         </Button>
       </View>
@@ -158,39 +199,21 @@ const CustomizeTemplate: FC = () => {
           <FlatList
             data={exercisesQueryData}
             showsVerticalScrollIndicator={false}
+            nestedScrollEnabled
+            renderItem={({ item, index }) => (
+              <ExerciseCard
+                {...item}
+                key={index}
+                onPress={() => addExercise(item)}
+                onLongPress={navigateToExerciseInfo}
+                style={{
+                  marginBottom: sizes.SIZE_24,
+                  marginHorizontal: sizes.SIZE_18,
+                }}
+              />
+            )}
             ListFooterComponent={() => (
               <View style={{ height: sizes.SIZE_100 }}></View>
-            )}
-            nestedScrollEnabled
-            stickyHeaderIndices={[0]}
-            stickyHeaderHiddenOnScroll
-            renderItem={() => null}
-            ListHeaderComponent={() => (
-              <View
-                style={stylesheet.tagList}
-                onStartShouldSetResponder={() => true}
-              >
-                <ScrollView
-                  showsHorizontalScrollIndicator={false}
-                  style={{
-                    marginTop: sizes.SIZE_10,
-                    marginBottom: sizes.SIZE_20,
-                  }}
-                  horizontal
-                >
-                  <View style={{ width: sizes.SIZE_16 }}></View>
-                  {exercisesToAdd.map((item, _index) => (
-                    <Tag
-                      text={item.name}
-                      backgroundColor={theme.colors.background_2}
-                      key={item.id}
-                      // onRemove={() => removeExercisesToAdd(item.id)}
-                      style={{ marginEnd: sizes.SIZE_8 }}
-                    />
-                  ))}
-                  <View style={{ width: sizes.SIZE_16 }}></View>
-                </ScrollView>
-              </View>
             )}
             keyExtractor={(item) => item.id}
           />
@@ -234,9 +257,15 @@ const stylesheet = StyleSheet.create({
     padding: sizes.SIZE_6,
   },
   tagList: {
-    paddingBottom: sizes.SIZE_16,
     paddingHorizontal: sizes.SIZE_20,
     backgroundColor: theme.colors.background,
+  },
+  exerciseActive: {
+    borderColor: "transparent",
+    borderWidth: sizes.SIZE_2,
+    borderRadius: sizes.SIZE_8,
+    marginBottom: sizes.SIZE_16,
+    marginHorizontal: sizes.SIZE_20,
   },
   buttonView: {
     justifyContent: "space-between",

@@ -17,14 +17,14 @@ interface MuscleCategory {
 }
 
 interface Exercise {
-  id: string;
+  id?: string;
   exerciseNumber: number;
   name: string;
   description?: string;
-  muscleCategories: MuscleCategory[];
+  muscleCategories?: MuscleCategory[];
   image?: string;
-  exerciseSets: Promise<ExerciseSet[]>;
-  when: Date;
+  exerciseSets?: Promise<ExerciseSet[]>;
+  when?: Date;
 }
 
 interface WorkoutTemplate {

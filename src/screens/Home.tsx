@@ -119,7 +119,10 @@ const Home = () => {
                   <ExerciseCard
                     {...item}
                     key={item.id}
-                    style={{ padding: sizes.SIZE_8 }}
+                    style={{
+                      padding: sizes.SIZE_8,
+                      marginBottom: sizes.SIZE_12,
+                    }}
                   />
                 ))
               )

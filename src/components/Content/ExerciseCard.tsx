@@ -11,14 +11,16 @@ import {
 import Tag from "../Base/Tag";
 
 interface Props {
-  id: string;
+  id?: string;
   exerciseNumber: number;
   name: string;
   description?: string;
-  muscleCategories: MuscleCategory[];
+  muscleCategories?: MuscleCategory[];
   image?: string;
   exerciseSets?: Promise<ExerciseSet[]>;
-  when: Date;
+  when?: Date;
+  onPress?: () => void;
+  onLongPress?: () => void;
   style?: StyleProperty;
 }
 
@@ -31,6 +33,8 @@ const ExerciseCard: FC<Props> = ({
   image,
   exerciseSets,
   when,
+  onPress,
+  onLongPress,
   style,
 }) => {
   const navigation = useNavigation();
@@ -39,24 +43,25 @@ const ExerciseCard: FC<Props> = ({
     /* @ts-ignore */
     navigation.navigate("ExerciseInfo", { params: {} });
   return (
-    <TouchableOpacity onPress={navigateToExerciseInfo}>
-      <View style={[styles.rowCenter, style]}>
-        <View style={stylesheet.exerciseImageBackground}>
-          <Image
-            source={{ uri: image }}
-            resizeMode="contain"
-            style={stylesheet.exerciseImage}
-          />
-        </View>
+    <TouchableOpacity
+      onLongPress={onLongPress}
+      onPress={onPress ? onPress : navigateToExerciseInfo}
+    >
+      <View style={[styles.rowCenter, style, stylesheet.exerciseBackground]}>
         <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
-          <Text style={stylesheet.exerciseName}>{name}</Text>
+          <Text
+            style={stylesheet.exerciseName}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {name}
+          </Text>
           <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
             {muscleCategories.slice(0, 2).map(({ id, name }) => (
               <Tag
                 key={id}
                 text={name}
                 backgroundColor={theme.colors.background_2}
-                onRemove={() => {}}
                 style={{ marginEnd: sizes.SIZE_8 }}
               />
             ))}
@@ -69,29 +74,46 @@ const ExerciseCard: FC<Props> = ({
             )}
           </View>
         </View>
+        {image && (
+          <View style={stylesheet.exerciseImageBackground}>
+            <Image
+              source={{ uri: image }}
+              resizeMode="contain"
+              style={stylesheet.exerciseImage}
+            />
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
 };
 
 const stylesheet = StyleSheet.create({
+  exerciseBackground: {
+    backgroundColor: "#132831",
+    borderRadius: sizes.SIZE_8,
+    paddingVertical: sizes.SIZE_6,
+    paddingEnd: sizes.SIZE_10,
+  },
   exerciseImageBackground: {
     backgroundColor: `${theme.colors.primary}30`,
     padding: sizes.SIZE_8,
     borderRadius: sizes.SIZE_8,
   },
   exerciseImage: {
-    width: sizes.SIZE_80,
-    height: sizes.SIZE_80,
+    width: sizes.SIZE_70,
+    height: sizes.SIZE_70,
   },
   exerciseTextWrapper: {
+    flex: 1,
     marginStart: sizes.SIZE_18,
-    alignSelf: "stretch",
+    paddingVertical: sizes.SIZE_6,
   },
   exerciseName: {
     color: theme.colors.primary,
     fontWeight: "bold",
     fontSize: fontSizes.FONT_16,
+    marginBottom: sizes.SIZE_4,
   },
   sets: {
     color: theme.colors.text,

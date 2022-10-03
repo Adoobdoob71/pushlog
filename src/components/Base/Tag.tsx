@@ -27,12 +27,22 @@ const Tag: FC<Props> = ({ text, onRemove, style, backgroundColor }) => {
         },
       ]}
     >
-      <Text style={stylesheet.tagText}>{text}</Text>
-      <MaterialCommunityIcons
-        name="close"
-        color={theme.colors.text}
-        size={sizes.SIZE_8}
-      />
+      <Text
+        style={[
+          stylesheet.tagText,
+          { marginEnd: onRemove ? sizes.SIZE_5 : sizes.SIZE_10 },
+        ]}
+      >
+        {text}
+      </Text>
+      {onRemove && (
+        <MaterialCommunityIcons
+          name="close"
+          color={theme.colors.text}
+          style={{ marginEnd: sizes.SIZE_5 }}
+          size={sizes.SIZE_8}
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -40,13 +50,12 @@ const Tag: FC<Props> = ({ text, onRemove, style, backgroundColor }) => {
 const stylesheet = StyleSheet.create({
   tag: {
     borderRadius: sizes.SIZE_4,
-    paddingHorizontal: sizes.SIZE_8,
+    paddingStart: sizes.SIZE_10,
     paddingVertical: sizes.SIZE_4,
   },
   tagText: {
     fontSize: fontSizes.FONT_10,
     color: theme.colors.text,
-    marginEnd: sizes.SIZE_4,
   },
 });
 
