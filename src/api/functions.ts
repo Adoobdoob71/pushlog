@@ -9,7 +9,6 @@ export async function getExercises(searchQuery: string) {
 }
 
 export async function getExerciseInfo(exerciseId: number) {
-  console.log(`${WGER_URL_API}/exerciseinfo/${exerciseId}`);
   const data = await fetch(`${WGER_URL_API}/exerciseinfo/${exerciseId}`);
   const jsonData = await data.json();
   return jsonData;

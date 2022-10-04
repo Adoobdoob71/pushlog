@@ -1,5 +1,5 @@
 import React, { FC, useContext } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Modal, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Button, ExerciseCard, Tag } from "components/index";
 import { fontSizes, sizes, styles, theme } from "utils/styles";
 import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";

@@ -125,9 +125,18 @@ function useCustomizeTemplate() {
         exerciseNumber: data.id,
         image: newExercise.image,
         muscleCategories: [
-          { name: data.muscles[0].name_en, muscleId: data.muscles[0].id },
+          {
+            name:
+              data.muscles[0].name_en !== ""
+                ? data.muscles[0].name_en
+                : data.muscles[0].name,
+            muscleId: data.muscles[0].id,
+          },
           ...data.muscles_secondary.map((mc) => {
-            return { name: mc.name_en, muscleId: mc.id };
+            return {
+              name: mc.name_en !== "" ? mc.name_en : mc.name,
+              muscleId: mc.id,
+            };
           }),
         ],
       };
@@ -194,9 +203,14 @@ function useCustomizeTemplate() {
   };
 
   const submitWorkout = () => {
-    if (currentTemplate === undefined) addTemplate(workout);
-    else modifyTemplate(workout);
-    navigation.goBack();
+    try {
+      if (currentTemplate === undefined)
+        addTemplate({ ...workout, muscleCategories: tags });
+      else modifyTemplate({ ...workout, muscleCategories: tags });
+      navigation.goBack();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return {

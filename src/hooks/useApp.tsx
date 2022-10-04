@@ -57,7 +57,7 @@ function useApp() {
       Toast.show({
         type: "success",
         text1: "Amazing!",
-        text2: "Added the new workout template 🎉",
+        text2: "New workout template 🎉",
       });
     } catch (error) {
       Toast.show({
@@ -96,23 +96,25 @@ function useApp() {
 
   const modifyTemplate = async (modifiedTemplate: WorkoutTemplate) => {
     try {
-      await dbConnector.manager.update(
-        Workout,
-        modifiedTemplate.id,
-        modifiedTemplate
-      );
+      await dbConnector.manager.save(Workout, modifiedTemplate);
       let newTemplateArr = templates;
-      const index = newTemplateArr.findIndex(
-        (template) => template?.id === modifiedTemplate.id
+      // const index = newTemplateArr.findIndex(
+      //   (template) => template?.id === modifiedTemplate.id
+      // );
+      // newTemplateArr[index] = modifiedTemplate;
+      // setTemplates(newTemplateArr);
+      newTemplateArr = newTemplateArr.filter(
+        (item) => item.id !== modifiedTemplate.id
       );
-      newTemplateArr[index] = modifiedTemplate;
+      newTemplateArr.push(modifiedTemplate);
       setTemplates(newTemplateArr);
       Toast.show({
         type: "success",
         text1: "Amazing!",
-        text2: "Added the new workout template 🎉",
+        text2: "Saved workout changes! 🎉",
       });
     } catch (error) {
+      console.error(error);
       Toast.show({
         type: "error",
         text1: "Uh oh...",

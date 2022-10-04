@@ -91,12 +91,12 @@ const stylesheet = StyleSheet.create({
   },
   templateName: {
     color: theme.colors.primary,
-    fontSize: fontSizes.FONT_14,
+    fontSize: fontSizes.FONT_16,
     fontWeight: "bold",
     marginBottom: sizes.SIZE_4,
   },
   templateDescription: {
-    fontSize: fontSizes.FONT_12,
+    fontSize: fontSizes.FONT_14,
     color: theme.colors.border,
     fontWeight: "bold",
   },
@@ -111,8 +111,8 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.text,
   },
   templateImage: {
-    width: sizes.SIZE_100,
-    height: sizes.SIZE_100,
+    width: sizes.SIZE_90,
+    height: sizes.SIZE_90,
     flex: 1,
   },
 });

@@ -1,14 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import workoutTemplates from "context/workoutTemplates";
-import { useContext, useState } from "react";
-import { WorkoutTemplate } from "utils/types";
+import { useContext, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
 function useWorkoutPlan() {
   const [templatesForRemoval, setTemplatesForRemoval] = useState<string[]>([]);
 
-  const { templates, addTemplate, modifyTemplate, removeTemplate } =
-    useContext(workoutTemplates);
+  const { removeTemplate } = useContext(workoutTemplates);
 
   const navigation = useNavigation();
 
