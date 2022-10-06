@@ -11,14 +11,15 @@ import { useNavigation } from "@react-navigation/native";
 import { WorkoutTemplate } from "utils/types";
 
 const WorkoutPlan = () => {
-  const { templates } = useContext(workoutRoutine);
-
   const {
+    templatesToShow,
     goBack,
     submitChanges,
     templatesForRemoval,
     toggleTemplateForRemoval,
     deleteTemplates,
+    templateSearchQuery,
+    onSearchQueryChange,
   } = useWorkoutPlan();
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
@@ -45,12 +46,14 @@ const WorkoutPlan = () => {
         <TextInput
           placeholder="Search any template..."
           placeholderTextColor={theme.colors.border}
+          value={templateSearchQuery}
+          onChangeText={onSearchQueryChange}
           style={stylesheet.searchBarInput}
           selectionColor={theme.colors.primary_3}
         />
       </View>
       <FlatList
-        data={templates}
+        data={templatesToShow}
         style={{
           marginVertical: sizes.SIZE_18,
         }}

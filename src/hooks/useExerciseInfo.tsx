@@ -1,7 +1,6 @@
 import { useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { Exercise, ExerciseSet } from "utils/types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useExerciseInfo() {
   const route = useRoute();
@@ -9,14 +8,17 @@ function useExerciseInfo() {
   const currentExercise: Exercise = route.params.exercise;
 
   const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>([]);
+  const [readMore, setReadMore] = useState(false);
 
   const readExerciseSets = async () => {
     // const jsonData = await AsyncStorage.get
   };
 
   return {
-    route,
     currentExercise,
+    exerciseSets,
+    readExerciseSets,
+    readMore,
   };
 }
 

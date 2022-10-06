@@ -47,10 +47,7 @@ const CustomizeTemplate: FC = () => {
           <Text style={stylesheet.textInputTitle}>Title</Text>
           <View style={styles.textInputWrapper}>
             <TextInput
-              placeholder={
-                templates[Math.trunc(Math.random() * templates.length - 1)]
-                  ?.name
-              }
+              placeholder="Getting JACKED"
               placeholderTextColor={theme.colors.border}
               style={styles.textInput}
               value={workout.name}
@@ -63,10 +60,7 @@ const CustomizeTemplate: FC = () => {
           <Text style={stylesheet.textInputTitle}>Description</Text>
           <View style={styles.textInputWrapper}>
             <TextInput
-              placeholder={
-                templates[Math.trunc(Math.random() * templates.length - 1)]
-                  ?.description
-              }
+              placeholder="Amazing workout at home"
               value={workout.description}
               placeholderTextColor={theme.colors.border}
               style={styles.textInput}
@@ -134,8 +128,9 @@ const CustomizeTemplate: FC = () => {
           >
             <ExerciseCard
               {...item}
+              exerciseData={item}
               key={index}
-              onPress={navigateToExerciseInfo}
+              onPress={() => navigateToExerciseInfo(item)}
               onLongPress={() => toggleExerciseForRemoval(item.exerciseNumber)}
             />
           </View>
@@ -203,9 +198,10 @@ const CustomizeTemplate: FC = () => {
             renderItem={({ item, index }) => (
               <ExerciseCard
                 {...item}
+                exerciseData={item}
                 key={index}
                 onPress={() => addExercise(item)}
-                onLongPress={navigateToExerciseInfo}
+                onLongPress={() => navigateToExerciseInfo(item)}
                 style={{
                   marginBottom: sizes.SIZE_24,
                   marginHorizontal: sizes.SIZE_18,

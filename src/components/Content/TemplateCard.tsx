@@ -91,12 +91,12 @@ const stylesheet = StyleSheet.create({
   },
   templateName: {
     color: theme.colors.primary,
-    fontSize: fontSizes.FONT_16,
+    fontSize: fontSizes.FONT_14,
     fontWeight: "bold",
     marginBottom: sizes.SIZE_4,
   },
   templateDescription: {
-    fontSize: fontSizes.FONT_14,
+    fontSize: fontSizes.FONT_12,
     color: theme.colors.border,
     fontWeight: "bold",
   },

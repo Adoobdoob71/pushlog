@@ -36,9 +36,9 @@ function useCustomizeTemplate() {
       { text: "Go back", onPress: () => {}, style: "cancel" },
       { text: "delete", onPress: () => navigation.goBack(), style: "default" },
     ]);
-  const navigateToExerciseInfo = () =>
+  const navigateToExerciseInfo = (exercise: Exercise) =>
     /* @ts-ignore */
-    navigation.navigate("ExerciseInfo", { params: {} });
+    navigation.navigate("ExerciseInfo", { exercise: exercise });
 
   const handlePresentModalPress = () => {
     bottomSheetRef.current?.snapToIndex(0);
@@ -119,6 +119,7 @@ function useCustomizeTemplate() {
         return;
       }
       const data = await getExerciseInfo(newExercise.exerciseNumber);
+      console.log(data);
       const exercise: Exercise = {
         name: data.name,
         description: data.description,

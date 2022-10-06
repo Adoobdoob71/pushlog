@@ -37,6 +37,7 @@ const sizes = {
   SIZE_16: WIDTH * (16 / 365),
   SIZE_18: WIDTH * (18 / 365),
   SIZE_20: WIDTH * (20 / 365),
+  SIZE_22: WIDTH * (22 / 365),
   SIZE_24: WIDTH * (24 / 365),
   SIZE_28: WIDTH * (28 / 365),
   SIZE_32: WIDTH * (32 / 365),

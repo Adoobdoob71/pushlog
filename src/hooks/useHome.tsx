@@ -15,15 +15,42 @@ import { Exercise } from "database/schemas";
 import workoutTemplates from "context/workoutTemplates";
 
 function useHome() {
+  const { templates } = useContext(workoutTemplates);
+
   const [activeTemplates, setActiveTemplates] = useState<WorkoutTemplate[]>([]);
+  const [templateSearchQuery, setTemplateSearachQuery] = useState<
+    string | null
+  >(null);
+  const [templatesToShow, setTemplatesToShow] =
+    useState<WorkoutTemplate[]>(templates);
+
+  const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value);
+
+  useEffect(() => {
+    if (templateSearchQuery !== null) {
+      const time = setTimeout(() => {
+        queryTemplates();
+      }, 250);
+      return () => clearTimeout(time);
+    }
+  }, [templateSearchQuery]);
+
+  useEffect(() => {
+    setTemplatesToShow(templates);
+  }, [templates]);
+
+  const queryTemplates = () => {
+    const qryTemplates = templates.filter((template) =>
+      template.name
+        .toLowerCase()
+        .includes(templateSearchQuery.toLocaleLowerCase())
+    );
+    setTemplatesToShow(qryTemplates);
+  };
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ["50%", "85%"], []);
-
-  const { connector } = useContext(sqliteDB);
-  const { templates, addTemplate, removeTemplate } =
-    useContext(workoutTemplates);
 
   const handlePresentModalPress = () => {
     bottomSheetRef.current?.snapToIndex(0);
@@ -93,6 +120,7 @@ function useHome() {
 
   return {
     activeTemplates,
+    templatesToShow,
     currentDay,
     chosenDay,
     updateChosenDay,
@@ -101,6 +129,8 @@ function useHome() {
     handlePresentModalPress,
     addActiveTemplates,
     removeActiveTemplates,
+    templateSearchQuery,
+    onSearchQueryChange,
   };
 }
 

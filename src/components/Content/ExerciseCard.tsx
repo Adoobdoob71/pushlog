@@ -7,6 +7,7 @@ import {
   TagType,
   MuscleCategory,
   ExerciseSet,
+  Exercise,
 } from "utils/types";
 import Tag from "../Base/Tag";
 
@@ -21,6 +22,7 @@ interface Props {
   when?: Date;
   onPress?: () => void;
   onLongPress?: () => void;
+  exerciseData: Exercise;
   style?: StyleProperty;
 }
 
@@ -35,13 +37,16 @@ const ExerciseCard: FC<Props> = ({
   when,
   onPress,
   onLongPress,
+  exerciseData,
   style,
 }) => {
   const navigation = useNavigation();
 
   const navigateToExerciseInfo = () =>
     /* @ts-ignore */
-    navigation.navigate("ExerciseInfo", { params: {} });
+    navigation.navigate("ExerciseInfo", {
+      exercise: exerciseData,
+    });
   return (
     <TouchableOpacity
       onLongPress={onLongPress}

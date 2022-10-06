@@ -2,18 +2,46 @@ import { useNavigation } from "@react-navigation/native";
 import workoutTemplates from "context/workoutTemplates";
 import { useContext, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
+import { WorkoutTemplate } from "utils/types";
 
 function useWorkoutPlan() {
-  const [templatesForRemoval, setTemplatesForRemoval] = useState<string[]>([]);
+  const { templates, removeTemplate } = useContext(workoutTemplates);
 
-  const { removeTemplate } = useContext(workoutTemplates);
+  const [templatesForRemoval, setTemplatesForRemoval] = useState<string[]>([]);
+  const [templateSearchQuery, setTemplateSearachQuery] = useState<
+    string | null
+  >(null);
+  const [templatesToShow, setTemplatesToShow] =
+    useState<WorkoutTemplate[]>(templates);
 
   const navigation = useNavigation();
 
   const goBack = () => navigation.goBack();
 
-  const submitChanges = () => {
-    goBack();
+  const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value);
+
+  const submitChanges = () => goBack();
+
+  useEffect(() => {
+    if (templateSearchQuery !== null) {
+      const time = setTimeout(() => {
+        queryTemplates();
+      }, 500);
+      return () => clearTimeout(time);
+    }
+  }, [templateSearchQuery]);
+
+  useEffect(() => {
+    setTemplatesToShow(templates);
+  }, [templates]);
+
+  const queryTemplates = () => {
+    const qryTemplates = templates.filter((template) =>
+      template.name
+        .toLowerCase()
+        .includes(templateSearchQuery.toLocaleLowerCase())
+    );
+    setTemplatesToShow(qryTemplates);
   };
 
   const addTemplateForRemoval = (templateId: string) => {
@@ -56,11 +84,14 @@ function useWorkoutPlan() {
   };
 
   return {
+    templatesToShow,
     goBack,
     submitChanges,
     templatesForRemoval,
     toggleTemplateForRemoval,
     deleteTemplates,
+    templateSearchQuery,
+    onSearchQueryChange,
   };
 }
 

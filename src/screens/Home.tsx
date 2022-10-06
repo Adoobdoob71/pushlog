@@ -31,6 +31,9 @@ const Home = () => {
     activeTemplates,
     addActiveTemplates,
     removeActiveTemplates,
+    templateSearchQuery,
+    templatesToShow,
+    onSearchQueryChange,
   } = useHome();
 
   const { templates } = useContext(workoutTemplates);
@@ -118,15 +121,17 @@ const Home = () => {
                 template.exercises.map((item) => (
                   <ExerciseCard
                     {...item}
+                    exerciseData={item}
                     key={item.id}
                     style={{
-                      padding: sizes.SIZE_8,
-                      marginBottom: sizes.SIZE_12,
+                      marginHorizontal: sizes.SIZE_12,
+                      marginTop: sizes.SIZE_16,
                     }}
                   />
                 ))
               )
             )}
+            <View style={{ height: sizes.SIZE_40 }}></View>
           </ScrollView>
         )}
         onDayPress={updateChosenDay}
@@ -160,11 +165,13 @@ const Home = () => {
               placeholder="Search any template..."
               placeholderTextColor={theme.colors.border}
               style={stylesheet.bottomSheetSearchBarInput}
+              value={templateSearchQuery}
+              onChangeText={onSearchQueryChange}
               selectionColor={theme.colors.primary_3}
             />
           </View>
           <FlatList
-            data={templates}
+            data={templatesToShow}
             showsVerticalScrollIndicator={false}
             ListFooterComponent={() => (
               <View style={{ height: sizes.SIZE_100 }}></View>
