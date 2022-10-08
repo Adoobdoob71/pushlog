@@ -1,17 +1,8 @@
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DateData } from "react-native-calendars";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { WorkoutTemplate } from "utils/types";
 import Toast from "react-native-toast-message";
-import sqliteDB from "context/sqliteDB";
-import { Exercise } from "database/schemas";
 import workoutTemplates from "context/workoutTemplates";
 
 function useHome() {

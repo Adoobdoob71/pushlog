@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Text, View, StyleSheet, SafeAreaView } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { Button, TemplateCard } from "components/index";
 import workoutRoutine from "context/workoutTemplates";
 import { useWorkoutPlan } from "hooks/useWorkoutPlan";
@@ -133,13 +133,13 @@ const stylesheet = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   title: {
-    fontSize: fontSizes.FONT_24,
+    fontSize: sizes.SIZE_24,
     fontWeight: "bold",
     color: theme.colors.primary,
     alignSelf: "center",
   },
   subtitle: {
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     color: theme.colors.border,
     fontWeight: "bold",
     marginTop: sizes.SIZE_18,
@@ -156,7 +156,7 @@ const stylesheet = StyleSheet.create({
   searchBarInput: {
     textAlignVertical: "center",
     color: theme.colors.text,
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
   },
   templateActive: {
     borderColor: "transparent",

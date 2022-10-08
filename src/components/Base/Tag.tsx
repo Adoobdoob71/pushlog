@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -54,7 +54,7 @@ const stylesheet = StyleSheet.create({
     paddingVertical: sizes.SIZE_4,
   },
   tagText: {
-    fontSize: fontSizes.FONT_10,
+    fontSize: sizes.SIZE_10,
     color: theme.colors.text,
   },
 });

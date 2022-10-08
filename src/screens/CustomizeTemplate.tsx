@@ -1,38 +1,26 @@
-import React, { FC, useContext } from "react";
-import { Modal, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Button, ExerciseCard, Tag } from "components/index";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import React, { FC } from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Button, ChooseExercise, ExerciseCard, Tag } from "components/index";
+import { sizes, styles, theme } from "utils/styles";
 import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
 import { STATUSBAR_HEIGHT } from "utils/constants";
 import { useCustomizeTemplate } from "hooks/useCustomizeTemplate";
 
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
-import workoutTemplates from "context/workoutTemplates";
-
 const CustomizeTemplate: FC = () => {
-  const {
-    tags,
-    workout,
-    templates,
-    goBack,
-    handleDescription,
-    handleName,
-    handlePresentModalPress,
-    bottomSheetRef,
-    snapPoints,
-    exercisesQueryData,
-    exerciseSearch,
-    changeExerciseQuery,
-    addExercise,
-    navigateToExerciseInfo,
-    toggleExerciseForRemoval,
-    exercisesForRemoval,
-    deleteExercises,
-    submitWorkout,
-  } = useCustomizeTemplate();
+  const customizeTemplateHook = useCustomizeTemplate(),
+    {
+      tags,
+      workout,
+      goBack,
+      handleDescription,
+      handleName,
+      handlePresentModalPress,
+      navigateToExerciseInfo,
+      toggleExerciseForRemoval,
+      exercisesForRemoval,
+      deleteExercises,
+      submitWorkout,
+    } = customizeTemplateHook;
 
   return (
     <SafeAreaView style={stylesheet.mainWrapper}>
@@ -153,68 +141,17 @@ const CustomizeTemplate: FC = () => {
         <Button
           mode="text"
           onPress={submitWorkout}
+          disabled={
+            workout.name.length === 0 ||
+            workout.description.length === 0 ||
+            workout.exercises.length === 0
+          }
           style={{ marginStart: "auto" }}
         >
           Done
         </Button>
       </View>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        keyboardBehavior="extend"
-        enablePanDownToClose={true}
-        snapPoints={snapPoints}
-        backdropComponent={(props) => (
-          <BottomSheetBackdrop
-            {...props}
-            appearsOnIndex={0}
-            disappearsOnIndex={-1}
-            opacity={0.65}
-          />
-        )}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.primary }}
-        backgroundStyle={{
-          backgroundColor: theme.colors.background,
-        }}
-      >
-        <View style={{ paddingVertical: sizes.SIZE_12 }}>
-          <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
-            Add exercises to your workout
-          </Text>
-          <View style={stylesheet.bottomSheetSearchBar}>
-            <BottomSheetTextInput
-              placeholder="Search any exercise..."
-              placeholderTextColor={theme.colors.border}
-              value={exerciseSearch}
-              onChangeText={changeExerciseQuery}
-              style={stylesheet.bottomSheetSearchBarInput}
-              selectionColor={theme.colors.primary_3}
-            />
-          </View>
-          <FlatList
-            data={exercisesQueryData}
-            showsVerticalScrollIndicator={false}
-            nestedScrollEnabled
-            renderItem={({ item, index }) => (
-              <ExerciseCard
-                {...item}
-                exerciseData={item}
-                key={index}
-                onPress={() => addExercise(item)}
-                onLongPress={() => navigateToExerciseInfo(item)}
-                style={{
-                  marginBottom: sizes.SIZE_24,
-                  marginHorizontal: sizes.SIZE_18,
-                }}
-              />
-            )}
-            ListFooterComponent={() => (
-              <View style={{ height: sizes.SIZE_100 }}></View>
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        </View>
-      </BottomSheet>
+      <ChooseExercise {...customizeTemplateHook} />
     </SafeAreaView>
   );
 };
@@ -229,13 +166,13 @@ const stylesheet = StyleSheet.create({
     flex: 1,
   },
   title: {
-    fontSize: fontSizes.FONT_24,
+    fontSize: sizes.SIZE_24,
     fontWeight: "bold",
     color: theme.colors.primary,
     alignSelf: "center",
   },
   subtitle: {
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     color: theme.colors.border,
     fontWeight: "bold",
     marginTop: sizes.SIZE_18,
@@ -247,7 +184,7 @@ const stylesheet = StyleSheet.create({
     marginTop: sizes.SIZE_16,
   },
   textInputTitle: {
-    fontSize: fontSizes.FONT_10,
+    fontSize: sizes.SIZE_10,
     color: theme.colors.primary,
     fontWeight: "bold",
     padding: sizes.SIZE_6,
@@ -267,25 +204,5 @@ const stylesheet = StyleSheet.create({
     justifyContent: "space-between",
     marginHorizontal: sizes.SIZE_40,
     marginTop: "auto",
-  },
-  bottomSheetTitle: {
-    color: theme.colors.primary,
-    fontWeight: "bold",
-    fontSize: fontSizes.FONT_20,
-    alignSelf: "center",
-  },
-  bottomSheetSearchBar: {
-    backgroundColor: "#132831",
-    marginHorizontal: sizes.SIZE_36,
-    marginTop: sizes.SIZE_20,
-    borderRadius: sizes.SIZE_4,
-    paddingVertical: sizes.SIZE_6,
-    paddingHorizontal: sizes.SIZE_12,
-    marginBottom: sizes.SIZE_10,
-  },
-  bottomSheetSearchBarInput: {
-    textAlignVertical: "center",
-    color: theme.colors.text,
-    fontSize: fontSizes.FONT_12,
   },
 });

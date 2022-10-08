@@ -1,7 +1,7 @@
 import "react-native-get-random-values";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { fontSizes, sizes, theme } from "utils/styles";
+import { sizes, theme } from "utils/styles";
 import StackNavigator from "navigators/StackNavigator";
 import { useApp } from "hooks/useApp";
 import WorkoutRoutine from "context/workoutTemplates";
@@ -45,11 +45,11 @@ export default function App() {
               }}
               text1Style={{
                 color: theme.colors.text,
-                fontSize: fontSizes.FONT_14,
+                fontSize: sizes.SIZE_14,
               }}
               text2Style={{
                 color: theme.colors.text,
-                fontSize: fontSizes.FONT_12,
+                fontSize: sizes.SIZE_12,
               }}
               contentContainerStyle={{
                 backgroundColor: theme.colors.background_2,
@@ -70,11 +70,11 @@ export default function App() {
               }}
               text1Style={{
                 color: theme.colors.text,
-                fontSize: fontSizes.FONT_14,
+                fontSize: sizes.SIZE_14,
               }}
               text2Style={{
                 color: theme.colors.text,
-                fontSize: fontSizes.FONT_12,
+                fontSize: sizes.SIZE_12,
               }}
               contentContainerStyle={{
                 backgroundColor: theme.colors.background_2,

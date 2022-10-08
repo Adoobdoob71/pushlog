@@ -1,7 +1,7 @@
 import { ComponentProps, FC } from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 
 interface Props {
   icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
@@ -39,12 +39,14 @@ const stylesheet = StyleSheet.create({
     marginStart: sizes.SIZE_16,
   },
   title: {
-    fontSize: fontSizes.FONT_16,
+    fontSize: sizes.SIZE_16,
     color: theme.colors.text,
+    fontWeight: "bold",
   },
   description: {
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
     color: theme.colors.border,
+    fontWeight: "bold",
   },
 });
 

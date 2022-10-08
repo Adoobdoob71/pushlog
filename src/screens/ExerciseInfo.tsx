@@ -1,20 +1,23 @@
-import { Header } from "components/index";
+import { CreateSet, Header, IconButton, Tag } from "components/index";
 import { useExerciseInfo } from "hooks/useExerciseInfo";
 import React, { FC } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import RenderHTML, { MixedStyleDeclaration } from "react-native-render-html";
 import { WIDTH } from "utils/constants";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  VictoryChart,
-  VictoryLine,
-  VictoryTheme,
-  VictoryTooltip,
-} from "victory-native";
+import { VictoryLine } from "victory-native";
 
 const ExerciseInfo: FC = () => {
-  const { currentExercise, exerciseSets, readExerciseSets } = useExerciseInfo();
+  const exerciseInfoHook = useExerciseInfo(),
+    { currentExercise, handlePresentModalPress, exerciseSets } =
+      exerciseInfoHook;
+
+  const sets = [
+    ...exerciseSets.map((item) => {
+      return { x: item.setNumber, y: item.reps };
+    }),
+  ];
 
   return (
     <SafeAreaView style={styles.mainWrapper}>
@@ -27,26 +30,46 @@ const ExerciseInfo: FC = () => {
             tagsStyles={htmlStylesheet}
             contentWidth={WIDTH}
           />
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            style={{ marginTop: sizes.SIZE_8 }}
+            horizontal
+          >
+            {currentExercise.muscleCategories.map((item, index) => (
+              <Tag
+                text={item.name}
+                backgroundColor={theme.colors.background_2}
+                key={index}
+                style={{ marginEnd: sizes.SIZE_8 }}
+              />
+            ))}
+            <View style={{ width: sizes.SIZE_24 }}></View>
+          </ScrollView>
         </View>
         <View style={stylesheet.graphs}>
           <View style={{ alignSelf: "center" }}>
-            <VictoryLine
-              style={{
-                data: { stroke: theme.colors.primary },
-              }}
-              interpolation="natural"
-              animate
-              data={[
-                { x: 1, y: 2 },
-                { x: 2, y: 3 },
-                { x: 3, y: 5 },
-                { x: 4, y: 4 },
-                { x: 5, y: 7 },
-              ]}
-            />
+            {exerciseSets.length !== 0 && (
+              <VictoryLine
+                style={{
+                  data: { stroke: theme.colors.primary },
+                }}
+                interpolation="natural"
+                animate
+                minDomain={{ x: 1, y: 0 }}
+                data={sets}
+              />
+            )}
           </View>
         </View>
       </ScrollView>
+      <IconButton
+        name="pencil"
+        color={theme.colors.text}
+        onPress={handlePresentModalPress}
+        size={sizes.SIZE_24}
+        fab
+      />
+      <CreateSet {...exerciseInfoHook} />
     </SafeAreaView>
   );
 };
@@ -56,13 +79,12 @@ const stylesheet = StyleSheet.create({
     padding: sizes.SIZE_20,
   },
   title: {
-    fontSize: fontSizes.FONT_24,
+    fontSize: sizes.SIZE_24,
     fontWeight: "bold",
-    // fontFamily: "orbitronBold",
     color: theme.colors.primary,
   },
   subtitle: {
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     color: theme.colors.border,
     fontWeight: "bold",
     marginTop: sizes.SIZE_18,
@@ -75,7 +97,7 @@ const stylesheet = StyleSheet.create({
 const htmlStylesheet: Readonly<Record<string, MixedStyleDeclaration>> = {
   p: {
     color: theme.colors.border,
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     fontWeight: "bold",
     lineHeight: sizes.SIZE_22,
   },
@@ -85,7 +107,7 @@ const htmlStylesheet: Readonly<Record<string, MixedStyleDeclaration>> = {
   },
   li: {
     color: theme.colors.border,
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
     fontWeight: "bold",
   },
 };

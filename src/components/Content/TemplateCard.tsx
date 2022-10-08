@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types";
 import Tag from "../Base/Tag";
 
@@ -91,12 +91,12 @@ const stylesheet = StyleSheet.create({
   },
   templateName: {
     color: theme.colors.primary,
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     fontWeight: "bold",
     marginBottom: sizes.SIZE_4,
   },
   templateDescription: {
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
     color: theme.colors.border,
     fontWeight: "bold",
   },
@@ -107,7 +107,7 @@ const stylesheet = StyleSheet.create({
     paddingVertical: sizes.SIZE_4,
   },
   tagNumberPlus: {
-    fontSize: fontSizes.FONT_10,
+    fontSize: sizes.SIZE_10,
     color: theme.colors.text,
   },
   templateImage: {

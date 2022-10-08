@@ -83,7 +83,7 @@ function useApp() {
       Toast.show({
         type: "success",
         text1: "Amazing!",
-        text2: "Added the new workout template 🎉",
+        text2: "Workout template has been removed 🎉",
       });
     } catch (error) {
       Toast.show({
@@ -98,11 +98,6 @@ function useApp() {
     try {
       await dbConnector.manager.save(Workout, modifiedTemplate);
       let newTemplateArr = templates;
-      // const index = newTemplateArr.findIndex(
-      //   (template) => template?.id === modifiedTemplate.id
-      // );
-      // newTemplateArr[index] = modifiedTemplate;
-      // setTemplates(newTemplateArr);
       newTemplateArr = newTemplateArr.filter(
         (item) => item.id !== modifiedTemplate.id
       );

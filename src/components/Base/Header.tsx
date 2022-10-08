@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { STATUSBAR_HEIGHT } from "utils/constants";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";
 import IconButton from "./IconButton";
 
@@ -42,7 +42,7 @@ const stylesheet = StyleSheet.create({
     paddingTop: STATUSBAR_HEIGHT + sizes.SIZE_20,
   },
   title: {
-    fontSize: fontSizes.FONT_20,
+    fontSize: sizes.SIZE_20,
     color: theme.colors.text,
     marginHorizontal: sizes.SIZE_16,
     fontWeight: "bold",

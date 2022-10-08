@@ -2,27 +2,6 @@ import { StyleSheet } from "react-native";
 import { DarkTheme } from "@react-navigation/native";
 import { WIDTH } from "./constants";
 
-const fontSizes = {
-  FONT_6: WIDTH * (6 / 365),
-  FONT_8: WIDTH * (8 / 365),
-  FONT_10: WIDTH * (10 / 365),
-  FONT_12: WIDTH * (12 / 365),
-  FONT_14: WIDTH * (14 / 365),
-  FONT_16: WIDTH * (16 / 365),
-  FONT_18: WIDTH * (18 / 365),
-  FONT_20: WIDTH * (20 / 365),
-  FONT_24: WIDTH * (24 / 365),
-  FONT_28: WIDTH * (28 / 365),
-  FONT_32: WIDTH * (32 / 365),
-  FONT_36: WIDTH * (36 / 365),
-  FONT_40: WIDTH * (40 / 365),
-  FONT_44: WIDTH * (44 / 365),
-  FONT_48: WIDTH * (48 / 365),
-  FONT_52: WIDTH * (52 / 365),
-  FONT_56: WIDTH * (56 / 365),
-  FONT_60: WIDTH * (60 / 365),
-} as const;
-
 const sizes = {
   SIZE_1: WIDTH * (1 / 365),
   SIZE_2: WIDTH * (2 / 365),
@@ -64,7 +43,7 @@ const sizes = {
   SIZE_200: WIDTH * (200 / 365),
 } as const;
 
-export { fontSizes, sizes };
+export { sizes };
 
 const theme: typeof DarkTheme & {
   colors: {
@@ -129,7 +108,7 @@ const styles = StyleSheet.create({
   textInput: {
     textAlignVertical: "center",
     color: theme.colors.text,
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
   },
 });
 

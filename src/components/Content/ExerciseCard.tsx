@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import {
   StyleProperty,
-  TagType,
   MuscleCategory,
   ExerciseSet,
   Exercise,
@@ -117,19 +116,19 @@ const stylesheet = StyleSheet.create({
   exerciseName: {
     color: theme.colors.primary,
     fontWeight: "bold",
-    fontSize: fontSizes.FONT_16,
+    fontSize: sizes.SIZE_16,
     marginBottom: sizes.SIZE_4,
   },
   sets: {
     color: theme.colors.text,
     fontWeight: "bold",
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     marginTop: sizes.SIZE_2,
   },
   exerciseWeight: {
     color: theme.colors.border,
     fontWeight: "bold",
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_12,
     marginTop: sizes.SIZE_4,
   },
   tagNumberPlusWrapper: {
@@ -139,7 +138,7 @@ const stylesheet = StyleSheet.create({
     paddingVertical: sizes.SIZE_4,
   },
   tagNumberPlus: {
-    fontSize: fontSizes.FONT_10,
+    fontSize: sizes.SIZE_10,
     color: theme.colors.text,
   },
 });

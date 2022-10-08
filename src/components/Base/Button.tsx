@@ -1,6 +1,6 @@
 import { ComponentProps, FC, ReactNode } from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
@@ -53,7 +53,7 @@ const Button: FC<Props> = ({
         )}
         <Text
           style={{
-            fontSize: fontSizes.FONT_14,
+            fontSize: sizes.SIZE_14,
             color: color,
             fontWeight: "bold",
           }}
@@ -78,7 +78,7 @@ const stylesheet = StyleSheet.create({
     backgroundColor: "transparent",
   },
   filledModeDisabled: {
-    backgroundColor: theme.colors.card,
+    backgroundColor: `${theme.colors.border}45`,
   },
 });
 

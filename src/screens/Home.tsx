@@ -1,42 +1,21 @@
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { fontSizes, sizes, styles, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import { useHome } from "hooks/useHome";
 import { Agenda } from "react-native-calendars";
 import {
-  Button,
+  ChooseTemplate,
   ExerciseCard,
   Header,
   IconButton,
-  Tag,
-  TemplateCard,
 } from "components/index";
-import { useNavigation } from "@react-navigation/native";
 import * as NavigationBar from "expo-navigation-bar";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
-import { useContext } from "react";
-import workoutTemplates from "context/workoutTemplates";
-import { WorkoutTemplate } from "utils/types";
+import { ScrollView } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
-  const {
-    updateChosenDay,
-    bottomSheetRef,
-    snapPoints,
-    handlePresentModalPress,
-    activeTemplates,
-    addActiveTemplates,
-    removeActiveTemplates,
-    templateSearchQuery,
-    templatesToShow,
-    onSearchQueryChange,
-  } = useHome();
-
-  const { templates } = useContext(workoutTemplates);
+  const homeHook = useHome(),
+    { updateChosenDay, handlePresentModalPress, activeTemplates } = homeHook;
 
   const agendaTheme = {
     calendarBackground: theme.colors.card,
@@ -61,15 +40,6 @@ const Home = () => {
   const goToSettings = () => navigation.navigate({ name: "Settings" });
 
   const noTemplates = activeTemplates.length === 0;
-
-  const navigateToCustomizeTemplate = (template: WorkoutTemplate) =>
-    // @ts-ignore
-    navigation.navigate({
-      // @ts-ignore
-      name: "CustomizeTemplate",
-      // @ts-ignore
-      params: { template: template },
-    });
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -136,114 +106,13 @@ const Home = () => {
         )}
         onDayPress={updateChosenDay}
       />
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={-1}
-        keyboardBehavior="extend"
-        enablePanDownToClose={true}
-        snapPoints={snapPoints}
-        backdropComponent={(props) => (
-          <BottomSheetBackdrop
-            {...props}
-            appearsOnIndex={0}
-            disappearsOnIndex={-1}
-            opacity={0.65}
-          />
-        )}
-        handleIndicatorStyle={{ backgroundColor: theme.colors.primary }}
-        backgroundStyle={{
-          backgroundColor: theme.colors.background,
-        }}
-        containerStyle={{ zIndex: 2 }}
-      >
-        <View style={{ paddingVertical: sizes.SIZE_12 }}>
-          <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
-            Your workout templates
-          </Text>
-          <View style={stylesheet.bottomSheetSearchBar}>
-            <BottomSheetTextInput
-              placeholder="Search any template..."
-              placeholderTextColor={theme.colors.border}
-              style={stylesheet.bottomSheetSearchBarInput}
-              value={templateSearchQuery}
-              onChangeText={onSearchQueryChange}
-              selectionColor={theme.colors.primary_3}
-            />
-          </View>
-          <FlatList
-            data={templatesToShow}
-            showsVerticalScrollIndicator={false}
-            ListFooterComponent={() => (
-              <View style={{ height: sizes.SIZE_100 }}></View>
-            )}
-            nestedScrollEnabled
-            stickyHeaderIndices={[0]}
-            stickyHeaderHiddenOnScroll
-            ListHeaderComponent={() => (
-              <View
-                style={stylesheet.tagList}
-                onStartShouldSetResponder={() => true}
-              >
-                <ScrollView
-                  showsHorizontalScrollIndicator={false}
-                  style={{
-                    marginTop: sizes.SIZE_10,
-                    marginBottom: sizes.SIZE_20,
-                  }}
-                  horizontal
-                >
-                  <View style={{ width: sizes.SIZE_16 }}></View>
-                  {activeTemplates.map((item, _index) => (
-                    <Tag
-                      text={item.name}
-                      backgroundColor={theme.colors.background_2}
-                      key={item.id}
-                      onRemove={() => removeActiveTemplates(item.id)}
-                      style={{ marginEnd: sizes.SIZE_8 }}
-                    />
-                  ))}
-                  <View style={{ width: sizes.SIZE_16 }}></View>
-                </ScrollView>
-              </View>
-            )}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item, index }) => (
-              <View
-                style={[
-                  stylesheet.templateActive,
-                  activeTemplates.some((tem) => tem.id === item.id) && {
-                    borderColor: theme.colors.primary,
-                  },
-                ]}
-              >
-                <TemplateCard
-                  key={index}
-                  onPress={() => addActiveTemplates(item)}
-                  onLongPress={() => navigateToCustomizeTemplate(item)}
-                  templateData={item}
-                  {...item}
-                  tags={item.muscleCategories}
-                />
-              </View>
-            )}
-          />
-        </View>
-      </BottomSheet>
+      <ChooseTemplate {...homeHook} />
       <IconButton
         name="pencil"
         color={theme.colors.text}
         onPress={handlePresentModalPress}
         size={sizes.SIZE_24}
-        style={{
-          backgroundColor: theme.colors.primary,
-          position: "absolute",
-          bottom: sizes.SIZE_24,
-          end: sizes.SIZE_24,
-          padding: sizes.SIZE_10,
-          borderRadius: sizes.SIZE_8,
-          elevation: sizes.SIZE_4,
-          zIndex: 1,
-        }}
+        fab
       />
     </SafeAreaView>
   );
@@ -252,12 +121,12 @@ const Home = () => {
 const stylesheet = StyleSheet.create({
   sectionTitle: {
     color: theme.colors.primary,
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     fontWeight: "bold",
   },
   headerTitle: {
     color: theme.colors.text,
-    fontSize: fontSizes.FONT_24,
+    fontSize: sizes.SIZE_24,
     fontFamily: "orbitronBold",
   },
   dayWrapper: {
@@ -267,38 +136,7 @@ const stylesheet = StyleSheet.create({
   noTemplatesText: {
     fontWeight: "bold",
     color: theme.colors.border,
-    fontSize: fontSizes.FONT_14,
-  },
-  templateActive: {
-    borderColor: "transparent",
-    borderWidth: sizes.SIZE_2,
-    borderRadius: sizes.SIZE_8,
-    marginBottom: sizes.SIZE_18,
-    marginHorizontal: sizes.SIZE_20,
-  },
-  tagList: {
-    backgroundColor: theme.colors.background,
-    flex: 1,
-  },
-  bottomSheetTitle: {
-    color: theme.colors.primary,
-    fontWeight: "bold",
-    fontSize: fontSizes.FONT_20,
-    alignSelf: "center",
-  },
-  bottomSheetSearchBar: {
-    backgroundColor: "#132831",
-    marginHorizontal: sizes.SIZE_36,
-    marginTop: sizes.SIZE_20,
-    borderRadius: sizes.SIZE_4,
-    paddingVertical: sizes.SIZE_6,
-    paddingHorizontal: sizes.SIZE_12,
-    marginBottom: sizes.SIZE_10,
-  },
-  bottomSheetSearchBarInput: {
-    textAlignVertical: "center",
-    color: theme.colors.text,
-    fontSize: fontSizes.FONT_12,
+    fontSize: sizes.SIZE_14,
   },
 });
 

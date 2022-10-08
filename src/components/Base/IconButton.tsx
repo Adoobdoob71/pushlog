@@ -1,4 +1,4 @@
-import { TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { StyleProperty } from "utils/types";
 import { ComponentProps, FC } from "react";
@@ -9,12 +9,17 @@ interface Props {
   size?: number;
   style?: StyleProperty;
   color?: string;
+  fab?: boolean;
   onPress?: () => void;
 }
 
-const IconButton: FC<Props> = ({ name, style, size, color, onPress }) => {
+const IconButton: FC<Props> = ({ name, style, size, color, onPress, fab }) => {
   return (
-    <TouchableOpacity onPress={onPress} style={style} activeOpacity={0.5}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={[style, fab && stylesheet.fab]}
+      activeOpacity={0.5}
+    >
       <MaterialCommunityIcons
         name={name}
         size={size ? size : sizes.SIZE_24}
@@ -24,4 +29,16 @@ const IconButton: FC<Props> = ({ name, style, size, color, onPress }) => {
   );
 };
 
+const stylesheet = StyleSheet.create({
+  fab: {
+    backgroundColor: theme.colors.primary,
+    position: "absolute",
+    bottom: sizes.SIZE_24,
+    end: sizes.SIZE_24,
+    padding: sizes.SIZE_10,
+    borderRadius: sizes.SIZE_8,
+    elevation: sizes.SIZE_4,
+    zIndex: 1,
+  },
+});
 export default IconButton;

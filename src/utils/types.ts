@@ -23,7 +23,6 @@ interface Exercise {
   description?: string;
   muscleCategories?: MuscleCategory[];
   image?: string;
-  exerciseSets?: Promise<ExerciseSet[]>;
   when?: Date;
 }
 
@@ -44,7 +43,6 @@ interface TagType {
 interface ExerciseSet {
   id: string;
   exerciseNumber: number;
-  exerciseId: string;
   setNumber: number;
   reps: number;
   weight: number;

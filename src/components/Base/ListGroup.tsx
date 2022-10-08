@@ -1,6 +1,6 @@
 import { FC, ReactNode } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { fontSizes, sizes, theme } from "utils/styles";
+import { sizes, theme } from "utils/styles";
 
 interface Props {
   groupTitle: string;
@@ -22,7 +22,7 @@ const stylesheet = StyleSheet.create({
   },
   groupTitle: {
     color: theme.colors.primary,
-    fontSize: fontSizes.FONT_14,
+    fontSize: sizes.SIZE_14,
     fontWeight: "bold",
   },
 });

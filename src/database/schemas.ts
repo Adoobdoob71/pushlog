@@ -69,10 +69,6 @@ export class Exercise {
   @JoinColumn()
   muscleCategories: MuscleCategory[];
 
-  @OneToMany((type) => ExerciseSet, (exerciseSet) => exerciseSet.exercise)
-  @JoinColumn()
-  exerciseSets: Promise<ExerciseSet[]>;
-
   @ManyToOne((type) => Workout, (workout) => workout.exercises, {
     onDelete: "CASCADE",
   })
@@ -110,9 +106,6 @@ export class ExerciseSet {
   exerciseNumber: number;
 
   @Column()
-  exerciseId: string;
-
-  @Column()
   setNumber: number;
 
   @Column()
@@ -123,7 +116,4 @@ export class ExerciseSet {
 
   @CreateDateColumn()
   when: Date;
-
-  @ManyToOne((type) => Exercise, (exercise) => exercise.exerciseSets)
-  exercise: Exercise;
 }
