@@ -1,4 +1,4 @@
-import { CreateSet, Header, IconButton, Tag } from "components/index";
+import { CreateSet, Graph, Header, IconButton, Tag } from "components/index";
 import { useExerciseInfo } from "hooks/useExerciseInfo";
 import React, { FC } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
@@ -6,7 +6,6 @@ import { sizes, styles, theme } from "utils/styles";
 import RenderHTML, { MixedStyleDeclaration } from "react-native-render-html";
 import { WIDTH } from "utils/constants";
 import { ScrollView } from "react-native-gesture-handler";
-import { VictoryLine } from "victory-native";
 
 const ExerciseInfo: FC = () => {
   const exerciseInfoHook = useExerciseInfo(),
@@ -15,7 +14,12 @@ const ExerciseInfo: FC = () => {
 
   const sets = [
     ...exerciseSets.map((item) => {
-      return { x: item.setNumber, y: item.reps };
+      return {
+        x: item.when.getTime(),
+        y: item.reps,
+        weight: item.weight,
+        setNumber: item.setNumber,
+      };
     }),
   ];
 
@@ -48,19 +52,10 @@ const ExerciseInfo: FC = () => {
         </View>
         <View style={stylesheet.graphs}>
           <View style={{ alignSelf: "center" }}>
-            {exerciseSets.length !== 0 && (
-              <VictoryLine
-                style={{
-                  data: { stroke: theme.colors.primary },
-                }}
-                interpolation="natural"
-                animate
-                minDomain={{ x: 1, y: 0 }}
-                data={sets}
-              />
-            )}
+            <Graph data={sets} />
           </View>
         </View>
+        <View style={{ height: sizes.SIZE_52 }}></View>
       </ScrollView>
       <IconButton
         name="pencil"

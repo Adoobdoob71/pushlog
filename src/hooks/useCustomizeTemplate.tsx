@@ -1,22 +1,18 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Exercise, MuscleCategory, WorkoutTemplate } from "utils/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import BottomSheet from "@gorhom/bottom-sheet";
 import workoutTemplates from "context/workoutTemplates";
-import { getExerciseInfo, getExercises, getMuscleInfo } from "api/functions";
+import { getExerciseInfo, getExercises } from "api/functions";
 import { WGER_URL } from "api/constants";
 import Toast from "react-native-toast-message";
 import { Alert } from "react-native";
+import { Modalize } from "react-native-modalize";
 
 function useCustomizeTemplate() {
   const navigation = useNavigation();
   const route = useRoute();
   // @ts-ignore
   const currentTemplate: WorkoutTemplate | undefined = route.params.template;
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const snapPoints = useMemo(() => ["50%", "85%"], []);
 
   const [workout, setWorkout] = useState<WorkoutTemplate>(
     currentTemplate
@@ -31,6 +27,8 @@ function useCustomizeTemplate() {
   const { templates } = useContext(workoutTemplates);
   const { addTemplate, modifyTemplate } = useContext(workoutTemplates);
 
+  const modalizeRef = useRef<Modalize>(null);
+
   const goBack = () =>
     Alert.alert("Are you sure?", "Everything will be lost", [
       { text: "Go back", onPress: () => {}, style: "cancel" },
@@ -41,7 +39,7 @@ function useCustomizeTemplate() {
     navigation.navigate("ExerciseInfo", { exercise: exercise });
 
   const handlePresentModalPress = () => {
-    bottomSheetRef.current?.snapToIndex(0);
+    modalizeRef.current?.open();
   };
 
   useEffect(() => {
@@ -119,7 +117,6 @@ function useCustomizeTemplate() {
         return;
       }
       const data = await getExerciseInfo(newExercise.exerciseNumber);
-      console.log(data);
       const exercise: Exercise = {
         name: data.name,
         description: data.description,
@@ -221,9 +218,8 @@ function useCustomizeTemplate() {
     goBack,
     handleName,
     handleDescription,
-    bottomSheetRef,
+    modalizeRef,
     handlePresentModalPress,
-    snapPoints,
     exercisesQueryData,
     exerciseSearch,
     changeExerciseQuery,

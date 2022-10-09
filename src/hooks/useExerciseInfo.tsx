@@ -1,10 +1,10 @@
 import { useRoute } from "@react-navigation/native";
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { ExerciseSet } from "utils/types";
-import BottomSheet from "@gorhom/bottom-sheet";
 import sqliteDB from "context/sqliteDB";
 import { Exercise, ExerciseSet as exSet } from "database/schemas";
 import Toast from "react-native-toast-message";
+import { Modalize } from "react-native-modalize";
 
 function useExerciseInfo() {
   const route = useRoute();
@@ -18,12 +18,10 @@ function useExerciseInfo() {
 
   const { connector } = useContext(sqliteDB);
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const snapPoints = useMemo(() => ["25%"], []);
+  const modalizeRef = useRef<Modalize>(null);
 
   const handlePresentModalPress = () => {
-    bottomSheetRef.current?.snapToIndex(0);
+    modalizeRef.current?.open();
   };
 
   const readExerciseSets = async () => {
@@ -50,7 +48,10 @@ function useExerciseInfo() {
         setNumber,
       });
       connector.manager.save(exSet, newSet);
-      setExerciseSets((exerciseSets) => [...exerciseSets, newSet]);
+      setExerciseSets((exerciseSets) => [
+        ...exerciseSets,
+        { ...newSet, when: new Date() },
+      ]);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -70,8 +71,7 @@ function useExerciseInfo() {
     currentExercise,
     exerciseSets,
     readExerciseSets,
-    bottomSheetRef,
-    snapPoints,
+    modalizeRef,
     handlePresentModalPress,
     reps,
     weight,

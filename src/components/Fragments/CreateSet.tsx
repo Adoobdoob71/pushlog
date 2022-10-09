@@ -2,13 +2,12 @@ import React, { FC } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { sizes, styles, theme } from "utils/styles";
 import Button from "../Base/Button";
-import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
-import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import { Picker } from "@react-native-picker/picker";
+import { IHandles } from "react-native-modalize/lib/options";
+import { Modalize } from "react-native-modalize";
 
 interface Props {
-  bottomSheetRef: React.MutableRefObject<BottomSheetMethods>;
-  snapPoints: string[];
+  modalizeRef: React.MutableRefObject<IHandles>;
   reps: number;
   weight: number;
   setNumber: number;
@@ -19,8 +18,7 @@ interface Props {
 }
 
 const CreateSet: FC<Props> = ({
-  bottomSheetRef,
-  snapPoints,
+  modalizeRef,
   onRepsChange,
   onWeightChange,
   onSetNumberChange,
@@ -30,25 +28,11 @@ const CreateSet: FC<Props> = ({
   addSet,
 }) => {
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      keyboardBehavior="extend"
-      enablePanDownToClose={true}
-      snapPoints={snapPoints}
-      backdropComponent={(props) => (
-        <BottomSheetBackdrop
-          {...props}
-          appearsOnIndex={0}
-          disappearsOnIndex={-1}
-          opacity={0.65}
-        />
-      )}
-      handleIndicatorStyle={{ backgroundColor: theme.colors.primary }}
-      backgroundStyle={{
-        backgroundColor: theme.colors.background,
-      }}
-      containerStyle={{ zIndex: 2 }}
+    <Modalize
+      ref={modalizeRef}
+      modalStyle={{ backgroundColor: theme.colors.background }}
+      handleStyle={{ backgroundColor: theme.colors.primary }}
+      adjustToContentHeight
     >
       <View style={stylesheet.mainWrapper}>
         <View
@@ -137,7 +121,7 @@ const CreateSet: FC<Props> = ({
           </View>
         </View>
       </View>
-    </BottomSheet>
+    </Modalize>
   );
 };
 

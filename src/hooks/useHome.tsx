@@ -1,9 +1,9 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DateData } from "react-native-calendars";
-import BottomSheet from "@gorhom/bottom-sheet";
 import { WorkoutTemplate } from "utils/types";
 import Toast from "react-native-toast-message";
 import workoutTemplates from "context/workoutTemplates";
+import { Modalize } from "react-native-modalize";
 
 function useHome() {
   const { templates } = useContext(workoutTemplates);
@@ -39,12 +39,12 @@ function useHome() {
     setTemplatesToShow(qryTemplates);
   };
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const modalizeRef = useRef<Modalize>(null);
 
   const snapPoints = useMemo(() => ["50%", "85%"], []);
 
   const handlePresentModalPress = () => {
-    bottomSheetRef.current?.snapToIndex(0);
+    modalizeRef.current?.open();
   };
 
   const date = new Date();
@@ -115,7 +115,7 @@ function useHome() {
     currentDay,
     chosenDay,
     updateChosenDay,
-    bottomSheetRef,
+    modalizeRef,
     snapPoints,
     handlePresentModalPress,
     addActiveTemplates,
