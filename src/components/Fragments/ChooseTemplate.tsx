@@ -1,32 +1,44 @@
 import React, { FC } from "react";
-import { View, StyleSheet, Text, TextInput } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { sizes, theme } from "utils/styles";
+import { sizes, styles, theme } from "utils/styles";
 import Tag from "../Base/Tag";
+import Button from "../Base/Button";
 import TemplateCard from "../Content/TemplateCard";
 import { WorkoutTemplate } from "utils/types";
 import { useNavigation } from "@react-navigation/native";
 import { Modalize } from "react-native-modalize";
 import { IHandles } from "react-native-modalize/lib/options";
+import { HEIGHT } from "utils/constants";
+import { FlashList } from "@shopify/flash-list";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 interface Props {
-  templatesToShow: WorkoutTemplate[];
+  templates: WorkoutTemplate[];
   templateSearchQuery: string;
   onSearchQueryChange: (value: string) => void;
   activeTemplates: WorkoutTemplate[];
   removeActiveTemplates: (id: string) => void;
   addActiveTemplates: (template: WorkoutTemplate) => void;
   modalizeRef: React.MutableRefObject<IHandles>;
+  loadingTemplates: boolean;
 }
 
 const ChooseTemplate: FC<Props> = ({
+  templates,
   activeTemplates,
   addActiveTemplates,
   onSearchQueryChange,
   removeActiveTemplates,
   templateSearchQuery,
-  templatesToShow,
   modalizeRef,
+  loadingTemplates,
 }) => {
   const navigation = useNavigation();
 
@@ -40,11 +52,26 @@ const ChooseTemplate: FC<Props> = ({
     });
 
   const HeaderComponent = (
-    <View style={[{ paddingTop: sizes.SIZE_20, paddingBottom: sizes.SIZE_6 }]}>
-      <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
-        Your workout templates
-      </Text>
-      <View style={stylesheet.bottomSheetSearchBar}>
+    <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
+      <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
+        <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
+          Workouts
+        </Text>
+        <Button
+          mode="text"
+          onPress={() => modalizeRef.current.close()}
+          style={{ marginStart: "auto" }}
+        >
+          Close
+        </Button>
+      </View>
+      <View style={[styles.rowCenter, stylesheet.bottomSheetSearchBar]}>
+        <MaterialCommunityIcons
+          name="magnify"
+          color={theme.colors.border}
+          size={sizes.SIZE_14}
+          style={{ marginEnd: sizes.SIZE_8 }}
+        />
         <TextInput
           placeholder="Search any template..."
           placeholderTextColor={theme.colors.border}
@@ -80,8 +107,9 @@ const ChooseTemplate: FC<Props> = ({
       <ScrollView
         showsHorizontalScrollIndicator={false}
         style={{
-          marginTop: sizes.SIZE_10,
-          marginBottom: sizes.SIZE_20,
+          marginTop: activeTemplates.length > 0 ? sizes.SIZE_10 : 0,
+          marginBottom:
+            activeTemplates.length > 0 ? sizes.SIZE_20 : sizes.SIZE_10,
         }}
         horizontal
       >
@@ -102,19 +130,32 @@ const ChooseTemplate: FC<Props> = ({
   return (
     <Modalize
       ref={modalizeRef}
-      flatListProps={{
-        data: templatesToShow,
-        renderItem: renderItem,
-        keyExtractor: (item) => item.id,
-        showsVerticalScrollIndicator: false,
-        ListHeaderComponent: ListHeaderComponent,
-        stickyHeaderIndices: [0],
-        stickyHeaderHiddenOnScroll: true,
-      }}
+      customRenderer={
+        loadingTemplates ? (
+          <View style={[styles.flex, styles.center]}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        ) : (
+          <FlashList
+            data={templates.filter((template) =>
+              template.name
+                .toLowerCase()
+                .includes(templateSearchQuery.toLocaleLowerCase())
+            )}
+            renderItem={renderItem}
+            getItemType={(item) => typeof item}
+            keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={ListHeaderComponent}
+            stickyHeaderHiddenOnScroll
+            stickyHeaderIndices={[0]}
+            showsVerticalScrollIndicator={false}
+            estimatedItemSize={sizes.SIZE_200}
+          />
+        )
+      }
+      withHandle={false}
       modalStyle={{ backgroundColor: theme.colors.background }}
-      adjustToContentHeight
       HeaderComponent={HeaderComponent}
-      handleStyle={{ backgroundColor: theme.colors.primary }}
     />
   );
 };
@@ -135,16 +176,16 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.primary,
     fontWeight: "bold",
     fontSize: sizes.SIZE_20,
-    alignSelf: "center",
+    marginTop: sizes.SIZE_12,
+    marginStart: sizes.SIZE_12,
   },
   bottomSheetSearchBar: {
     backgroundColor: "#132831",
     marginHorizontal: sizes.SIZE_36,
-    marginTop: sizes.SIZE_20,
+    marginTop: sizes.SIZE_16,
     borderRadius: sizes.SIZE_4,
     paddingVertical: sizes.SIZE_6,
     paddingHorizontal: sizes.SIZE_12,
-    marginBottom: sizes.SIZE_10,
   },
   bottomSheetSearchBarInput: {
     textAlignVertical: "center",

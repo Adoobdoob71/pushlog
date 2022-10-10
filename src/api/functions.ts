@@ -1,5 +1,13 @@
 import { WGER_URL_API } from "./constants";
 
+export async function getAllExercises() {
+  const data = await fetch(
+    `${WGER_URL_API}/exerciseinfo?language=2&limit=1000`
+  );
+  const jsonData = await data.json();
+  return jsonData;
+}
+
 export async function getExercises(searchQuery: string) {
   const data = await fetch(
     `${WGER_URL_API}/exercise/search?language=2&term=${searchQuery}&limit=5`

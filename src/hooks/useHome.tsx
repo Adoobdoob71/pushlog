@@ -6,38 +6,12 @@ import workoutTemplates from "context/workoutTemplates";
 import { Modalize } from "react-native-modalize";
 
 function useHome() {
-  const { templates } = useContext(workoutTemplates);
+  const { templates, loadingTemplates } = useContext(workoutTemplates);
 
   const [activeTemplates, setActiveTemplates] = useState<WorkoutTemplate[]>([]);
-  const [templateSearchQuery, setTemplateSearachQuery] = useState<
-    string | null
-  >(null);
-  const [templatesToShow, setTemplatesToShow] =
-    useState<WorkoutTemplate[]>(templates);
+  const [templateSearchQuery, setTemplateSearachQuery] = useState<string>("");
 
   const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value);
-
-  useEffect(() => {
-    if (templateSearchQuery !== null) {
-      const time = setTimeout(() => {
-        queryTemplates();
-      }, 250);
-      return () => clearTimeout(time);
-    }
-  }, [templateSearchQuery]);
-
-  useEffect(() => {
-    setTemplatesToShow(templates);
-  }, [templates]);
-
-  const queryTemplates = () => {
-    const qryTemplates = templates.filter((template) =>
-      template.name
-        .toLowerCase()
-        .includes(templateSearchQuery.toLocaleLowerCase())
-    );
-    setTemplatesToShow(qryTemplates);
-  };
 
   const modalizeRef = useRef<Modalize>(null);
 
@@ -110,8 +84,9 @@ function useHome() {
   };
 
   return {
+    templates,
+    loadingTemplates,
     activeTemplates,
-    templatesToShow,
     currentDay,
     chosenDay,
     updateChosenDay,

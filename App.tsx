@@ -12,6 +12,7 @@ import SqliteDB from "context/sqliteDB";
 export default function App() {
   const {
     templates,
+    loadingTemplates,
     addTemplate,
     modifyTemplate,
     removeTemplate,
@@ -23,7 +24,13 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SqliteDB.Provider value={{ connector: dbConnector }}>
         <WorkoutRoutine.Provider
-          value={{ templates, addTemplate, modifyTemplate, removeTemplate }}
+          value={{
+            templates,
+            addTemplate,
+            modifyTemplate,
+            removeTemplate,
+            loadingTemplates,
+          }}
         >
           <NavigationContainer theme={theme}>
             <StatusBar style="light" translucent={true} animated />

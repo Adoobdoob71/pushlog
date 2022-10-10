@@ -14,6 +14,7 @@ import {
 
 function useApp() {
   const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([]);
+  const [loadingTemplates, setLoadingTemplates] = useState(true);
   const [dbConnector, setDBConnector] = useState<DataSource | null>(null);
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background);
@@ -47,6 +48,7 @@ function useApp() {
   const readTemplates = async () => {
     const templatesData = await dbConnector.manager.find(Workout);
     setTemplates(templatesData);
+    setLoadingTemplates(false);
   };
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
@@ -54,6 +56,7 @@ function useApp() {
       const temp = dbConnector.manager.create(Workout, newTemplate);
       await dbConnector.manager.save(Workout, temp);
       setTemplates((templates) => [...templates, temp]);
+      setLoadingTemplates(false);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -80,6 +83,7 @@ function useApp() {
       setTemplates((templates) =>
         templates.filter((template) => template.id !== templateId)
       );
+      setLoadingTemplates(false);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -103,6 +107,7 @@ function useApp() {
       );
       newTemplateArr.push(modifiedTemplate);
       setTemplates(newTemplateArr);
+      setLoadingTemplates(false);
       Toast.show({
         type: "success",
         text1: "Amazing!",
@@ -120,6 +125,7 @@ function useApp() {
 
   return {
     templates,
+    loadingTemplates,
     addTemplate,
     removeTemplate,
     modifyTemplate,

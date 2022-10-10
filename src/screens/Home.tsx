@@ -64,7 +64,8 @@ const Home = () => {
         theme={agendaTheme}
         pastScrollRange={18}
         futureScrollRange={18}
-        showClosingKnob
+        showClosingKnob={true}
+        hideKnob
         onCalendarToggled={(enabled) =>
           NavigationBar.setBackgroundColorAsync(
             enabled ? theme.colors.card : theme.colors.background

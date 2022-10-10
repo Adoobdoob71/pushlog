@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Exercise, MuscleCategory, WorkoutTemplate } from "utils/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import workoutTemplates from "context/workoutTemplates";
-import { getExerciseInfo, getExercises } from "api/functions";
+import { getAllExercises, getExerciseInfo, getExercises } from "api/functions";
 import { WGER_URL } from "api/constants";
 import Toast from "react-native-toast-message";
 import { Alert } from "react-native";
@@ -20,9 +20,10 @@ function useCustomizeTemplate() {
       : { name: "", description: "", exercises: [], muscleCategories: [] }
   );
   const [tags, setTags] = useState<MuscleCategory[]>([]);
-  const [exercisesQueryData, setExercisesQueryData] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState([]);
   const [exerciseSearch, setExerciseSearch] = useState("");
   const [exercisesForRemoval, setExercisesForRemoval] = useState<number[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const { templates } = useContext(workoutTemplates);
   const { addTemplate, modifyTemplate } = useContext(workoutTemplates);
@@ -72,34 +73,49 @@ function useCustomizeTemplate() {
     setExerciseSearch(searchQuery);
 
   useEffect(() => {
-    const searchDelay = setTimeout(() => {
-      setExercisesQueryData([]);
-      exerciseSearch.length > 0 && loadExercises(exerciseSearch);
-    }, 500);
-    return () => clearTimeout(searchDelay);
-  }, [exerciseSearch]);
+    loadExercises();
+  }, []);
 
-  const loadExercises = async (exerciseSearch: string) => {
+  const loadExercises = async () => {
     try {
-      const data = await getExercises(exerciseSearch);
-      data.suggestions.forEach((item) => {
-        setExercisesQueryData((exercisesQueryData) => [
-          ...exercisesQueryData,
-          {
-            exerciseNumber: item.data.id,
-            name: item.data.name,
-            image: item.data.image ? WGER_URL.concat(item.data.image) : null,
-            muscleCategories: [{ muscleId: 0, name: item.data.category }],
-          },
-        ]);
-      });
+      const data = await getAllExercises();
+      const exercisesArr = data.results.flatMap((item) =>
+        item.language.id === 2
+          ? {
+              name: item.name,
+              description: item.description,
+              exerciseNumber: item.id,
+              image: item.images[0]?.image,
+              muscleCategories: item.muscles[0]
+                ? [
+                    {
+                      name:
+                        item.muscles[0].name_en !== ""
+                          ? item.muscles[0].name_en
+                          : item.muscles[0].name,
+                      muscleId: item.muscles[0].id,
+                    },
+                    ...item.muscles_secondary.map((mc) => {
+                      return {
+                        name: mc.name_en !== "" ? mc.name_en : mc.name,
+                        muscleId: mc.id,
+                      };
+                    }),
+                  ]
+                : [],
+            }
+          : []
+      );
+      setExercises(exercisesArr);
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
       });
+      console.error(error);
     }
+    setLoading(false);
   };
 
   const addExercise = async (newExercise: Exercise) => {
@@ -121,22 +137,24 @@ function useCustomizeTemplate() {
         name: data.name,
         description: data.description,
         exerciseNumber: data.id,
-        image: newExercise.image,
-        muscleCategories: [
-          {
-            name:
-              data.muscles[0].name_en !== ""
-                ? data.muscles[0].name_en
-                : data.muscles[0].name,
-            muscleId: data.muscles[0].id,
-          },
-          ...data.muscles_secondary.map((mc) => {
-            return {
-              name: mc.name_en !== "" ? mc.name_en : mc.name,
-              muscleId: mc.id,
-            };
-          }),
-        ],
+        image: data.images[0]?.image,
+        muscleCategories: data.muscles[0]
+          ? [
+              {
+                name:
+                  data.muscles[0].name_en !== ""
+                    ? data.muscles[0].name_en
+                    : data.muscles[0].name,
+                muscleId: data.muscles[0].id,
+              },
+              ...data.muscles_secondary.map((mc) => {
+                return {
+                  name: mc.name_en !== "" ? mc.name_en : mc.name,
+                  muscleId: mc.id,
+                };
+              }),
+            ]
+          : [],
       };
       setWorkout((w) => {
         return { ...w, exercises: [...w.exercises, exercise] };
@@ -215,12 +233,12 @@ function useCustomizeTemplate() {
     tags,
     workout,
     templates,
+    exercises,
     goBack,
     handleName,
     handleDescription,
     modalizeRef,
     handlePresentModalPress,
-    exercisesQueryData,
     exerciseSearch,
     changeExerciseQuery,
     addExercise,
@@ -231,6 +249,7 @@ function useCustomizeTemplate() {
     toggleExerciseForRemoval,
     deleteExercises,
     submitWorkout,
+    loading,
   };
 }
 
