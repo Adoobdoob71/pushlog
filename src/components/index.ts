@@ -7,10 +7,10 @@ export { default as Button } from "./Base/Button";
 export { default as Tag } from "./Base/Tag";
 
 // Content
-export { default as MasonryList } from "./Content/MasonryList";
 export { default as TemplateCard } from "./Content/TemplateCard";
 export { default as ExerciseCard } from "./Content/ExerciseCard";
 export { default as Graph } from "./Content/Graph";
+export { default as MasonryList } from "./Content/MasonryList";
 
 // Fragments
 export { default as CreateSet } from "./Fragments/CreateSet";

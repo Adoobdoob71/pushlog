@@ -2,7 +2,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Exercise, MuscleCategory, WorkoutTemplate } from "utils/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import workoutTemplates from "context/workoutTemplates";
-import { getAllExercises, getExerciseInfo, getExercises } from "api/functions";
+import {
+  getAllExercises,
+  getExerciseInfo,
+  getExercises,
+  getMuscles,
+} from "api/functions";
 import { WGER_URL } from "api/constants";
 import Toast from "react-native-toast-message";
 import { Alert } from "react-native";
@@ -23,12 +28,22 @@ function useCustomizeTemplate() {
   const [exercises, setExercises] = useState([]);
   const [exerciseSearch, setExerciseSearch] = useState("");
   const [exercisesForRemoval, setExercisesForRemoval] = useState<number[]>([]);
+  const [muscles, setMuscles] = useState<
+    {
+      id: number;
+      name: string;
+      nameEn: string;
+      isFront: boolean;
+      image: string;
+    }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   const { templates } = useContext(workoutTemplates);
   const { addTemplate, modifyTemplate } = useContext(workoutTemplates);
 
-  const modalizeRef = useRef<Modalize>(null);
+  const exerciseModalRef = useRef<Modalize>(null);
+  const filterModalRef = useRef<Modalize>(null);
 
   const goBack = () =>
     Alert.alert("Are you sure?", "Everything will be lost", [
@@ -39,8 +54,12 @@ function useCustomizeTemplate() {
     /* @ts-ignore */
     navigation.navigate("ExerciseInfo", { exercise: exercise });
 
-  const handlePresentModalPress = () => {
-    modalizeRef.current?.open();
+  const openExerciseModal = () => {
+    exerciseModalRef.current?.open();
+  };
+
+  const openFilterModal = () => {
+    filterModalRef.current?.open();
   };
 
   useEffect(() => {
@@ -73,10 +92,10 @@ function useCustomizeTemplate() {
     setExerciseSearch(searchQuery);
 
   useEffect(() => {
-    loadExercises();
+    loadData();
   }, []);
 
-  const loadExercises = async () => {
+  const loadData = async () => {
     try {
       const data = await getAllExercises();
       const exercisesArr = data.results.flatMap((item) =>
@@ -107,6 +126,19 @@ function useCustomizeTemplate() {
           : []
       );
       setExercises(exercisesArr);
+      const muscleData = await getMuscles();
+      muscleData.results.forEach((item) => {
+        setMuscles((musclesArr) => [
+          ...musclesArr,
+          {
+            id: item.id,
+            name: item.name,
+            nameEn: item.name_en,
+            isFront: item.is_front,
+            image: item.image_url_main,
+          },
+        ]);
+      });
     } catch (error) {
       Toast.show({
         type: "error",
@@ -234,11 +266,14 @@ function useCustomizeTemplate() {
     workout,
     templates,
     exercises,
+    muscles,
     goBack,
     handleName,
     handleDescription,
-    modalizeRef,
-    handlePresentModalPress,
+    exerciseModalRef,
+    filterModalRef,
+    openExerciseModal,
+    openFilterModal,
     exerciseSearch,
     changeExerciseQuery,
     addExercise,

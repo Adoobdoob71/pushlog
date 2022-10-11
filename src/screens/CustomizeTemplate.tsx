@@ -14,7 +14,8 @@ const CustomizeTemplate: FC = () => {
       goBack,
       handleDescription,
       handleName,
-      handlePresentModalPress,
+      openExerciseModal,
+      openFilterModal,
       navigateToExerciseInfo,
       toggleExerciseForRemoval,
       exercisesForRemoval,
@@ -128,7 +129,7 @@ const CustomizeTemplate: FC = () => {
             mode="text"
             style={{ marginBottom: sizes.SIZE_12 }}
             icon="plus"
-            onPress={handlePresentModalPress}
+            onPress={openExerciseModal}
           >
             Add Exercise
           </Button>

@@ -22,6 +22,12 @@ export async function getExerciseInfo(exerciseId: number) {
   return jsonData;
 }
 
+export async function getMuscles() {
+  const data = await fetch(`${WGER_URL_API}/muscle`);
+  const jsonData = await data.json();
+  return jsonData;
+}
+
 export async function getMuscleInfo(muscleId: string) {
   const data = await fetch(`${WGER_URL_API}/muscle/${muscleId}`);
   const jsonData = await data.json();

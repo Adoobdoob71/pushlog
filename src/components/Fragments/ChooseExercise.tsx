@@ -9,8 +9,9 @@ import {
 import { sizes, styles, theme } from "utils/styles";
 import { Exercise } from "utils/types";
 import ExerciseCard from "../Content/ExerciseCard";
+import MasonryList from "../Content/MasonryList";
 import Button from "../Base/Button";
-import { HEIGHT } from "utils/constants";
+import { HEIGHT, WIDTH } from "utils/constants";
 import { Modalize } from "react-native-modalize";
 import { IHandles } from "react-native-modalize/lib/options";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -21,9 +22,18 @@ interface Props {
   changeExerciseQuery: (value: string) => void;
   navigateToExerciseInfo: (exercise: Exercise) => void;
   addExercise: (newExercise: Exercise) => Promise<void>;
-  modalizeRef: React.MutableRefObject<IHandles>;
+  exerciseModalRef: React.MutableRefObject<IHandles>;
+  filterModalRef: React.MutableRefObject<IHandles>;
+  openFilterModal: () => void;
   loading: boolean;
   exercises: Exercise[];
+  muscles: {
+    id: number;
+    name: string;
+    nameEn: string;
+    isFront: boolean;
+    image: string;
+  }[];
 }
 
 const ChooseExercise: FC<Props> = ({
@@ -31,11 +41,14 @@ const ChooseExercise: FC<Props> = ({
   exerciseSearch,
   navigateToExerciseInfo,
   addExercise,
-  modalizeRef,
+  exerciseModalRef,
+  filterModalRef,
+  openFilterModal,
   loading,
   exercises,
+  muscles,
 }) => {
-  const HeaderComponent = (
+  const ExercisesHeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
       <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
         <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
@@ -43,7 +56,7 @@ const ChooseExercise: FC<Props> = ({
         </Text>
         <Button
           mode="text"
-          onPress={() => modalizeRef.current.close()}
+          onPress={() => exerciseModalRef.current.close()}
           style={{ marginStart: "auto" }}
         >
           Close
@@ -77,7 +90,7 @@ const ChooseExercise: FC<Props> = ({
             selectionColor={theme.colors.primary_3}
           />
         </View>
-        <Button mode="text" onPress={() => {}} icon="filter">
+        <Button mode="text" onPress={openFilterModal} icon="filter">
           Filter
         </Button>
       </View>
@@ -90,40 +103,86 @@ const ChooseExercise: FC<Props> = ({
       onPress={() => addExercise(item)}
       onLongPress={() => navigateToExerciseInfo(item)}
       style={{
-        marginBottom: sizes.SIZE_24,
+        marginBottom: sizes.SIZE_12,
         marginHorizontal: sizes.SIZE_18,
       }}
     />
   );
 
+  const FilterHeaderComponent = (
+    <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
+      <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
+        <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
+          Filters
+        </Text>
+        <Button
+          mode="text"
+          onPress={() => filterModalRef.current.close()}
+          style={{ marginStart: "auto" }}
+        >
+          Close
+        </Button>
+      </View>
+    </View>
+  );
+
   return (
-    <Modalize
-      ref={modalizeRef}
-      customRenderer={
-        loading ? (
-          <View style={[styles.flex, styles.center]}>
-            <ActivityIndicator size="large" color={theme.colors.primary} />
-          </View>
-        ) : (
-          <FlashList
-            data={exercises.filter((item) =>
-              item.name
-                .toLocaleLowerCase()
-                .includes(exerciseSearch.toLocaleLowerCase())
-            )}
-            renderItem={renderItem}
-            getItemType={(item) => typeof item}
-            keyExtractor={(item, index) => index.toString()}
-            showsVerticalScrollIndicator={false}
-            estimatedItemSize={sizes.SIZE_150}
+    <>
+      <Modalize
+        ref={exerciseModalRef}
+        customRenderer={
+          loading ? (
+            <View style={[styles.flex, styles.center]}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+          ) : (
+            <FlashList
+              data={exercises.filter((item) =>
+                item.name
+                  .toLocaleLowerCase()
+                  .includes(exerciseSearch.toLocaleLowerCase())
+              )}
+              renderItem={renderItem}
+              getItemType={(item) => typeof item}
+              keyExtractor={(_item, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              estimatedItemSize={sizes.SIZE_150}
+            />
+          )
+        }
+        modalHeight={HEIGHT * 0.9}
+        panGestureComponentEnabled
+        withHandle={false}
+        modalStyle={{ backgroundColor: theme.colors.background }}
+        HeaderComponent={ExercisesHeaderComponent}
+        handleStyle={{ backgroundColor: theme.colors.primary }}
+      />
+      <Modalize
+        ref={filterModalRef}
+        panGestureComponentEnabled
+        withHandle={false}
+        adjustToContentHeight
+        HeaderComponent={FilterHeaderComponent}
+        modalStyle={{ backgroundColor: theme.colors.background }}
+        handleStyle={{ backgroundColor: theme.colors.primary }}
+      ></Modalize>
+      <Modalize
+        ref={filterModalRef}
+        panGestureComponentEnabled
+        withHandle={false}
+        modalHeight={HEIGHT * 0.3}
+        HeaderComponent={FilterHeaderComponent}
+        modalStyle={{ backgroundColor: theme.colors.background }}
+        customRenderer={
+          <MasonryList
+            data={muscles}
+            style={{ width: WIDTH * 0.65, height: "auto", marginStart: "auto" }}
+            renderItem={({ item, index }) => <Text>{item.name}</Text>}
           />
-        )
-      }
-      withHandle={false}
-      modalStyle={{ backgroundColor: theme.colors.background }}
-      HeaderComponent={HeaderComponent}
-      handleStyle={{ backgroundColor: theme.colors.primary }}
-    />
+        }
+        handleStyle={{ backgroundColor: theme.colors.primary }}
+      ></Modalize>
+    </>
   );
 };
 

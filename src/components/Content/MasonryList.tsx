@@ -1,12 +1,19 @@
 import { FC, ReactElement } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { StyleProperty } from "utils/types";
 import { sizes, styles } from "utils/styles";
 
 interface Props<T> {
   numColumns?: number;
   data: T[];
-  renderItem: ({ item, index }: { item: T; index: number }) => ReactElement;
+  renderItem: ({
+    item,
+    index,
+  }: {
+    item: T;
+    index: number;
+  }) => JSX.Element | null;
   style?: StyleProperty;
   contentContainerStyle?: StyleProperty;
   header?: ReactElement;
@@ -33,6 +40,7 @@ function MasonryList<T>({
   return (
     <ScrollView
       style={[style]}
+      horizontal={false}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >

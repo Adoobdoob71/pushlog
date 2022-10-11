@@ -144,7 +144,7 @@ const ChooseTemplate: FC<Props> = ({
             )}
             renderItem={renderItem}
             getItemType={(item) => typeof item}
-            keyExtractor={(item, index) => index.toString()}
+            keyExtractor={(_item, index) => index.toString()}
             ListHeaderComponent={ListHeaderComponent}
             stickyHeaderHiddenOnScroll
             stickyHeaderIndices={[0]}
@@ -153,6 +153,8 @@ const ChooseTemplate: FC<Props> = ({
           />
         )
       }
+      panGestureComponentEnabled
+      modalHeight={HEIGHT * 0.9}
       withHandle={false}
       modalStyle={{ backgroundColor: theme.colors.background }}
       HeaderComponent={HeaderComponent}
@@ -188,6 +190,7 @@ const stylesheet = StyleSheet.create({
     paddingHorizontal: sizes.SIZE_12,
   },
   bottomSheetSearchBarInput: {
+    flex: 1,
     textAlignVertical: "center",
     color: theme.colors.text,
     fontSize: sizes.SIZE_12,

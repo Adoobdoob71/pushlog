@@ -103,6 +103,7 @@ const stylesheet = StyleSheet.create({
     backgroundColor: `${theme.colors.primary}30`,
     padding: sizes.SIZE_8,
     borderRadius: sizes.SIZE_8,
+    marginStart: sizes.SIZE_20,
   },
   exerciseImage: {
     width: sizes.SIZE_70,
