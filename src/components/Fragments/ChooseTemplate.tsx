@@ -10,6 +10,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { sizes, styles, theme } from "utils/styles";
 import Tag from "../Base/Tag";
 import Button from "../Base/Button";
+import MuscleButton from "../Base/MuscleButton";
 import TemplateCard from "../Content/TemplateCard";
 import { WorkoutTemplate } from "utils/types";
 import { useNavigation } from "@react-navigation/native";
@@ -18,15 +19,28 @@ import { IHandles } from "react-native-modalize/lib/options";
 import { HEIGHT } from "utils/constants";
 import { FlashList } from "@shopify/flash-list";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { FlatGrid } from "react-native-super-grid";
 
 interface Props {
   templates: WorkoutTemplate[];
+  muscles: {
+    id: number;
+    name: string;
+    nameEn: string;
+    isFront: boolean;
+    image: string;
+  }[];
   templateSearchQuery: string;
   onSearchQueryChange: (value: string) => void;
   activeTemplates: WorkoutTemplate[];
   removeActiveTemplates: (id: string) => void;
   addActiveTemplates: (template: WorkoutTemplate) => void;
-  modalizeRef: React.MutableRefObject<IHandles>;
+  templatesModalRef: React.MutableRefObject<IHandles>;
+  filterModalRef: React.MutableRefObject<IHandles>;
+  openFilterModal: () => void;
+  toggleMuscleFilter: (id: number) => void;
+  activeMuscleFilters: number[];
+  loadingMuscles: boolean;
   loadingTemplates: boolean;
 }
 
@@ -37,8 +51,14 @@ const ChooseTemplate: FC<Props> = ({
   onSearchQueryChange,
   removeActiveTemplates,
   templateSearchQuery,
-  modalizeRef,
   loadingTemplates,
+  filterModalRef,
+  loadingMuscles,
+  openFilterModal,
+  templatesModalRef,
+  toggleMuscleFilter,
+  muscles,
+  activeMuscleFilters,
 }) => {
   const navigation = useNavigation();
 
@@ -51,7 +71,7 @@ const ChooseTemplate: FC<Props> = ({
       params: { template: template },
     });
 
-  const HeaderComponent = (
+  const TemplatesHeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
       <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
         <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
@@ -59,31 +79,44 @@ const ChooseTemplate: FC<Props> = ({
         </Text>
         <Button
           mode="text"
-          onPress={() => modalizeRef.current.close()}
+          onPress={() => templatesModalRef.current.close()}
           style={{ marginStart: "auto" }}
         >
           Close
         </Button>
       </View>
-      <View style={[styles.rowCenter, stylesheet.bottomSheetSearchBar]}>
-        <MaterialCommunityIcons
-          name="magnify"
-          color={theme.colors.border}
-          size={sizes.SIZE_14}
-          style={{ marginEnd: sizes.SIZE_8 }}
-        />
-        <TextInput
-          placeholder="Search any template..."
-          placeholderTextColor={theme.colors.border}
-          style={stylesheet.bottomSheetSearchBarInput}
-          value={templateSearchQuery}
-          onChangeText={onSearchQueryChange}
-          selectionColor={theme.colors.primary_3}
-        />
+      <View
+        style={[
+          styles.rowCenter,
+          {
+            paddingTop: sizes.SIZE_16,
+            paddingHorizontal: sizes.SIZE_24,
+          },
+        ]}
+      >
+        <View style={[styles.rowCenter, stylesheet.bottomSheetSearchBar]}>
+          <MaterialCommunityIcons
+            name="magnify"
+            color={theme.colors.border}
+            size={sizes.SIZE_14}
+            style={{ marginEnd: sizes.SIZE_8 }}
+          />
+          <TextInput
+            placeholder="Search any template..."
+            placeholderTextColor={theme.colors.border}
+            style={stylesheet.bottomSheetSearchBarInput}
+            value={templateSearchQuery}
+            onChangeText={onSearchQueryChange}
+            selectionColor={theme.colors.primary_3}
+          />
+        </View>
+        <Button mode="text" onPress={openFilterModal} icon="filter">
+          Filter
+        </Button>
       </View>
     </View>
   );
-  const renderItem = ({ item, index }) => (
+  const renderTemplateItem = ({ item, index }) => (
     <View
       style={[
         stylesheet.templateActive,
@@ -102,7 +135,7 @@ const ChooseTemplate: FC<Props> = ({
       />
     </View>
   );
-  const ListHeaderComponent = () => (
+  const tagListComponent = () => (
     <View style={stylesheet.tagList} onStartShouldSetResponder={() => true}>
       <ScrollView
         showsHorizontalScrollIndicator={false}
@@ -127,38 +160,100 @@ const ChooseTemplate: FC<Props> = ({
       </ScrollView>
     </View>
   );
+
+  const FilterHeaderComponent = (
+    <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
+      <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
+        <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
+          Muscle Filters
+        </Text>
+        <Button
+          mode="text"
+          onPress={() => filterModalRef.current.close()}
+          style={{ marginStart: "auto" }}
+        >
+          Close
+        </Button>
+      </View>
+    </View>
+  );
   return (
-    <Modalize
-      ref={modalizeRef}
-      customRenderer={
-        loadingTemplates ? (
-          <View style={[styles.flex, styles.center]}>
-            <ActivityIndicator size="large" color={theme.colors.primary} />
-          </View>
-        ) : (
-          <FlashList
-            data={templates.filter((template) =>
-              template.name
-                .toLowerCase()
-                .includes(templateSearchQuery.toLocaleLowerCase())
+    <>
+      <Modalize
+        ref={templatesModalRef}
+        customRenderer={
+          loadingTemplates ? (
+            <View style={[styles.flex, styles.center]}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+          ) : (
+            <FlashList
+              data={
+                activeMuscleFilters.length === 0
+                  ? templates.filter((template) =>
+                      template.name
+                        .toLowerCase()
+                        .includes(templateSearchQuery.toLocaleLowerCase())
+                    )
+                  : templates
+                      .filter((item) =>
+                        item.muscleCategories.some((mc) =>
+                          activeMuscleFilters.includes(mc.muscleId)
+                        )
+                      )
+                      .filter((template) =>
+                        template.name
+                          .toLowerCase()
+                          .includes(templateSearchQuery.toLocaleLowerCase())
+                      )
+              }
+              renderItem={renderTemplateItem}
+              getItemType={(item) => typeof item}
+              keyExtractor={(_item, index) => index.toString()}
+              ListHeaderComponent={tagListComponent}
+              stickyHeaderHiddenOnScroll
+              stickyHeaderIndices={[0]}
+              showsVerticalScrollIndicator={false}
+              estimatedItemSize={sizes.SIZE_200}
+            />
+          )
+        }
+        panGestureComponentEnabled
+        modalHeight={HEIGHT * 0.9}
+        withHandle={false}
+        modalStyle={{ backgroundColor: theme.colors.background }}
+        HeaderComponent={TemplatesHeaderComponent}
+      />
+      <Modalize
+        ref={filterModalRef}
+        withHandle={false}
+        panGestureEnabled={false}
+        modalHeight={HEIGHT * 0.65}
+        customRenderer={
+          <FlatGrid
+            data={muscles}
+            renderItem={({ item, index }) => (
+              <MuscleButton
+                {...item}
+                active={activeMuscleFilters.includes(item.id)}
+                onPress={() => toggleMuscleFilter(item.id)}
+                key={index}
+                style={{
+                  height: sizes.SIZE_70,
+                  paddingHorizontal: 0,
+                }}
+              />
             )}
-            renderItem={renderItem}
-            getItemType={(item) => typeof item}
-            keyExtractor={(_item, index) => index.toString()}
-            ListHeaderComponent={ListHeaderComponent}
-            stickyHeaderHiddenOnScroll
-            stickyHeaderIndices={[0]}
+            spacing={10}
+            key={1}
+            keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
-            estimatedItemSize={sizes.SIZE_200}
           />
-        )
-      }
-      panGestureComponentEnabled
-      modalHeight={HEIGHT * 0.9}
-      withHandle={false}
-      modalStyle={{ backgroundColor: theme.colors.background }}
-      HeaderComponent={HeaderComponent}
-    />
+        }
+        HeaderComponent={FilterHeaderComponent}
+        modalStyle={{ backgroundColor: theme.colors.background }}
+      ></Modalize>
+    </>
   );
 };
 
@@ -182,9 +277,9 @@ const stylesheet = StyleSheet.create({
     marginStart: sizes.SIZE_12,
   },
   bottomSheetSearchBar: {
+    flex: 1,
     backgroundColor: "#132831",
-    marginHorizontal: sizes.SIZE_36,
-    marginTop: sizes.SIZE_16,
+    marginEnd: sizes.SIZE_16,
     borderRadius: sizes.SIZE_4,
     paddingVertical: sizes.SIZE_6,
     paddingHorizontal: sizes.SIZE_12,

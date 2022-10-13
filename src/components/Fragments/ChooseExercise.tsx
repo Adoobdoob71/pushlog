@@ -175,7 +175,6 @@ const ChooseExercise: FC<Props> = ({
         withHandle={false}
         modalStyle={{ backgroundColor: theme.colors.background }}
         HeaderComponent={ExercisesHeaderComponent}
-        handleStyle={{ backgroundColor: theme.colors.primary }}
       />
       <Modalize
         ref={filterModalRef}
@@ -184,7 +183,6 @@ const ChooseExercise: FC<Props> = ({
         adjustToContentHeight
         HeaderComponent={FilterHeaderComponent}
         modalStyle={{ backgroundColor: theme.colors.background }}
-        handleStyle={{ backgroundColor: theme.colors.primary }}
       ></Modalize>
       <Modalize
         ref={filterModalRef}
@@ -214,7 +212,6 @@ const ChooseExercise: FC<Props> = ({
         }
         HeaderComponent={FilterHeaderComponent}
         modalStyle={{ backgroundColor: theme.colors.background }}
-        handleStyle={{ backgroundColor: theme.colors.primary }}
       ></Modalize>
     </>
   );

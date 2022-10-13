@@ -147,7 +147,6 @@ function useCustomizeTemplate() {
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
       });
-      console.error(error);
     }
     setLoading(false);
   };
