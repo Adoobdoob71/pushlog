@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
   const homeHook = useHome(),
-    { updateChosenDay, handlePresentModalPress, activeTemplates } = homeHook;
+    { updateChosenDay, openTemplatesModal, activeTemplates } = homeHook;
 
   const agendaTheme = {
     calendarBackground: theme.colors.card,
@@ -111,7 +111,7 @@ const Home = () => {
       <IconButton
         name="pencil"
         color={theme.colors.text}
-        onPress={handlePresentModalPress}
+        onPress={openTemplatesModal}
         size={sizes.SIZE_24}
         fab
       />

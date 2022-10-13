@@ -2,13 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Exercise, MuscleCategory, WorkoutTemplate } from "utils/types";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import workoutTemplates from "context/workoutTemplates";
-import {
-  getAllExercises,
-  getExerciseInfo,
-  getExercises,
-  getMuscles,
-} from "api/functions";
-import { WGER_URL } from "api/constants";
+import { getAllExercises, getExerciseInfo, getMuscles } from "api/functions";
 import Toast from "react-native-toast-message";
 import { Alert } from "react-native";
 import { Modalize } from "react-native-modalize";
@@ -37,6 +31,7 @@ function useCustomizeTemplate() {
       image: string;
     }[]
   >([]);
+  const [activeMuscleFilters, setActiveMuscleFilters] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { templates } = useContext(workoutTemplates);
@@ -61,6 +56,13 @@ function useCustomizeTemplate() {
   const openFilterModal = () => {
     filterModalRef.current?.open();
   };
+
+  const toggleMuscleFilter = (id: number) =>
+    setActiveMuscleFilters((activeFilters) => {
+      if (activeFilters.some((item) => item === id))
+        return activeFilters.filter((item) => item !== id);
+      return [...activeFilters, id];
+    });
 
   useEffect(() => {
     const newTags = workout.exercises.reduce(
@@ -285,6 +287,8 @@ function useCustomizeTemplate() {
     deleteExercises,
     submitWorkout,
     loading,
+    activeMuscleFilters,
+    toggleMuscleFilter,
   };
 }
 

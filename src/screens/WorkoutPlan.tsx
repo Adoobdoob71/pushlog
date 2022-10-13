@@ -12,9 +12,8 @@ import { WorkoutTemplate } from "utils/types";
 
 const WorkoutPlan = () => {
   const {
-    templatesToShow,
+    templates,
     goBack,
-    submitChanges,
     templatesForRemoval,
     toggleTemplateForRemoval,
     deleteTemplates,
@@ -53,7 +52,11 @@ const WorkoutPlan = () => {
         />
       </View>
       <FlatList
-        data={templatesToShow}
+        data={templates.filter((template) =>
+          template.name
+            .toLowerCase()
+            .includes(templateSearchQuery.toLocaleLowerCase())
+        )}
         style={{
           marginVertical: sizes.SIZE_18,
         }}

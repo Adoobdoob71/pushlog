@@ -1,5 +1,6 @@
 import { FC } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";

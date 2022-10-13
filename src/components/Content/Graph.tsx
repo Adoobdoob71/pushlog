@@ -1,5 +1,6 @@
 import { FC, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { HEIGHT, WIDTH } from "utils/constants";
 import { sizes, styles, theme } from "utils/styles";
 import { StyleProperty } from "utils/types";

@@ -1,4 +1,5 @@
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { StyleProperty } from "utils/types";
 import { ComponentProps, FC } from "react";

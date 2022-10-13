@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { FC } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { sizes, styles, theme } from "utils/styles";
 import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types";
 import Tag from "../Base/Tag";

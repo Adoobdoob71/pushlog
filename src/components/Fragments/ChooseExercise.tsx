@@ -9,13 +9,15 @@ import {
 import { sizes, styles, theme } from "utils/styles";
 import { Exercise } from "utils/types";
 import ExerciseCard from "../Content/ExerciseCard";
-import MasonryList from "../Content/MasonryList";
 import Button from "../Base/Button";
-import { HEIGHT, WIDTH } from "utils/constants";
+import MuscleButton from "../Base/MuscleButton";
+
+import { HEIGHT } from "utils/constants";
 import { Modalize } from "react-native-modalize";
 import { IHandles } from "react-native-modalize/lib/options";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { FlashList } from "@shopify/flash-list";
+import { AnimatedFlashList } from "@shopify/flash-list";
+import { FlatGrid } from "react-native-super-grid";
 
 interface Props {
   exerciseSearch: string;
@@ -34,6 +36,8 @@ interface Props {
     isFront: boolean;
     image: string;
   }[];
+  activeMuscleFilters: number[];
+  toggleMuscleFilter: (id: number) => void;
 }
 
 const ChooseExercise: FC<Props> = ({
@@ -47,6 +51,8 @@ const ChooseExercise: FC<Props> = ({
   loading,
   exercises,
   muscles,
+  activeMuscleFilters,
+  toggleMuscleFilter,
 }) => {
   const ExercisesHeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
@@ -113,7 +119,7 @@ const ChooseExercise: FC<Props> = ({
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
       <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
         <Text style={stylesheet.bottomSheetTitle} numberOfLines={1}>
-          Filters
+          Muscle Filters
         </Text>
         <Button
           mode="text"
@@ -136,12 +142,26 @@ const ChooseExercise: FC<Props> = ({
               <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
           ) : (
-            <FlashList
-              data={exercises.filter((item) =>
-                item.name
-                  .toLocaleLowerCase()
-                  .includes(exerciseSearch.toLocaleLowerCase())
-              )}
+            <AnimatedFlashList
+              data={
+                activeMuscleFilters.length === 0
+                  ? exercises.filter((item) =>
+                      item.name
+                        .toLocaleLowerCase()
+                        .includes(exerciseSearch.toLocaleLowerCase())
+                    )
+                  : exercises
+                      .filter((item) =>
+                        item.muscleCategories.some((mc) =>
+                          activeMuscleFilters.includes(mc.muscleId)
+                        )
+                      )
+                      .filter((item) =>
+                        item.name
+                          .toLocaleLowerCase()
+                          .includes(exerciseSearch.toLocaleLowerCase())
+                      )
+              }
               renderItem={renderItem}
               getItemType={(item) => typeof item}
               keyExtractor={(_item, index) => index.toString()}
@@ -168,18 +188,32 @@ const ChooseExercise: FC<Props> = ({
       ></Modalize>
       <Modalize
         ref={filterModalRef}
-        panGestureComponentEnabled
         withHandle={false}
-        modalHeight={HEIGHT * 0.3}
-        HeaderComponent={FilterHeaderComponent}
-        modalStyle={{ backgroundColor: theme.colors.background }}
+        panGestureEnabled={false}
+        modalHeight={HEIGHT * 0.65}
         customRenderer={
-          <MasonryList
+          <FlatGrid
             data={muscles}
-            style={{ width: WIDTH * 0.65, height: "auto", marginStart: "auto" }}
-            renderItem={({ item, index }) => <Text>{item.name}</Text>}
+            renderItem={({ item, index }) => (
+              <MuscleButton
+                {...item}
+                active={activeMuscleFilters.includes(item.id)}
+                onPress={() => toggleMuscleFilter(item.id)}
+                key={index}
+                style={{
+                  height: sizes.SIZE_70,
+                  paddingHorizontal: 0,
+                }}
+              />
+            )}
+            spacing={10}
+            key={1}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
           />
         }
+        HeaderComponent={FilterHeaderComponent}
+        modalStyle={{ backgroundColor: theme.colors.background }}
         handleStyle={{ backgroundColor: theme.colors.primary }}
       ></Modalize>
     </>

@@ -8,12 +8,7 @@ function useWorkoutPlan() {
   const { templates, removeTemplate } = useContext(workoutTemplates);
 
   const [templatesForRemoval, setTemplatesForRemoval] = useState<string[]>([]);
-  const [templateSearchQuery, setTemplateSearachQuery] = useState<
-    string | null
-  >(null);
-  const [templatesToShow, setTemplatesToShow] =
-    useState<WorkoutTemplate[]>(templates);
-
+  const [templateSearchQuery, setTemplateSearachQuery] = useState<string>("");
   const navigation = useNavigation();
 
   const goBack = () => navigation.goBack();
@@ -21,28 +16,6 @@ function useWorkoutPlan() {
   const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value);
 
   const submitChanges = () => goBack();
-
-  useEffect(() => {
-    if (templateSearchQuery !== null) {
-      const time = setTimeout(() => {
-        queryTemplates();
-      }, 500);
-      return () => clearTimeout(time);
-    }
-  }, [templateSearchQuery]);
-
-  useEffect(() => {
-    setTemplatesToShow(templates);
-  }, [templates]);
-
-  const queryTemplates = () => {
-    const qryTemplates = templates.filter((template) =>
-      template.name
-        .toLowerCase()
-        .includes(templateSearchQuery.toLocaleLowerCase())
-    );
-    setTemplatesToShow(qryTemplates);
-  };
 
   const addTemplateForRemoval = (templateId: string) => {
     setTemplatesForRemoval((removalTemplates) => [
@@ -84,7 +57,7 @@ function useWorkoutPlan() {
   };
 
   return {
-    templatesToShow,
+    templates,
     goBack,
     submitChanges,
     templatesForRemoval,

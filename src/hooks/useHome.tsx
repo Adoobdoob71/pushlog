@@ -15,9 +15,7 @@ function useHome() {
 
   const modalizeRef = useRef<Modalize>(null);
 
-  const snapPoints = useMemo(() => ["50%", "85%"], []);
-
-  const handlePresentModalPress = () => {
+  const openTemplatesModal = () => {
     modalizeRef.current?.open();
   };
 
@@ -91,8 +89,7 @@ function useHome() {
     chosenDay,
     updateChosenDay,
     modalizeRef,
-    snapPoints,
-    handlePresentModalPress,
+    openTemplatesModal,
     addActiveTemplates,
     removeActiveTemplates,
     templateSearchQuery,
