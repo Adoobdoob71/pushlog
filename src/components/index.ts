@@ -16,3 +16,4 @@ export { default as Graph } from "./Content/Graph";
 export { default as CreateSet } from "./Fragments/CreateSet";
 export { default as ChooseTemplate } from "./Fragments/ChooseTemplate";
 export { default as ChooseExercise } from "./Fragments/ChooseExercise";
+export { default as WorkoutCalendar } from "./Fragments/WorkoutCalendar";

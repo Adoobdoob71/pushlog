@@ -27,6 +27,7 @@ function useHome() {
 
   const templatesModalRef = useRef<Modalize>(null);
   const filterModalRef = useRef<Modalize>(null);
+  const calendarModalRef = useRef<Modalize>(null);
 
   const openTemplatesModal = () => {
     templatesModalRef.current?.open();
@@ -36,6 +37,10 @@ function useHome() {
     filterModalRef.current?.open();
   };
 
+  const openCalendarModal = () => {
+    calendarModalRef.current?.open();
+  };
+  
   const toggleMuscleFilter = (id: number) =>
     setActiveMuscleFilters((activeFilters) => {
       if (activeFilters.some((item) => item === id))
@@ -48,7 +53,7 @@ function useHome() {
     day: date.getDate(),
     month: date.getMonth(),
     year: date.getFullYear(),
-    dateString: date.toLocaleString(),
+    dateString: date.toLocaleDateString(),
     timestamp: date.getMilliseconds(),
   };
   const [chosenDay, setChosenDay] = useState<DateData>(currentDay);
@@ -143,6 +148,8 @@ function useHome() {
     updateChosenDay,
     templatesModalRef,
     filterModalRef,
+    calendarModalRef,
+    openCalendarModal,
     openFilterModal,
     muscles,
     activeMuscleFilters,
