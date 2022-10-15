@@ -219,7 +219,7 @@ const ChooseTemplate: FC<Props> = ({
           )
         }
         panGestureComponentEnabled
-        modalHeight={HEIGHT * 0.9}
+        modalHeight={HEIGHT * 0.75}
         withHandle={false}
         modalStyle={{ backgroundColor: theme.colors.background }}
         HeaderComponent={TemplatesHeaderComponent}

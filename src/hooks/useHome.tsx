@@ -9,6 +9,16 @@ import { getMuscles } from "api/functions";
 function useHome() {
   const { templates, loadingTemplates } = useContext(workoutTemplates);
 
+  const date = new Date();
+  const currentDay = {
+    day: date.getDate(),
+    month: date.getMonth(),
+    year: date.getFullYear(),
+    dateString: date.toLocaleDateString(),
+    timestamp: date.getMilliseconds(),
+  };
+
+  const [chosenDay, setChosenDay] = useState<DateData>(currentDay);
   const [activeTemplates, setActiveTemplates] = useState<WorkoutTemplate[]>([]);
   const [templateSearchQuery, setTemplateSearachQuery] = useState<string>("");
   const [muscles, setMuscles] = useState<
@@ -28,19 +38,16 @@ function useHome() {
   const templatesModalRef = useRef<Modalize>(null);
   const filterModalRef = useRef<Modalize>(null);
   const calendarModalRef = useRef<Modalize>(null);
+  const workoutDayModalRef = useRef<Modalize>(null);
 
-  const openTemplatesModal = () => {
-    templatesModalRef.current?.open();
-  };
+  const openTemplatesModal = () => templatesModalRef.current?.open();
 
-  const openFilterModal = () => {
-    filterModalRef.current?.open();
-  };
+  const openFilterModal = () => filterModalRef.current?.open();
 
-  const openCalendarModal = () => {
-    calendarModalRef.current?.open();
-  };
-  
+  const openCalendarModal = () => calendarModalRef.current?.open();
+
+  const openWorkoutDayModalRef = () => workoutDayModalRef.current?.open();
+
   const toggleMuscleFilter = (id: number) =>
     setActiveMuscleFilters((activeFilters) => {
       if (activeFilters.some((item) => item === id))
@@ -48,17 +55,10 @@ function useHome() {
       return [...activeFilters, id];
     });
 
-  const date = new Date();
-  const currentDay = {
-    day: date.getDate(),
-    month: date.getMonth(),
-    year: date.getFullYear(),
-    dateString: date.toLocaleDateString(),
-    timestamp: date.getMilliseconds(),
+  const updateChosenDay = (day: DateData) => {
+    setChosenDay(day);
+    openWorkoutDayModalRef();
   };
-  const [chosenDay, setChosenDay] = useState<DateData>(currentDay);
-
-  const updateChosenDay = (day: DateData) => setChosenDay(day);
 
   useEffect(() => {
     activeTemplates.forEach((item) => {
@@ -149,6 +149,8 @@ function useHome() {
     templatesModalRef,
     filterModalRef,
     calendarModalRef,
+    workoutDayModalRef,
+    openWorkoutDayModalRef,
     openCalendarModal,
     openFilterModal,
     muscles,

@@ -190,25 +190,31 @@ const ChooseExercise: FC<Props> = ({
         panGestureEnabled={false}
         modalHeight={HEIGHT * 0.65}
         customRenderer={
-          <FlatGrid
-            data={muscles}
-            renderItem={({ item, index }) => (
-              <MuscleButton
-                {...item}
-                active={activeMuscleFilters.includes(item.id)}
-                onPress={() => toggleMuscleFilter(item.id)}
-                key={index}
-                style={{
-                  height: sizes.SIZE_70,
-                  paddingHorizontal: 0,
-                }}
-              />
-            )}
-            spacing={10}
-            key={1}
-            keyExtractor={(item) => item.id.toString()}
-            showsVerticalScrollIndicator={false}
-          />
+          loading ? (
+            <View style={[styles.flex, styles.center]}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+          ) : (
+            <FlatGrid
+              data={muscles}
+              renderItem={({ item, index }) => (
+                <MuscleButton
+                  {...item}
+                  active={activeMuscleFilters.includes(item.id)}
+                  onPress={() => toggleMuscleFilter(item.id)}
+                  key={index}
+                  style={{
+                    height: sizes.SIZE_70,
+                    paddingHorizontal: 0,
+                  }}
+                />
+              )}
+              spacing={10}
+              key={1}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+            />
+          )
         }
         HeaderComponent={FilterHeaderComponent}
         modalStyle={{ backgroundColor: theme.colors.background }}

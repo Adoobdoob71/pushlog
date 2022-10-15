@@ -1,3 +1,4 @@
+import { FC } from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { sizes, styles, theme } from "utils/styles";
 import { useHome } from "hooks/useHome";
@@ -6,12 +7,14 @@ import {
   ExerciseCard,
   Header,
   IconButton,
+  Button,
   WorkoutCalendar,
 } from "components/index";
 import * as NavigationBar from "expo-navigation-bar";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 
 const Home = () => {
   const homeHook = useHome(),
@@ -46,6 +49,8 @@ const Home = () => {
 
   const noTemplates = activeTemplates.length === 0;
 
+  const currentDay = moment().date();
+
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
       <View style={{ backgroundColor: theme.colors.card }}>
@@ -67,38 +72,13 @@ const Home = () => {
         />
         <TouchableOpacity onPress={openCalendarModal} activeOpacity={0.5}>
           <View style={[styles.rowCenter, stylesheet.weekView]}>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Sun</Text>
-              <Text style={stylesheet.weekDay}>9</Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Mon</Text>
-              <Text style={stylesheet.weekDay}>10</Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Tue</Text>
-              <Text style={stylesheet.weekDay}>11</Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Wed</Text>
-              <Text style={stylesheet.weekDay}>12</Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Thu</Text>
-              <Text style={stylesheet.weekDay}>13</Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={[stylesheet.weekDay, { color: theme.colors.text }]}>
-                Fri
-              </Text>
-              <Text style={[stylesheet.weekDay, { color: theme.colors.text }]}>
-                14
-              </Text>
-            </View>
-            <View style={[styles.columnCenter]}>
-              <Text style={stylesheet.weekDay}>Sat</Text>
-              <Text style={stylesheet.weekDay}>15</Text>
-            </View>
+            <WeekDay day="Sunday" currentDay={currentDay} />
+            <WeekDay day="Monday" currentDay={currentDay} />
+            <WeekDay day="Tuesday" currentDay={currentDay} />
+            <WeekDay day="Wednesday" currentDay={currentDay} />
+            <WeekDay day="Thursday" currentDay={currentDay} />
+            <WeekDay day="Friday" currentDay={currentDay} />
+            <WeekDay day="Saturday" currentDay={currentDay} />
           </View>
         </TouchableOpacity>
       </View>
@@ -135,13 +115,32 @@ const Home = () => {
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
       <IconButton
-        name="pencil"
+        name={activeTemplates.length === 0 ? "pencil" : "play"}
         color={theme.colors.text}
         onPress={openTemplatesModal}
         size={sizes.SIZE_24}
+        text={activeTemplates.length === 0 ? undefined : "Start Workout"}
         fab
       />
     </SafeAreaView>
+  );
+};
+
+const WeekDay: FC<{ day: string; currentDay: number }> = ({
+  day,
+  currentDay,
+}) => {
+  const date = moment().day(day).date();
+  const activeStyle = {
+    color: date === currentDay ? theme.colors.text : theme.colors.border,
+  };
+  return (
+    <View style={[styles.columnCenter]}>
+      <Text style={[stylesheet.weekDay, activeStyle]}>
+        {day.substring(0, 3)}
+      </Text>
+      <Text style={[stylesheet.weekDay, activeStyle]}>{date}</Text>
+    </View>
   );
 };
 
