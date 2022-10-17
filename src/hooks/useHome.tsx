@@ -1,79 +1,82 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { DateData } from "react-native-calendars";
-import { WorkoutTemplate } from "utils/types";
-import Toast from "react-native-toast-message";
-import workoutTemplates from "context/workoutTemplates";
-import { Modalize } from "react-native-modalize";
-import { getMuscles } from "api/functions";
+import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { DateData } from "react-native-calendars"
+import { WorkoutTemplate } from "utils/types"
+import Toast from "react-native-toast-message"
+import workoutTemplates from "context/workoutTemplates"
+import { Modalize } from "react-native-modalize"
+import { getMuscles } from "api/functions"
 
 function useHome() {
-  const { templates, loadingTemplates } = useContext(workoutTemplates);
+  const { templates, loadingTemplates } = useContext(workoutTemplates)
 
-  const date = new Date();
+  const date = new Date()
   const currentDay = {
     day: date.getDate(),
     month: date.getMonth(),
     year: date.getFullYear(),
     dateString: date.toLocaleDateString(),
     timestamp: date.getMilliseconds(),
-  };
+  }
 
-  const [chosenDay, setChosenDay] = useState<DateData>(currentDay);
-  const [activeTemplates, setActiveTemplates] = useState<WorkoutTemplate[]>([]);
-  const [templateSearchQuery, setTemplateSearachQuery] = useState<string>("");
+  const [chosenDay, setChosenDay] = useState<DateData>(currentDay)
+  const [activeTemplates, setActiveTemplates] = useState<WorkoutTemplate[]>([])
+  const [templateSearchQuery, setTemplateSearachQuery] = useState<string>("")
   const [muscles, setMuscles] = useState<
     {
-      id: number;
-      name: string;
-      nameEn: string;
-      isFront: boolean;
-      image: string;
+      id: number
+      name: string
+      nameEn: string
+      isFront: boolean
+      image: string
     }[]
-  >([]);
-  const [activeMuscleFilters, setActiveMuscleFilters] = useState<number[]>([]);
-  const [loadingMuscles, setLoadingMuscles] = useState(true);
+  >([])
+  const [activeMuscleFilters, setActiveMuscleFilters] = useState<number[]>([])
+  const [loadingMuscles, setLoadingMuscles] = useState(true)
 
-  const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value);
+  const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value)
 
-  const templatesModalRef = useRef<Modalize>(null);
-  const filterModalRef = useRef<Modalize>(null);
-  const calendarModalRef = useRef<Modalize>(null);
-  const workoutDayModalRef = useRef<Modalize>(null);
+  const templatesModalRef = useRef<Modalize>(null)
+  const filterModalRef = useRef<Modalize>(null)
+  const calendarModalRef = useRef<Modalize>(null)
+  const workoutDayModalRef = useRef<Modalize>(null)
+  const workoutSessionModalRef = useRef<Modalize>(null)
 
-  const openTemplatesModal = () => templatesModalRef.current?.open();
+  const openTemplatesModal = () => templatesModalRef.current?.open()
 
-  const openFilterModal = () => filterModalRef.current?.open();
+  const openFilterModal = () => filterModalRef.current?.open()
 
-  const openCalendarModal = () => calendarModalRef.current?.open();
+  const openCalendarModal = () => calendarModalRef.current?.open()
 
-  const openWorkoutDayModalRef = () => workoutDayModalRef.current?.open();
+  const openWorkoutDayModal = () => workoutDayModalRef.current?.open()
+
+  const openWorkoutSessionModal = () => workoutSessionModalRef.current?.open()
 
   const toggleMuscleFilter = (id: number) =>
     setActiveMuscleFilters((activeFilters) => {
       if (activeFilters.some((item) => item === id))
-        return activeFilters.filter((item) => item !== id);
-      return [...activeFilters, id];
-    });
+        return activeFilters.filter((item) => item !== id)
+      return [...activeFilters, id]
+    })
 
   const updateChosenDay = (day: DateData) => {
-    setChosenDay(day);
-    openWorkoutDayModalRef();
-  };
+    setChosenDay(day)
+    openWorkoutDayModal()
+  }
 
   useEffect(() => {
     activeTemplates.forEach((item) => {
-      const exists = templates.some((tem) => tem.id === item.id);
-      if (!exists) removeActiveTemplates(item.id);
-    });
-  }, [templates]);
+      const exists = templates.some((tem) => tem.id === item.id)
+      if (!exists) removeActiveTemplates(item.id)
+    })
+  }, [templates])
 
   useEffect(() => {
-    loadMuscles();
-  }, []);
+    loadMuscles()
+  }, [])
 
   const loadMuscles = async () => {
     try {
-      const muscleData = await getMuscles();
+      const muscleData = await getMuscles()
       muscleData.results.forEach((item) => {
         setMuscles((musclesArr) => [
           ...musclesArr,
@@ -84,60 +87,57 @@ function useHome() {
             isFront: item.is_front,
             image: item.image_url_main,
           },
-        ]);
-      });
+        ])
+      })
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
+      })
     }
-    setLoadingMuscles(false);
-  };
+    setLoadingMuscles(false)
+  }
 
   const removeActiveTemplates = (templateId: string) => {
     try {
-      const exists = activeTemplates.some((item) => item.id === templateId);
-      if (!exists) return;
+      const exists = activeTemplates.some((item) => item.id === templateId)
+      if (!exists) return
       setActiveTemplates(
         activeTemplates.filter((item) => item.id !== templateId)
-      );
+      )
       Toast.show({
         type: "success",
         text1: "Great!",
         text2: "Updated workout 💪",
-      });
+      })
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
+      })
     }
-  };
+  }
 
   const addActiveTemplates = (newTemplate: WorkoutTemplate) => {
     try {
-      const exists = activeTemplates.some((item) => item.id === newTemplate.id);
-      if (exists) return;
-      setActiveTemplates((activeTemplates) => [
-        ...activeTemplates,
-        newTemplate,
-      ]);
+      const exists = activeTemplates.some((item) => item.id === newTemplate.id)
+      if (exists) return
+      setActiveTemplates((activeTemplates) => [...activeTemplates, newTemplate])
       Toast.show({
         type: "success",
         text1: "Great!",
         text2: "Updated workout 💪",
-      });
+      })
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
+      })
     }
-  };
+  }
 
   return {
     templates,
@@ -150,7 +150,9 @@ function useHome() {
     filterModalRef,
     calendarModalRef,
     workoutDayModalRef,
-    openWorkoutDayModalRef,
+    workoutSessionModalRef,
+    openWorkoutSessionModal,
+    openWorkoutDayModal,
     openCalendarModal,
     openFilterModal,
     muscles,
@@ -162,7 +164,7 @@ function useHome() {
     removeActiveTemplates,
     templateSearchQuery,
     onSearchQueryChange,
-  };
+  }
 }
 
-export { useHome };
+export { useHome }

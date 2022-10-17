@@ -1,29 +1,28 @@
-import { FC } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { sizes, styles, theme } from "utils/styles";
-import { useHome } from "hooks/useHome";
+import { FC } from "react"
+import { SafeAreaView, StyleSheet, Text, View } from "react-native"
+import { sizes, styles, theme } from "utils/styles"
+import { useHome } from "hooks/useHome"
 import {
   ChooseTemplate,
   ExerciseCard,
   Header,
   IconButton,
-  Button,
+  WorkoutSession,
   WorkoutCalendar,
-} from "components/index";
-import * as NavigationBar from "expo-navigation-bar";
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useNavigation } from "@react-navigation/native";
-import moment from "moment";
+} from "components/index"
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import { useNavigation } from "@react-navigation/native"
+import moment from "moment"
 
 const Home = () => {
   const homeHook = useHome(),
     {
-      updateChosenDay,
       openTemplatesModal,
       activeTemplates,
       openCalendarModal,
-    } = homeHook;
+      openWorkoutSessionModal,
+    } = homeHook
 
   const agendaTheme = {
     calendarBackground: theme.colors.card,
@@ -40,16 +39,16 @@ const Home = () => {
     textDayHeaderFontWeight: "bold",
     textMonthFontWeight: "bold",
     todayButtonFontWeight: "bold",
-  };
+  }
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   // @ts-ignore
-  const goToSettings = () => navigation.navigate({ name: "Settings" });
+  const goToSettings = () => navigation.navigate({ name: "Settings" })
 
-  const noTemplates = activeTemplates.length === 0;
+  const noTemplates = activeTemplates.length === 0
 
-  const currentDay = moment().date();
+  const currentDay = moment().date()
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -84,8 +83,7 @@ const Home = () => {
       </View>
       <ScrollView
         style={[styles.flex, stylesheet.dayWrapper]}
-        contentContainerStyle={noTemplates && { flexGrow: 1 }}
-      >
+        contentContainerStyle={noTemplates && { flexGrow: 1 }}>
         {activeTemplates.length === 0 ? (
           <View style={[styles.flex, styles.center]}>
             <MaterialCommunityIcons
@@ -114,26 +112,31 @@ const Home = () => {
       </ScrollView>
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
+      <WorkoutSession {...homeHook} />
       <IconButton
         name={activeTemplates.length === 0 ? "pencil" : "play"}
         color={theme.colors.text}
-        onPress={openTemplatesModal}
+        onPress={
+          activeTemplates.length === 0
+            ? openTemplatesModal
+            : openWorkoutSessionModal
+        }
         size={sizes.SIZE_24}
         text={activeTemplates.length === 0 ? undefined : "Start Workout"}
         fab
       />
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const WeekDay: FC<{ day: string; currentDay: number }> = ({
   day,
   currentDay,
 }) => {
-  const date = moment().day(day).date();
+  const date = moment().day(day).date()
   const activeStyle = {
     color: date === currentDay ? theme.colors.text : theme.colors.border,
-  };
+  }
   return (
     <View style={[styles.columnCenter]}>
       <Text style={[stylesheet.weekDay, activeStyle]}>
@@ -141,8 +144,8 @@ const WeekDay: FC<{ day: string; currentDay: number }> = ({
       </Text>
       <Text style={[stylesheet.weekDay, activeStyle]}>{date}</Text>
     </View>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   sectionTitle: {
@@ -174,6 +177,6 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.border,
     fontSize: sizes.SIZE_14,
   },
-});
+})
 
-export default Home;
+export default Home

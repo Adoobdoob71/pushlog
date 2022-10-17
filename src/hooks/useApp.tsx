@@ -1,23 +1,24 @@
-import { useContext, useEffect, useState } from "react";
-import { theme } from "utils/styles";
-import * as NavigationBar from "expo-navigation-bar";
-import { useFonts } from "expo-font";
-import { WorkoutTemplate } from "utils/types";
-import Toast from "react-native-toast-message";
-import { DataSource } from "typeorm";
+import { useContext, useEffect, useState } from "react"
+import { theme } from "utils/styles"
+import * as NavigationBar from "expo-navigation-bar"
+import { useFonts } from "expo-font"
+import { WorkoutTemplate } from "utils/types"
+import Toast from "react-native-toast-message"
+import { DataSource } from "typeorm"
 import {
   Exercise,
   ExerciseSet,
   MuscleCategory,
   Workout,
-} from "database/schemas";
+  WorkoutSession,
+} from "database/schemas"
 
 function useApp() {
-  const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([]);
-  const [loadingTemplates, setLoadingTemplates] = useState(true);
-  const [dbConnector, setDBConnector] = useState<DataSource | null>(null);
+  const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([])
+  const [loadingTemplates, setLoadingTemplates] = useState(true)
+  const [dbConnector, setDBConnector] = useState<DataSource | null>(null)
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background)
 
   const [loaded] = useFonts({
     orbitronBlack: require("../../assets/fonts/Orbitron-Black.ttf"),
@@ -26,51 +27,57 @@ function useApp() {
     orbitronMedium: require("../../assets/fonts/Orbitron-Medium.ttf"),
     orbitronRegular: require("../../assets/fonts/Orbitron-Regular.ttf"),
     orbitronSemiBold: require("../../assets/fonts/Orbitron-SemiBold.ttf"),
-  });
+  })
 
   useEffect(() => {
     const dataSource = new DataSource({
-      database: "f",
+      database: "browhats",
       driver: require("expo-sqlite"),
-      entities: [Workout, Exercise, MuscleCategory, ExerciseSet],
+      entities: [
+        Workout,
+        Exercise,
+        MuscleCategory,
+        WorkoutSession,
+        ExerciseSet,
+      ],
       synchronize: true, // DISABLE WHEN PRODUCTION IS ON!
       type: "expo",
-    });
+    })
     dataSource.initialize().then((con) => {
-      setDBConnector(con);
-    });
-  }, []);
+      setDBConnector(con)
+    })
+  }, [])
 
   useEffect(() => {
-    if (dbConnector) readTemplates();
-  }, [dbConnector]);
+    if (dbConnector) readTemplates()
+  }, [dbConnector])
 
   const readTemplates = async () => {
-    const templatesData = await dbConnector.manager.find(Workout);
-    setTemplates(templatesData);
-    setLoadingTemplates(false);
-  };
+    const templatesData = await dbConnector.manager.find(Workout)
+    setTemplates(templatesData)
+    setLoadingTemplates(false)
+  }
 
   const addTemplate = async (newTemplate: WorkoutTemplate) => {
     try {
-      const temp = dbConnector.manager.create(Workout, newTemplate);
-      await dbConnector.manager.save(Workout, temp);
-      setTemplates((templates) => [...templates, temp]);
-      setLoadingTemplates(false);
+      const temp = dbConnector.manager.create(Workout, newTemplate)
+      await dbConnector.manager.save(Workout, temp)
+      setTemplates((templates) => [...templates, temp])
+      setLoadingTemplates(false)
       Toast.show({
         type: "success",
         text1: "Amazing!",
         text2: "New workout template 🎉",
-      });
+      })
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
-      console.error(error);
+      })
+      console.error(error)
     }
-  };
+  }
 
   const removeTemplate = async (templateId: string) => {
     try {
@@ -79,49 +86,49 @@ function useApp() {
         .delete()
         .from(Workout)
         .where("id = :id", { id: templateId })
-        .execute();
+        .execute()
       setTemplates((templates) =>
         templates.filter((template) => template.id !== templateId)
-      );
-      setLoadingTemplates(false);
+      )
+      setLoadingTemplates(false)
       Toast.show({
         type: "success",
         text1: "Amazing!",
         text2: "Workout template has been removed 🎉",
-      });
+      })
     } catch (error) {
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
+      })
     }
-  };
+  }
 
   const modifyTemplate = async (modifiedTemplate: WorkoutTemplate) => {
     try {
-      await dbConnector.manager.save(Workout, modifiedTemplate);
-      let newTemplateArr = templates;
+      await dbConnector.manager.save(Workout, modifiedTemplate)
+      let newTemplateArr = templates
       newTemplateArr = newTemplateArr.filter(
         (item) => item.id !== modifiedTemplate.id
-      );
-      newTemplateArr.push(modifiedTemplate);
-      setTemplates(newTemplateArr);
-      setLoadingTemplates(false);
+      )
+      newTemplateArr.push(modifiedTemplate)
+      setTemplates(newTemplateArr)
+      setLoadingTemplates(false)
       Toast.show({
         type: "success",
         text1: "Amazing!",
         text2: "Saved workout changes! 🎉",
-      });
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
       Toast.show({
         type: "error",
         text1: "Uh oh...",
         text2: "Something went wrong 😥",
-      });
+      })
     }
-  };
+  }
 
   return {
     templates,
@@ -131,7 +138,7 @@ function useApp() {
     modifyTemplate,
     loaded,
     dbConnector,
-  };
+  }
 }
 
-export { useApp };
+export { useApp }

@@ -6,25 +6,25 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
-} from "typeorm";
+} from "typeorm"
 
 @Entity()
 export class Workout {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column({ nullable: true })
-  description: string;
+  description: string
 
   @OneToMany((type) => Exercise, (exercise) => exercise.workout, {
     eager: true,
     cascade: true,
   })
   @JoinColumn()
-  exercises: Exercise[];
+  exercises: Exercise[]
 
   @OneToMany(
     (type) => MuscleCategory,
@@ -35,28 +35,28 @@ export class Workout {
     }
   )
   @JoinColumn()
-  muscleCategories: MuscleCategory[];
+  muscleCategories: MuscleCategory[]
 }
 
 @Entity()
 export class Exercise {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string
 
   @Column()
-  exerciseNumber: number;
+  exerciseNumber: number
 
   @Column()
-  name: string;
+  name: string
 
   @Column({ nullable: true })
-  description: string;
+  description: string
 
   @Column({ nullable: true })
-  image: string;
+  image: string
 
   @CreateDateColumn()
-  when: Date;
+  when: Date
 
   @OneToMany(
     (type) => MuscleCategory,
@@ -67,53 +67,83 @@ export class Exercise {
     }
   )
   @JoinColumn()
-  muscleCategories: MuscleCategory[];
+  muscleCategories: MuscleCategory[]
 
   @ManyToOne((type) => Workout, (workout) => workout.exercises, {
     onDelete: "CASCADE",
   })
-  workout: Workout;
+  workout: Workout
 }
 
 @Entity()
 export class MuscleCategory {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string
 
   @Column()
-  muscleId: number;
+  muscleId: number
 
   @Column()
-  name: string;
+  name: string
 
   @ManyToOne((type) => Workout, (workout) => workout.muscleCategories, {
     onDelete: "CASCADE",
   })
-  workout: Workout;
+  workout: Workout
 
   @ManyToOne((type) => Exercise, (exercise) => exercise.muscleCategories, {
     onDelete: "CASCADE",
   })
-  exercise: Exercise;
+  exercise: Exercise
+}
+
+@Entity()
+export class WorkoutSession {
+  @PrimaryGeneratedColumn("uuid")
+  id: string
+
+  @Column()
+  workoutTemplateId: string
+
+  @CreateDateColumn()
+  when: Date
+
+  @OneToMany((type) => ExerciseSet, (set) => set.workoutSession, {
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  sets: ExerciseSet[]
 }
 
 @Entity()
 export class ExerciseSet {
   @PrimaryGeneratedColumn("uuid")
-  id: string;
+  id: string
 
   @Column()
-  exerciseNumber: number;
+  workoutSessionId: string
 
   @Column()
-  setNumber: number;
+  exerciseNumber: number
 
   @Column()
-  reps: number;
+  setNumber: number
 
   @Column()
-  weight: number;
+  reps: number
+
+  @Column()
+  weight: number
+
+  @Column({ type: "varchar", length: 500 })
+  note: string
 
   @CreateDateColumn()
-  when: Date;
+  when: Date
+
+  @ManyToOne((type) => WorkoutSession, (session) => session.sets, {
+    onDelete: "CASCADE",
+  })
+  workoutSession: WorkoutSession
 }
