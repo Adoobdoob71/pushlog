@@ -1,17 +1,19 @@
-import { ComponentProps, FC, ReactNode } from "react";
-import { Text, StyleSheet, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { sizes, styles, theme } from "utils/styles";
-import { StyleProperty } from "utils/types";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { ComponentProps, FC, ReactNode } from "react"
+import { Text, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { sizes, styles, theme } from "utils/styles"
+import { StyleProperty } from "utils/types"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 
 interface Props {
-  mode: "filled" | "text";
-  onPress: () => void;
-  style?: StyleProperty;
-  disabled?: boolean;
-  icon?: ComponentProps<typeof MaterialCommunityIcons>["name"];
-  children: ReactNode;
+  mode: "filled" | "text"
+  onPress: () => void
+  style?: StyleProperty
+  disabled?: boolean
+  backgroundColor?: string
+  textColor?: string
+  icon?: ComponentProps<typeof MaterialCommunityIcons>["name"]
+  children: ReactNode
 }
 
 const Button: FC<Props> = ({
@@ -21,15 +23,19 @@ const Button: FC<Props> = ({
   disabled,
   icon,
   children,
+  backgroundColor,
+  textColor,
 }) => {
   const color = disabled
     ? theme.colors.border
+    : textColor
+    ? textColor
     : mode === "filled"
     ? "#FFF"
-    : theme.colors.primary;
+    : theme.colors.primary
 
   return (
-    <View style={[style, { alignItems: "center" }]}>
+    <View style={[{ alignItems: "center" }, style]}>
       <TouchableOpacity
         style={[
           icon ? styles.rowCenter : styles.center,
@@ -39,11 +45,11 @@ const Button: FC<Props> = ({
               ? stylesheet.filledModeDisabled
               : stylesheet.filledMode
             : stylesheet.textMode,
+          backgroundColor && { backgroundColor: backgroundColor },
         ]}
         disabled={disabled}
         activeOpacity={0.5}
-        onPress={onPress}
-      >
+        onPress={onPress}>
         {icon && (
           <MaterialCommunityIcons
             name={icon}
@@ -57,14 +63,13 @@ const Button: FC<Props> = ({
             fontSize: sizes.SIZE_14,
             color: color,
             fontWeight: "bold",
-          }}
-        >
+          }}>
           {children}
         </Text>
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   buttonStyle: {
@@ -81,6 +86,6 @@ const stylesheet = StyleSheet.create({
   filledModeDisabled: {
     backgroundColor: `${theme.colors.border}45`,
   },
-});
+})
 
-export default Button;
+export default Button

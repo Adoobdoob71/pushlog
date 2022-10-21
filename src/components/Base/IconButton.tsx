@@ -1,18 +1,18 @@
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { StyleProperty } from "utils/types";
-import { ComponentProps, FC } from "react";
-import { sizes, theme, styles } from "utils/styles";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import { StyleProperty } from "utils/types"
+import { ComponentProps, FC } from "react"
+import { sizes, theme, styles } from "utils/styles"
 
 interface Props {
-  name: ComponentProps<typeof MaterialCommunityIcons>["name"];
-  size?: number;
-  style?: StyleProperty;
-  color?: string;
-  fab?: boolean;
-  disabled?: boolean;
-  text?: string;
-  onPress?: () => void;
+  name: ComponentProps<typeof MaterialCommunityIcons>["name"]
+  size?: number
+  style?: StyleProperty
+  color?: string
+  fab?: boolean
+  disabled?: boolean
+  text?: string
+  onPress?: () => void
 }
 
 const IconButton: FC<Props> = ({
@@ -29,7 +29,6 @@ const IconButton: FC<Props> = ({
     <TouchableOpacity
       onPress={onPress}
       style={[
-        style,
         fab && stylesheet.fab,
         {
           backgroundColor: fab
@@ -38,10 +37,10 @@ const IconButton: FC<Props> = ({
               : theme.colors.primary
             : "transparent",
         },
+        style,
       ]}
       activeOpacity={0.5}
-      disabled={disabled}
-    >
+      disabled={disabled}>
       <View style={styles.rowCenter}>
         <MaterialCommunityIcons
           name={name}
@@ -51,8 +50,8 @@ const IconButton: FC<Props> = ({
         {text && <Text style={stylesheet.text}>{text}</Text>}
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   fab: {
@@ -70,5 +69,5 @@ const stylesheet = StyleSheet.create({
     fontSize: sizes.SIZE_14,
     marginStart: sizes.SIZE_8,
   },
-});
-export default IconButton;
+})
+export default IconButton

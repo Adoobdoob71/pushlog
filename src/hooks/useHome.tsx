@@ -32,6 +32,9 @@ function useHome() {
   >([])
   const [activeMuscleFilters, setActiveMuscleFilters] = useState<number[]>([])
   const [loadingMuscles, setLoadingMuscles] = useState(true)
+  const [currentExercise, setCurrentExercise] = useState(0)
+
+  const changeExercise = (index: number) => setCurrentExercise(index)
 
   const onSearchQueryChange = (value: string) => setTemplateSearachQuery(value)
 
@@ -164,6 +167,8 @@ function useHome() {
     removeActiveTemplates,
     templateSearchQuery,
     onSearchQueryChange,
+    currentExercise,
+    changeExercise,
   }
 }
 

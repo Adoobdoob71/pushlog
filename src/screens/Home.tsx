@@ -24,23 +24,6 @@ const Home = () => {
       openWorkoutSessionModal,
     } = homeHook
 
-  const agendaTheme = {
-    calendarBackground: theme.colors.card,
-    todayTextColor: theme.colors.primary,
-    textSectionTitleColor: theme.colors.primary,
-    monthTextColor: theme.colors.border,
-    dayTextColor: theme.colors.border,
-    textDisabledColor: theme.colors.card,
-    agendaKnobColor: theme.colors.primary,
-    indicatorColor: theme.colors.primary,
-    selectedDayBackgroundColor: theme.colors.primary,
-    dotColor: theme.colors.primary,
-    textDayFontWeight: "bold",
-    textDayHeaderFontWeight: "bold",
-    textMonthFontWeight: "bold",
-    todayButtonFontWeight: "bold",
-  }
-
   const navigation = useNavigation()
 
   // @ts-ignore
