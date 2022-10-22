@@ -55,62 +55,70 @@ const WorkoutSession: FC<Props> = ({
       HeaderComponent={HeaderComponent}
       modalHeight={HEIGHT * 0.9}>
       <ScrollView
-        showsHorizontalScrollIndicator={false}
-        style={{ marginTop: sizes.SIZE_8, marginBottom: sizes.SIZE_16 }}
-        horizontal>
-        <View style={[styles.rowCenter, stylesheet.exercisesList]}>
-          {exercises.map((item, index) => (
-            <TouchableOpacity onPress={() => changeExercise(index)}>
-              <View
-                style={[
-                  styles.center,
-                  stylesheet.exerciseButton,
-                  {
-                    backgroundColor:
-                      currentExercise === index
-                        ? theme.colors.primary
-                        : `${theme.colors.primary}35`,
-                  },
-                ]}>
-                {item.image ? (
-                  <Image
-                    source={{ uri: item.image ?? "" }}
-                    style={stylesheet.exerciseImage}
-                    resizeMode="contain"
-                  />
-                ) : (
-                  <Text
-                    style={stylesheet.exerciseName}
-                    numberOfLines={2}
-                    lineBreakMode="tail">
-                    {item.name}
-                  </Text>
-                )}
-              </View>
-            </TouchableOpacity>
-          ))}
+        showsVerticalScrollIndicator={false}
+        stickyHeaderIndices={[0]}>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          style={{
+            flex: 1,
+            marginTop: sizes.SIZE_8,
+            marginBottom: sizes.SIZE_16,
+          }}
+          horizontal>
+          <View style={[styles.rowCenter, stylesheet.exercisesList]}>
+            {exercises.map((item, index) => (
+              <TouchableOpacity
+                onPress={() => changeExercise(index)}
+                key={index}>
+                <View
+                  style={[
+                    styles.center,
+                    stylesheet.exerciseButton,
+                    {
+                      backgroundColor:
+                        currentExercise === index
+                          ? theme.colors.primary
+                          : `${theme.colors.primary}35`,
+                    },
+                  ]}>
+                  {item.image ? (
+                    <Image
+                      source={{ uri: item.image ?? "" }}
+                      style={stylesheet.exerciseImage}
+                      resizeMode="contain"
+                    />
+                  ) : (
+                    <Text
+                      style={stylesheet.exerciseName}
+                      numberOfLines={2}
+                      lineBreakMode="tail">
+                      {item.name}
+                    </Text>
+                  )}
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+
+        <View style={[styles.flex, stylesheet.contentView]}>
+          <Text style={stylesheet.activeExerciseName}>
+            {activeExercise?.name}
+          </Text>
+          <Text style={stylesheet.subtitle}>Sets</Text>
+          <AddSet />
+          <View style={[styles.center, stylesheet.previousSetsView]}>
+            <Text
+              style={{
+                color: theme.colors.border,
+                fontSize: sizes.SIZE_12,
+                fontWeight: "bold",
+              }}>
+              No sets of this exercise have been recorded
+            </Text>
+          </View>
         </View>
       </ScrollView>
-      <View style={[styles.flex, stylesheet.contentView]}>
-        <Text style={stylesheet.activeExerciseName}>
-          {activeExercise?.name}
-        </Text>
-        <Text style={stylesheet.subtitle}>Sets</Text>
-        <AddSet />
-        <AddSet />
-        <AddSet />
-        <AddSet />
-        <View style={[styles.center, stylesheet.previousSetsView]}>
-          <Text
-            style={{
-              color: theme.colors.border,
-              fontSize: sizes.SIZE_12,
-              fontWeight: "bold",
-            }}>
-            No sets of this exercise have been recorded
-          </Text>
-        </View>
-      </View>
     </Modalize>
   )
 }

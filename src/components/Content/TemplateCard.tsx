@@ -1,21 +1,21 @@
-import { useNavigation } from "@react-navigation/native";
-import { FC } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { sizes, styles, theme } from "utils/styles";
-import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types";
-import Tag from "../Base/Tag";
+import { useNavigation } from "@react-navigation/native"
+import { FC } from "react"
+import { Image, StyleSheet, Text, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { sizes, styles, theme } from "utils/styles"
+import { Exercise, StyleProperty, TagType, WorkoutTemplate } from "utils/types"
+import Tag from "../Base/Tag"
 
 interface Props {
-  id?: string;
-  name: string;
-  tags: TagType[];
-  exercises: Exercise[];
-  description?: string;
-  templateData: WorkoutTemplate;
-  onPress?: () => void;
-  onLongPress?: () => void;
-  style?: StyleProperty;
+  id?: string
+  name: string
+  tags: TagType[]
+  exercises: Exercise[]
+  description?: string
+  templateData: WorkoutTemplate
+  onPress?: () => void
+  onLongPress?: () => void
+  style?: StyleProperty
 }
 
 const TemplateCard: FC<Props> = ({
@@ -29,22 +29,21 @@ const TemplateCard: FC<Props> = ({
   onLongPress,
   style,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const navigateToCustomizeTemplate = () =>
     navigation.navigate({
       // @ts-ignore
       name: "CustomizeTemplate",
       // @ts-ignore
       params: { template: templateData },
-    });
+    })
   return (
     <TouchableOpacity
       style={[stylesheet.templateCard, style, styles.rowCenter]}
       key={id}
       onPress={onPress ? onPress : navigateToCustomizeTemplate}
       onLongPress={onLongPress}
-      activeOpacity={0.7}
-    >
+      activeOpacity={0.7}>
       <View style={{ flex: 1.5 }}>
         <Text style={stylesheet.templateName}>{name}</Text>
         <Text style={stylesheet.templateDescription} numberOfLines={3}>
@@ -55,7 +54,6 @@ const TemplateCard: FC<Props> = ({
             <Tag
               text={value.name}
               key={index}
-              onRemove={() => {}}
               style={{ marginEnd: sizes.SIZE_8 }}
             />
           ))}
@@ -78,8 +76,8 @@ const TemplateCard: FC<Props> = ({
         />
       )}
     </TouchableOpacity>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   templateCard: {
@@ -115,6 +113,6 @@ const stylesheet = StyleSheet.create({
     height: sizes.SIZE_90,
     flex: 1,
   },
-});
+})
 
-export default TemplateCard;
+export default TemplateCard

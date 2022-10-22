@@ -1,63 +1,79 @@
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from "react-native"
 
 // style types
-type StyleProperty = StyleProp<ViewStyle>;
-type TextStyleProperty = StyleProp<TextStyle>;
+type StyleProperty = StyleProp<ViewStyle>
+type TextStyleProperty = StyleProp<TextStyle>
 interface defaultProps {
-  style?: StyleProperty;
+  style?: StyleProperty
 }
 
-export { StyleProperty, TextStyleProperty, defaultProps };
+export { StyleProperty, TextStyleProperty, defaultProps }
 
 // database types
 interface MuscleCategory {
-  id?: string;
-  muscleId: number;
-  name: string;
+  id?: string
+  muscleId: number
+  name: string
 }
 
 interface Exercise {
-  id?: string;
-  exerciseNumber: number;
-  name: string;
-  description?: string;
-  muscleCategories?: MuscleCategory[];
-  image?: string;
-  when?: Date;
+  id?: string
+  exerciseNumber: number
+  name: string
+  description?: string
+  muscleCategories?: MuscleCategory[]
+  image?: string
+  when?: Date
 }
 
 interface WorkoutTemplate {
-  id?: string;
-  name: string;
-  description?: string;
-  muscleCategories: MuscleCategory[];
-  exercises: Exercise[];
+  id?: string
+  name: string
+  description?: string
+  muscleCategories: MuscleCategory[]
+  exercises: Exercise[]
 }
 
 interface TagType {
-  id?: string;
-  muscleId: number;
-  name: string;
+  id?: string
+  muscleId: number
+  name: string
+}
+
+interface Session {
+  id: string
+  workoutTemplateId: string
+  when: Date
+  sets: ExerciseSet[]
 }
 
 interface ExerciseSet {
-  id: string;
-  exerciseNumber: number;
-  setNumber: number;
-  reps: number;
-  weight: number;
-  when: Date;
+  id: string
+  workoutSessionId: string
+  exerciseNumber: number
+  setNumber: number
+  reps: number
+  weight: number
+  note: string
+  when: Date
 }
 
-export { WorkoutTemplate, Exercise, MuscleCategory, TagType, ExerciseSet };
+export {
+  WorkoutTemplate,
+  Exercise,
+  MuscleCategory,
+  TagType,
+  Session,
+  ExerciseSet,
+}
 
 // navigation types
 type RootStackParamList = {
-  Home: undefined;
-  Settings: undefined;
-  WorkoutPlan: undefined;
-  CustomizeTemplate: { template?: WorkoutTemplate };
-  ExerciseInfo: { exercise: Exercise };
-};
+  Home: undefined
+  Settings: undefined
+  WorkoutPlan: undefined
+  CustomizeTemplate: { template?: WorkoutTemplate }
+  ExerciseInfo: { exercise: Exercise }
+}
 
-export { RootStackParamList };
+export { RootStackParamList }
