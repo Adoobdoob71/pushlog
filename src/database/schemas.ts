@@ -102,8 +102,8 @@ export class WorkoutSession {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @Column()
-  workoutTemplateId: string
+  @Column({ type: "varchar", array: true })
+  workoutTemplateIds: string[]
 
   @CreateDateColumn()
   when: Date

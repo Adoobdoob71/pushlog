@@ -41,21 +41,21 @@ interface TagType {
 }
 
 interface Session {
-  id: string
-  workoutTemplateId: string
-  when: Date
+  id?: string
+  workoutTemplateIds: string[]
+  when?: Date
   sets: ExerciseSet[]
 }
 
 interface ExerciseSet {
-  id: string
-  workoutSessionId: string
+  id?: string
+  workoutSessionId?: string
   exerciseNumber: number
   setNumber: number
   reps: number
   weight: number
-  note: string
-  when: Date
+  note?: string
+  when?: Date
 }
 
 export {

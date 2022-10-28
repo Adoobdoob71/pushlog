@@ -1,10 +1,11 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { DateData } from "react-native-calendars"
 import { WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import workoutTemplates from "context/workoutTemplates"
 import { Modalize } from "react-native-modalize"
 import { getMuscles } from "api/functions"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 function useHome() {
   const { templates, loadingTemplates } = useContext(workoutTemplates)
@@ -102,13 +103,24 @@ function useHome() {
     setLoadingMuscles(false)
   }
 
+  useEffect(() => {
+    AsyncStorage.getItem("activeTemplates").then((data) => {
+      if (data) setActiveTemplates(JSON.parse(data))
+    })
+  }, [])
+
+  const updateTemps = async (temps: WorkoutTemplate[]) =>
+    await AsyncStorage.setItem("activeTemplates", JSON.stringify(temps))
+
   const removeActiveTemplates = (templateId: string) => {
     try {
       const exists = activeTemplates.some((item) => item.id === templateId)
       if (!exists) return
-      setActiveTemplates(
-        activeTemplates.filter((item) => item.id !== templateId)
+      const filteredTemplates = activeTemplates.filter(
+        (item) => item.id !== templateId
       )
+      setActiveTemplates(filteredTemplates)
+      updateTemps(filteredTemplates)
       Toast.show({
         type: "success",
         text1: "Great!",
@@ -127,7 +139,10 @@ function useHome() {
     try {
       const exists = activeTemplates.some((item) => item.id === newTemplate.id)
       if (exists) return
-      setActiveTemplates((activeTemplates) => [...activeTemplates, newTemplate])
+      setActiveTemplates((activeTemplates) => {
+        updateTemps([...activeTemplates, newTemplate])
+        return [...activeTemplates, newTemplate]
+      })
       Toast.show({
         type: "success",
         text1: "Great!",

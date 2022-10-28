@@ -1,4 +1,4 @@
-import { FC, MutableRefObject } from "react"
+import { FC, MutableRefObject, Dispatch, SetStateAction } from "react"
 import { Image, StyleSheet, Text, TextInput, View } from "react-native"
 import { Modalize } from "react-native-modalize"
 import { IHandles } from "react-native-modalize/lib/options"
@@ -6,6 +6,7 @@ import { sizes, styles, theme } from "utils/styles"
 import { HEIGHT } from "utils/constants"
 import { WorkoutTemplate, Exercise } from "utils/types"
 import Button from "../Base/Button"
+import { useWorkoutSession } from "hooks/useWorkoutSession"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import IconButton from "../Base/IconButton"
 
@@ -27,6 +28,20 @@ const WorkoutSession: FC<Props> = ({
     [] as Exercise[]
   )
 
+  const {
+    sets,
+    setSets,
+    note,
+    setNote,
+    reps,
+    setReps,
+    weight,
+    setWeight,
+    addSet,
+    removeSet,
+    submitSession,
+  } = useWorkoutSession(currentExercise, activeTemplates)
+
   const HeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_12 }]}>
       <View style={[styles.rowCenter, { paddingHorizontal: sizes.SIZE_8 }]}>
@@ -35,9 +50,9 @@ const WorkoutSession: FC<Props> = ({
         </Text>
         <Button
           mode="text"
-          onPress={() => workoutSessionModalRef.current?.close()}
+          onPress={submitSession}
           style={{ marginStart: "auto" }}>
-          Done
+          Finish
         </Button>
       </View>
     </View>
@@ -45,15 +60,19 @@ const WorkoutSession: FC<Props> = ({
 
   const activeExercise = exercises[currentExercise]
 
+  const currentExerciseSets = sets.filter(
+    (item) => item.exerciseNumber === currentExercise
+  )
+
   return (
     <Modalize
       ref={workoutSessionModalRef}
       panGestureComponentEnabled
       withHandle={false}
-      onBackButtonPress={() => false}
+      // onBackButtonPress={() => false}
       modalStyle={{ backgroundColor: theme.colors.background }}
       HeaderComponent={HeaderComponent}
-      modalHeight={HEIGHT * 0.9}>
+      modalHeight={HEIGHT * 0.85}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}>
@@ -106,7 +125,29 @@ const WorkoutSession: FC<Props> = ({
             {activeExercise?.name}
           </Text>
           <Text style={stylesheet.subtitle}>Sets</Text>
-          <AddSet />
+          {currentExerciseSets
+            .sort((a, b) => a.setNumber - b.setNumber)
+            .map((item, index) => (
+              <Set
+                {...item}
+                setNumber={item.setNumber}
+                setNote={setNote}
+                setReps={setReps}
+                setWeight={setWeight}
+                removeSet={removeSet}
+              />
+            ))}
+          <Set
+            reps={reps}
+            weight={weight}
+            note={note}
+            setNumber={currentExerciseSets.length + 1}
+            add
+            addSet={addSet}
+            setNote={setNote}
+            setReps={setReps}
+            setWeight={setWeight}
+          />
           <View style={[styles.center, stylesheet.previousSetsView]}>
             <Text
               style={{
@@ -123,7 +164,31 @@ const WorkoutSession: FC<Props> = ({
   )
 }
 
-const AddSet = () => {
+interface SetProps {
+  setNumber: number
+  weight: number
+  reps: number
+  note?: string
+  add?: boolean
+  setReps: Dispatch<SetStateAction<number>>
+  setWeight: Dispatch<SetStateAction<number>>
+  setNote: Dispatch<SetStateAction<string>>
+  addSet?: () => void
+  removeSet?: (index: number) => void
+}
+
+const Set: FC<SetProps> = ({
+  note,
+  reps,
+  setNumber,
+  weight,
+  add,
+  setReps,
+  setWeight,
+  setNote,
+  addSet,
+  removeSet,
+}) => {
   return (
     <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
       <View
@@ -137,7 +202,7 @@ const AddSet = () => {
             fontSize: sizes.SIZE_12,
             fontWeight: "bold",
           }}>
-          1
+          {setNumber}
         </Text>
       </View>
       <View
@@ -145,11 +210,27 @@ const AddSet = () => {
           styles.flex,
           stylesheet.inputBackground,
           { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_6 },
-        ]}>
+        ]}
+        pointerEvents={add ? "auto" : "none"}>
         <TextInput
-          placeholder="Kg"
+          placeholder="KG"
           placeholderTextColor={theme.colors.border}
-          style={stylesheet.textInput}
+          style={[
+            stylesheet.textInput,
+            { color: add ? theme.colors.text : theme.colors.border },
+          ]}
+          onChangeText={(value) =>
+            setWeight(value === "" ? 0 : parseInt(value))
+          }
+          value={
+            add
+              ? weight === 0
+                ? undefined
+                : weight.toString()
+              : weight === 0
+              ? "Body"
+              : weight.toString()
+          }
           keyboardType="numeric"
           selectionColor={theme.colors.primary_3}
         />
@@ -159,11 +240,19 @@ const AddSet = () => {
           styles.flex,
           stylesheet.inputBackground,
           { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_6 },
-        ]}>
+        ]}
+        pointerEvents={add ? "auto" : "none"}>
         <TextInput
           placeholder="Reps"
           placeholderTextColor={theme.colors.border}
-          style={stylesheet.textInput}
+          style={[
+            stylesheet.textInput,
+            { color: add ? theme.colors.text : theme.colors.border },
+          ]}
+          onChangeText={(value) => setReps(value === "" ? 0 : parseInt(value))}
+          value={
+            add ? (reps === 0 ? undefined : reps.toString()) : reps.toString()
+          }
           keyboardType="numeric"
           selectionColor={theme.colors.primary_3}
         />
@@ -175,11 +264,14 @@ const AddSet = () => {
         textColor={theme.colors.border}>
         Note
       </Button>
-
       <IconButton
-        style={stylesheet.addButton}
-        name="plus"
-        size={sizes.SIZE_20}
+        style={[
+          stylesheet.addButton,
+          { backgroundColor: add ? theme.colors.success : theme.colors.danger },
+        ]}
+        name={add ? "plus" : "close"}
+        onPress={add ? addSet : () => removeSet(setNumber)}
+        size={sizes.SIZE_16}
       />
     </View>
   )
@@ -237,7 +329,6 @@ const stylesheet = StyleSheet.create({
   },
   textInput: {
     textAlign: "center",
-    color: theme.colors.text,
     fontSize: sizes.SIZE_12,
     fontWeight: "bold",
   },

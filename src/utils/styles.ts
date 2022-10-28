@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
-import { DarkTheme } from "@react-navigation/native";
-import { WIDTH } from "./constants";
+import { StyleSheet } from "react-native"
+import { DarkTheme } from "@react-navigation/native"
+import { WIDTH } from "./constants"
 
 const sizes = {
   SIZE_1: WIDTH * (1 / 365),
@@ -11,6 +11,7 @@ const sizes = {
   SIZE_6: WIDTH * (6 / 365),
   SIZE_8: WIDTH * (8 / 365),
   SIZE_10: WIDTH * (10 / 365),
+  SIZE_11: WIDTH * (11 / 365),
   SIZE_12: WIDTH * (12 / 365),
   SIZE_14: WIDTH * (14 / 365),
   SIZE_16: WIDTH * (16 / 365),
@@ -41,18 +42,19 @@ const sizes = {
   SIZE_180: WIDTH * (180 / 365),
   SIZE_190: WIDTH * (190 / 365),
   SIZE_200: WIDTH * (200 / 365),
-} as const;
+} as const
 
-export { sizes };
+export { sizes }
 
 const theme: typeof DarkTheme & {
   colors: {
-    primary_1: string;
-    primary_2: string;
-    primary_3: string;
-    background_2: string;
-    danger: string;
-  };
+    primary_1: string
+    primary_2: string
+    primary_3: string
+    background_2: string
+    danger: string
+    success: string
+  }
 } = {
   dark: true,
   colors: {
@@ -66,9 +68,10 @@ const theme: typeof DarkTheme & {
     text: "#fff",
     background_2: "#122027",
     notification: "",
+    success: "#98ec98",
     danger: "#FF8585",
   },
-};
+}
 
 const styles = StyleSheet.create({
   mainWrapper: {
@@ -110,6 +113,6 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: sizes.SIZE_12,
   },
-});
+})
 
-export { styles, theme };
+export { styles, theme }

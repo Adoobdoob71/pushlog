@@ -251,14 +251,18 @@ function useCustomizeTemplate() {
     }
   }
 
-  const submitWorkout = () => {
+  const submitWorkout = async () => {
     try {
       if (currentTemplate === undefined)
-        addTemplate({ ...workout, muscleCategories: tags })
-      else modifyTemplate({ ...workout, muscleCategories: tags })
+        await addTemplate({ ...workout, muscleCategories: tags })
+      else await modifyTemplate({ ...workout, muscleCategories: tags })
       navigation.goBack()
     } catch (error) {
-      console.error(error)
+      Toast.show({
+        type: "error",
+        text1: "Uh oh...",
+        text2: "Something went wrong 😥",
+      })
     }
   }
 

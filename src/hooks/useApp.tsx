@@ -12,6 +12,7 @@ import {
   Workout,
   WorkoutSession,
 } from "database/schemas"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 function useApp() {
   const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([])
@@ -30,22 +31,31 @@ function useApp() {
   })
 
   useEffect(() => {
-    const dataSource = new DataSource({
-      database: "browhats",
-      driver: require("expo-sqlite"),
-      entities: [
-        Workout,
-        Exercise,
-        MuscleCategory,
-        WorkoutSession,
-        ExerciseSet,
-      ],
-      synchronize: true, // DISABLE WHEN PRODUCTION IS ON!
-      type: "expo",
-    })
-    dataSource.initialize().then((con) => {
-      setDBConnector(con)
-    })
+    AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
+    try {
+      const dataSource = new DataSource({
+        database: "elgatoooooo", // CHANGE NAME WHEN PRODUCTION IS ON!
+        driver: require("expo-sqlite"),
+        entities: [
+          Workout,
+          Exercise,
+          MuscleCategory,
+          WorkoutSession,
+          ExerciseSet,
+        ],
+        synchronize: true, // DISABLE WHEN PRODUCTION IS ON!
+        type: "expo",
+      })
+      dataSource.initialize().then((con) => {
+        setDBConnector(con)
+      })
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Uh oh...",
+        text2: "Something went wrong 😥",
+      })
+    }
   }, [])
 
   useEffect(() => {
@@ -53,8 +63,12 @@ function useApp() {
   }, [dbConnector])
 
   const readTemplates = async () => {
-    const templatesData = await dbConnector.manager.find(Workout)
-    setTemplates(templatesData)
+    try {
+      const templatesData = await dbConnector.manager.find(Workout)
+      setTemplates(templatesData)
+    } catch (error) {
+      console.error(error)
+    }
     setLoadingTemplates(false)
   }
 

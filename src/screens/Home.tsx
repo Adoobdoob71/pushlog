@@ -64,35 +64,6 @@ const Home = () => {
           </View>
         </TouchableOpacity>
       </View>
-      <ScrollView
-        style={[styles.flex, stylesheet.dayWrapper]}
-        contentContainerStyle={noTemplates && { flexGrow: 1 }}>
-        {activeTemplates.length === 0 ? (
-          <View style={[styles.flex, styles.center]}>
-            <MaterialCommunityIcons
-              name="sleep"
-              color={theme.colors.border}
-              size={sizes.SIZE_40}
-            />
-            <Text style={stylesheet.noTemplatesText}>At last, a rest day</Text>
-          </View>
-        ) : (
-          activeTemplates.map((template) =>
-            template.exercises.map((item) => (
-              <ExerciseCard
-                {...item}
-                exerciseData={item}
-                key={item.id}
-                style={{
-                  marginHorizontal: sizes.SIZE_12,
-                  marginTop: sizes.SIZE_16,
-                }}
-              />
-            ))
-          )
-        )}
-        <View style={{ height: sizes.SIZE_40 }}></View>
-      </ScrollView>
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
       <WorkoutSession {...homeHook} />
@@ -105,7 +76,7 @@ const Home = () => {
             : openWorkoutSessionModal
         }
         size={sizes.SIZE_24}
-        text={activeTemplates.length === 0 ? undefined : "Start Workout"}
+        text={activeTemplates.length === 0 ? undefined : "Workout"}
         fab
       />
     </SafeAreaView>

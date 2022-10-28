@@ -84,7 +84,7 @@ const ChooseTemplate: FC<Props> = ({
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
     }).start()
   }
@@ -92,7 +92,7 @@ const ChooseTemplate: FC<Props> = ({
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       toValue: 0,
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
     }).start()
   }
@@ -253,9 +253,19 @@ const ChooseTemplate: FC<Props> = ({
                 renderItem={renderTemplateItem}
                 getItemType={(item) => typeof item}
                 keyExtractor={(_item, index) => index.toString()}
+                ListEmptyComponent={() => (
+                  <View style={[styles.flex, styles.center]}>
+                    <Text
+                      style={{
+                        color: theme.colors.border,
+                        fontSize: sizes.SIZE_14,
+                        fontWeight: "bold",
+                      }}>
+                      You haven't created any workout templates
+                    </Text>
+                  </View>
+                )}
                 ListHeaderComponent={tagListComponent}
-                stickyHeaderHiddenOnScroll
-                stickyHeaderIndices={[0]}
                 showsVerticalScrollIndicator={false}
                 estimatedItemSize={sizes.SIZE_200}
               />

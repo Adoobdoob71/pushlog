@@ -1,13 +1,13 @@
-import "react-native-get-random-values";
-import { StatusBar } from "expo-status-bar";
-import { NavigationContainer } from "@react-navigation/native";
-import { sizes, theme } from "utils/styles";
-import StackNavigator from "navigators/StackNavigator";
-import { useApp } from "hooks/useApp";
-import WorkoutRoutine from "context/workoutTemplates";
-import Toast, { BaseToast } from "react-native-toast-message";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import SqliteDB from "context/sqliteDB";
+import "react-native-get-random-values"
+import { StatusBar } from "expo-status-bar"
+import { NavigationContainer } from "@react-navigation/native"
+import { sizes, theme } from "utils/styles"
+import StackNavigator from "navigators/StackNavigator"
+import { useApp } from "hooks/useApp"
+import WorkoutRoutine from "context/workoutTemplates"
+import Toast, { BaseToast } from "react-native-toast-message"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import SqliteDB from "context/sqliteDB"
 
 export default function App() {
   const {
@@ -18,7 +18,7 @@ export default function App() {
     removeTemplate,
     loaded,
     dbConnector,
-  } = useApp();
+  } = useApp()
 
   return loaded ? (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -30,8 +30,7 @@ export default function App() {
             modifyTemplate,
             removeTemplate,
             loadingTemplates,
-          }}
-        >
+          }}>
           <NavigationContainer theme={theme}>
             <StatusBar style="light" translucent={true} animated />
             <StackNavigator />
@@ -44,7 +43,7 @@ export default function App() {
             <BaseToast
               {...props}
               style={{
-                borderLeftColor: "#85FF85",
+                borderLeftColor: theme.colors.success,
                 borderLeftWidth: sizes.SIZE_8,
                 borderRadius: sizes.SIZE_8,
                 backgroundColor: "transparent",
@@ -93,5 +92,5 @@ export default function App() {
         }}
       />
     </GestureHandlerRootView>
-  ) : null;
+  ) : null
 }
