@@ -1,5 +1,5 @@
 import { MutableRefObject, useContext, useEffect, useState } from "react"
-import { ExerciseSet, Session, WorkoutTemplate } from "utils/types"
+import { Exercise, ExerciseSet, Session, WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import sqliteDB from "context/sqliteDB"
@@ -11,7 +11,8 @@ function useWorkoutSession(
   currentExercise: number,
   activeTemplates: WorkoutTemplate[],
   workoutSessionModalRef: MutableRefObject<IHandles>,
-  resetActiveTemplates: () => void
+  resetActiveTemplates: () => void,
+  exercises: Exercise[]
 ) {
   const [sets, setSets] = useState<ExerciseSet[]>([])
   const [reps, setReps] = useState(0)
@@ -42,33 +43,23 @@ function useWorkoutSession(
       return
     }
 
-    setSets((sets) => {
-      updateSets([
-        ...sets,
+    setSets((currentSets) => {
+      const newSets = [
+        ...currentSets,
         {
           reps,
           weight,
           note,
           setNumber:
-            sets.filter((item) => item.exerciseNumber === currentExercise)
-              .length + 1,
-          exerciseNumber: currentExercise,
-          when: new Date(),
-        },
-      ])
-      return [
-        ...sets,
-        {
-          reps,
-          weight,
-          note,
-          setNumber:
-            sets.filter((item) => item.exerciseNumber === currentExercise)
-              .length + 1,
-          exerciseNumber: currentExercise,
+            currentSets.filter(
+              (item) => item.exerciseNumber === currentExercise
+            ).length + 1,
+          exerciseNumber: exercises[currentExercise].exerciseNumber,
           when: new Date(),
         },
       ]
+      updateSets(newSets)
+      return newSets
     })
     setReps(0)
     setWeight(0)
@@ -76,7 +67,6 @@ function useWorkoutSession(
   }
 
   const removeSet = (index: number) => {
-    console.log(index)
     let setsFilter = sets.filter((item) => item.setNumber !== index)
     setsFilter = setsFilter.flatMap((item, index) => {
       item.setNumber = index + 1
@@ -103,6 +93,10 @@ function useWorkoutSession(
       })
       workoutSessionModalRef.current.close()
       await AsyncStorage.multiRemove(["sets", "activeTemplates"])
+      setSets([])
+      setWeight(0)
+      setReps(0)
+      setNote("")
       resetActiveTemplates()
     } catch (error) {
       Toast.show({

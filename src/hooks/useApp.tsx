@@ -31,10 +31,10 @@ function useApp() {
   })
 
   useEffect(() => {
-    // AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
+    AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
     try {
       const dataSource = new DataSource({
-        database: "elgatoooooo", // CHANGE NAME WHEN PRODUCTION IS ON!
+        database: "golasooo", // CHANGE NAME WHEN PRODUCTION IS ON!
         driver: require("expo-sqlite"),
         entities: [
           Workout,

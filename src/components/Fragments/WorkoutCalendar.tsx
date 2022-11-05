@@ -140,11 +140,12 @@ const WorkoutCalendar: FC<Props> = ({
           data={chosenDaySessions.flatMap((session) =>
             session.templates.flatMap((tem) => tem.exercises)
           )}
+          showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
             <ExerciseCard
               {...item}
               sets={sets.filter((i) => {
-                console.log(i.exerciseNumber)
+                // console.log(i)
                 return i.exerciseNumber === item.exerciseNumber
               })}
               key={index}

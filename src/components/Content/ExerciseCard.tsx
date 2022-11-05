@@ -78,7 +78,11 @@ const ExerciseCard: FC<Props> = ({
                 <View
                   style={[
                     stylesheet.tagNumberPlusWrapper,
-                    { backgroundColor: sets && theme.colors.background },
+                    {
+                      backgroundColor: sets
+                        ? theme.colors.background
+                        : theme.colors.background_2,
+                    },
                   ]}>
                   <Text style={stylesheet.tagNumberPlus}>
                     {"+ " + `${muscleCategories.length - 2}`}
@@ -91,7 +95,9 @@ const ExerciseCard: FC<Props> = ({
             <View
               style={[
                 stylesheet.exerciseImageBackground,
-                { backgroundColor: sets && "transparent" },
+                {
+                  backgroundColor: sets ? "transparent" : theme.colors.primary,
+                },
               ]}>
               <Image
                 source={{ uri: image }}

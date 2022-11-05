@@ -27,13 +27,6 @@ function useWorkoutCalendar(
           ),
         },
       })
-      console.log(
-        result.map((i) =>
-          i.templates.map((j) => {
-            return `${j.name}, ${i.when}`
-          })
-        )
-      )
       setSessions(result)
     } catch (error) {
       Toast.show({

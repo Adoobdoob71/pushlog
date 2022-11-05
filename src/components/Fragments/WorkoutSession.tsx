@@ -46,7 +46,8 @@ const WorkoutSession: FC<Props> = ({
     currentExercise,
     activeTemplates,
     workoutSessionModalRef,
-    resetActiveTemplates
+    resetActiveTemplates,
+    exercises
   )
 
   const HeaderComponent = (
