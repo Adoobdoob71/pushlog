@@ -1,18 +1,18 @@
-import { useNavigation } from "@react-navigation/native";
-import { Header, ListGroup, ListItem } from "components/index";
-import { SafeAreaView, View } from "react-native";
-import { styles, theme } from "utils/styles";
-import * as NavigationBar from "expo-navigation-bar";
+import { useNavigation } from "@react-navigation/native"
+import { Header, ListGroup, ListItem } from "components/index"
+import { SafeAreaView, View } from "react-native"
+import { styles, theme } from "utils/styles"
+import * as NavigationBar from "expo-navigation-bar"
 
 const Settings = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const navigateToWorkoutPlan = () =>
     /* @ts-ignore */ navigation.navigate({
-      name: "WorkoutPlan",
-    });
+      name: "TemplatesList",
+    })
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background)
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -36,7 +36,7 @@ const Settings = () => {
         />
       </ListGroup>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

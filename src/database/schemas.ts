@@ -6,6 +6,8 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
+  ManyToMany,
+  JoinTable,
 } from "typeorm"
 
 @Entity()
@@ -102,11 +104,14 @@ export class WorkoutSession {
   @PrimaryGeneratedColumn("uuid")
   id: string
 
-  @Column({ type: "varchar", array: true })
-  workoutTemplateIds: string[]
-
   @CreateDateColumn()
   when: Date
+
+  @ManyToMany((type) => Workout, {
+    eager: true,
+  })
+  @JoinTable()
+  templates: Workout[]
 
   @OneToMany((type) => ExerciseSet, (set) => set.workoutSession, {
     eager: true,

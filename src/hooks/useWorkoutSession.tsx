@@ -1,13 +1,17 @@
-import { useContext, useEffect, useState } from "react"
+import { MutableRefObject, useContext, useEffect, useState } from "react"
 import { ExerciseSet, Session, WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import sqliteDB from "context/sqliteDB"
 import { WorkoutSession } from "database/schemas"
+import { IHandles } from "react-native-modalize/lib/options"
+import moment from "moment"
 
 function useWorkoutSession(
   currentExercise: number,
-  activeTemplates: WorkoutTemplate[]
+  activeTemplates: WorkoutTemplate[],
+  workoutSessionModalRef: MutableRefObject<IHandles>,
+  resetActiveTemplates: () => void
 ) {
   const [sets, setSets] = useState<ExerciseSet[]>([])
   const [reps, setReps] = useState(0)
@@ -87,7 +91,8 @@ function useWorkoutSession(
       if (sets.length === 0) throw ""
       const newSession: Session = {
         sets: sets,
-        workoutTemplateIds: activeTemplates.map((item) => item.id),
+        templates: activeTemplates,
+        when: moment().toDate(),
       }
       const session = connector.manager.create(WorkoutSession, newSession)
       await connector.manager.save(WorkoutSession, session)
@@ -96,8 +101,10 @@ function useWorkoutSession(
         text1: "Amazing!",
         text2: "You've finished your workout!",
       })
+      workoutSessionModalRef.current.close()
+      await AsyncStorage.multiRemove(["sets", "activeTemplates"])
+      resetActiveTemplates()
     } catch (error) {
-      console.error(error)
       Toast.show({
         type: "error",
         text1: "Uh oh...",

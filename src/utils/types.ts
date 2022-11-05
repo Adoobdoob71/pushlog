@@ -42,7 +42,7 @@ interface TagType {
 
 interface Session {
   id?: string
-  workoutTemplateIds: string[]
+  templates: WorkoutTemplate[]
   when?: Date
   sets: ExerciseSet[]
 }
@@ -71,7 +71,7 @@ export {
 type RootStackParamList = {
   Home: undefined
   Settings: undefined
-  WorkoutPlan: undefined
+  TemplatesList: undefined
   CustomizeTemplate: { template?: WorkoutTemplate }
   ExerciseInfo: { exercise: Exercise }
 }

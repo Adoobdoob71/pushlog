@@ -1,19 +1,28 @@
-import { FC, MutableRefObject } from "react";
-import { Text, View, StyleSheet, InteractionManager } from "react-native";
-import { CalendarList, DateData } from "react-native-calendars";
-import { styles, theme, sizes } from "utils/styles";
-import { HEIGHT } from "utils/constants";
-import NavigationBar from "expo-navigation-bar";
-import { Modalize } from "react-native-modalize";
-import { IHandles } from "react-native-modalize/lib/options";
-import Button from "../Base/Button";
-import moment from "moment";
+import { FC, MutableRefObject } from "react"
+import {
+  Text,
+  View,
+  StyleSheet,
+  InteractionManager,
+  ActivityIndicator,
+} from "react-native"
+import { CalendarList, DateData } from "react-native-calendars"
+import { styles, theme, sizes } from "utils/styles"
+import { HEIGHT } from "utils/constants"
+import { useWorkoutCalendar } from "hooks/useWorkoutCalendar"
+import { Modalize } from "react-native-modalize"
+import { IHandles } from "react-native-modalize/lib/options"
+import Button from "../Base/Button"
+import TemplateCard from "../Content/TemplateCard"
+import moment from "moment"
+import { FlatList, ScrollView } from "react-native-gesture-handler"
+import ExerciseCard from "../Content/ExerciseCard"
 
 interface Props {
-  calendarModalRef: MutableRefObject<IHandles>;
-  workoutDayModalRef: MutableRefObject<IHandles>;
-  updateChosenDay: (day: DateData) => void;
-  chosenDay: DateData;
+  calendarModalRef: MutableRefObject<IHandles>
+  workoutDayModalRef: MutableRefObject<IHandles>
+  updateChosenDay: (day: DateData) => void
+  chosenDay: DateData
 }
 
 const WorkoutCalendar: FC<Props> = ({
@@ -22,6 +31,11 @@ const WorkoutCalendar: FC<Props> = ({
   updateChosenDay,
   chosenDay,
 }) => {
+  const { sessions, loading, markedDays, getSessions } = useWorkoutCalendar(
+    chosenDay,
+    workoutDayModalRef
+  )
+
   const agendaTheme = {
     calendarBackground: theme.colors.background,
     todayTextColor: theme.colors.primary,
@@ -46,7 +60,7 @@ const WorkoutCalendar: FC<Props> = ({
       borderRadius: sizes.SIZE_4,
       marginTop: sizes.SIZE_4,
     },
-  };
+  }
 
   const WorkoutHistoryHeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_12 }]}>
@@ -57,13 +71,12 @@ const WorkoutCalendar: FC<Props> = ({
         <Button
           mode="text"
           onPress={() => calendarModalRef.current.close()}
-          style={{ marginStart: "auto" }}
-        >
+          style={{ marginStart: "auto" }}>
           Close
         </Button>
       </View>
     </View>
-  );
+  )
 
   const WorkoutDayHeaderComponent = (
     <View style={[{ paddingVertical: sizes.SIZE_8 }]}>
@@ -76,61 +89,92 @@ const WorkoutCalendar: FC<Props> = ({
         <Button
           mode="text"
           onPress={() => workoutDayModalRef.current.close()}
-          style={{ marginStart: "auto" }}
-        >
+          style={{ marginStart: "auto" }}>
           Close
         </Button>
       </View>
     </View>
-  );
+  )
+
+  const chosenDaySessions = sessions.filter((session) =>
+    moment(session.when).isSame(chosenDay.dateString, "day")
+  )
+
+  const sets = chosenDaySessions.flatMap((session) => session.sets)
+
   return (
     <>
       <Modalize
         ref={calendarModalRef}
         panGestureComponentEnabled
         withHandle={false}
+        onOpen={getSessions}
         modalHeight={HEIGHT * 0.8}
         modalStyle={{ backgroundColor: theme.colors.background }}
         HeaderComponent={WorkoutHistoryHeaderComponent}
         customRenderer={
-          <CalendarList
-            // @ts-ignore
-            theme={agendaTheme}
-            pastScrollRange={1}
-            futureScrollRange={0}
-            markingType="dot"
-            markedDates={{
-              "2022-10-15": { marked: true, dotColor: theme.colors.primary_3 },
-              "2022-10-14": { marked: true, dotColor: theme.colors.primary_3 },
-              "2022-10-13": { marked: true, dotColor: theme.colors.primary_3 },
-            }}
-            onDayPress={updateChosenDay}
-          />
-        }
-      ></Modalize>
+          loading ? (
+            <View style={[styles.flex, styles.center]}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+          ) : (
+            <CalendarList
+              // @ts-ignore
+              theme={agendaTheme}
+              pastScrollRange={1}
+              futureScrollRange={0}
+              markingType="dot"
+              markedDates={markedDays}
+              onDayPress={updateChosenDay}
+            />
+          )
+        }></Modalize>
       <Modalize
         ref={workoutDayModalRef}
         panGestureComponentEnabled
         withHandle={false}
         adjustToContentHeight
         modalStyle={{ backgroundColor: theme.colors.background }}
-        HeaderComponent={WorkoutDayHeaderComponent}
-      >
-        <View style={[styles.flex, styles.center, { height: sizes.SIZE_120 }]}>
-          <Text
-            style={{
-              color: theme.colors.border,
-              fontSize: sizes.SIZE_12,
-              fontWeight: "bold",
-            }}
-          >
-            No Records
-          </Text>
-        </View>
+        HeaderComponent={WorkoutDayHeaderComponent}>
+        <FlatList
+          data={chosenDaySessions.flatMap((session) =>
+            session.templates.flatMap((tem) => tem.exercises)
+          )}
+          renderItem={({ item, index }) => (
+            <ExerciseCard
+              {...item}
+              sets={sets.filter((i) => {
+                console.log(i.exerciseNumber)
+                return i.exerciseNumber === item.exerciseNumber
+              })}
+              key={index}
+              style={{
+                backgroundColor: theme.colors.card,
+                elevation: 0,
+                marginBottom: sizes.SIZE_16,
+                marginHorizontal: sizes.SIZE_16,
+              }}
+              exerciseData={item}
+            />
+          )}
+          ListEmptyComponent={() => (
+            <View
+              style={[styles.flex, styles.center, { height: sizes.SIZE_120 }]}>
+              <Text
+                style={{
+                  color: theme.colors.border,
+                  fontSize: sizes.SIZE_12,
+                  fontWeight: "bold",
+                }}>
+                No records were found
+              </Text>
+            </View>
+          )}
+        />
       </Modalize>
     </>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   bottomSheetTitle: {
@@ -152,6 +196,6 @@ const stylesheet = StyleSheet.create({
     fontSize: sizes.SIZE_20,
     marginStart: sizes.SIZE_12,
   },
-});
+})
 
-export default WorkoutCalendar;
+export default WorkoutCalendar

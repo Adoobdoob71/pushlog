@@ -1,10 +1,10 @@
-import React, { FC } from "react";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Button, ChooseExercise, ExerciseCard, Tag } from "components/index";
-import { sizes, styles, theme } from "utils/styles";
-import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler";
-import { STATUSBAR_HEIGHT } from "utils/constants";
-import { useCustomizeTemplate } from "hooks/useCustomizeTemplate";
+import React, { FC } from "react"
+import { SafeAreaView, StyleSheet, Text, View } from "react-native"
+import { Button, ChooseExercise, ExerciseCard, Tag } from "components/index"
+import { sizes, styles, theme } from "utils/styles"
+import { FlatList, ScrollView, TextInput } from "react-native-gesture-handler"
+import { STATUSBAR_HEIGHT } from "utils/constants"
+import { useCustomizeTemplate } from "hooks/useCustomizeTemplate"
 
 const CustomizeTemplate: FC = () => {
   const customizeTemplateHook = useCustomizeTemplate(),
@@ -21,7 +21,7 @@ const CustomizeTemplate: FC = () => {
       exercisesForRemoval,
       deleteExercises,
       submitWorkout,
-    } = customizeTemplateHook;
+    } = customizeTemplateHook
 
   return (
     <SafeAreaView style={stylesheet.mainWrapper}>
@@ -70,8 +70,7 @@ const CustomizeTemplate: FC = () => {
                   exercisesForRemoval.length === 0 ? sizes.SIZE_10 : 0,
                 backgroundColor: theme.colors.background,
               },
-            ]}
-          >
+            ]}>
             {exercisesForRemoval.length > 0 && (
               <Button
                 mode="text"
@@ -80,16 +79,14 @@ const CustomizeTemplate: FC = () => {
                   marginHorizontal: sizes.SIZE_20,
                 }}
                 icon="trash-can"
-                onPress={deleteExercises}
-              >
+                onPress={deleteExercises}>
                 Delete
               </Button>
             )}
             <ScrollView
               style={stylesheet.tagList}
               showsHorizontalScrollIndicator={false}
-              horizontal
-            >
+              horizontal>
               {tags.map((item, index) => (
                 <Tag
                   text={item.name}
@@ -102,7 +99,7 @@ const CustomizeTemplate: FC = () => {
             </ScrollView>
           </View>
         )}
-        style={{ marginBottom: sizes.SIZE_12 }}
+        style={{ flex: 1, marginBottom: sizes.SIZE_12 }}
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
         showsVerticalScrollIndicator={false}
@@ -113,8 +110,7 @@ const CustomizeTemplate: FC = () => {
               exercisesForRemoval.some((ex) => ex === item.exerciseNumber) && {
                 borderColor: theme.colors.danger,
               },
-            ]}
-          >
+            ]}>
             <ExerciseCard
               {...item}
               exerciseData={item}
@@ -129,10 +125,21 @@ const CustomizeTemplate: FC = () => {
             mode="text"
             style={{ marginBottom: sizes.SIZE_12 }}
             icon="plus"
-            onPress={openExerciseModal}
-          >
+            onPress={openExerciseModal}>
             Add Exercise
           </Button>
+        )}
+        ListEmptyComponent={() => (
+          <View style={[{ height: sizes.SIZE_100 }, styles.center]}>
+            <Text
+              style={{
+                color: theme.colors.border,
+                fontSize: sizes.SIZE_14,
+                fontWeight: "bold",
+              }}>
+              You've gotta add exercises!
+            </Text>
+          </View>
         )}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
@@ -147,17 +154,16 @@ const CustomizeTemplate: FC = () => {
             workout.description.length === 0 ||
             workout.exercises.length === 0
           }
-          style={{ marginStart: "auto" }}
-        >
+          style={{ marginStart: "auto" }}>
           Done
         </Button>
       </View>
       <ChooseExercise {...customizeTemplateHook} />
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default CustomizeTemplate;
+export default CustomizeTemplate
 
 const stylesheet = StyleSheet.create({
   mainWrapper: {
@@ -206,4 +212,4 @@ const stylesheet = StyleSheet.create({
     marginHorizontal: sizes.SIZE_40,
     marginTop: "auto",
   },
-});
+})

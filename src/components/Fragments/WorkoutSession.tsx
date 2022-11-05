@@ -14,6 +14,7 @@ interface Props {
   workoutSessionModalRef: MutableRefObject<IHandles>
   activeTemplates: WorkoutTemplate[]
   currentExercise: number
+  resetActiveTemplates: () => void
   changeExercise: (index: number) => void
 }
 
@@ -21,6 +22,7 @@ const WorkoutSession: FC<Props> = ({
   workoutSessionModalRef,
   activeTemplates,
   currentExercise,
+  resetActiveTemplates,
   changeExercise,
 }) => {
   const exercises = activeTemplates.reduce(
@@ -40,7 +42,12 @@ const WorkoutSession: FC<Props> = ({
     addSet,
     removeSet,
     submitSession,
-  } = useWorkoutSession(currentExercise, activeTemplates)
+  } = useWorkoutSession(
+    currentExercise,
+    activeTemplates,
+    workoutSessionModalRef,
+    resetActiveTemplates
+  )
 
   const HeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_12 }]}>
@@ -69,7 +76,6 @@ const WorkoutSession: FC<Props> = ({
       ref={workoutSessionModalRef}
       panGestureComponentEnabled
       withHandle={false}
-      // onBackButtonPress={() => false}
       modalStyle={{ backgroundColor: theme.colors.background }}
       HeaderComponent={HeaderComponent}
       modalHeight={HEIGHT * 0.85}>

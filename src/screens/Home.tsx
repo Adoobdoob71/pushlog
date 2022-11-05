@@ -68,13 +68,9 @@ const Home = () => {
       <WorkoutCalendar {...homeHook} />
       <WorkoutSession {...homeHook} />
       <IconButton
-        name={activeTemplates.length === 0 ? "pencil" : "play"}
+        name={noTemplates ? "pencil" : "play"}
         color={theme.colors.text}
-        onPress={
-          activeTemplates.length === 0
-            ? openTemplatesModal
-            : openWorkoutSessionModal
-        }
+        onPress={noTemplates ? openTemplatesModal : openWorkoutSessionModal}
         size={sizes.SIZE_24}
         text={activeTemplates.length === 0 ? undefined : "Workout"}
         fab

@@ -109,8 +109,11 @@ function useHome() {
     })
   }, [])
 
-  const updateTemps = async (temps: WorkoutTemplate[]) =>
-    await AsyncStorage.setItem("activeTemplates", JSON.stringify(temps))
+  const updateTemps = async (temps: WorkoutTemplate[]) => {
+    if (temps.length === 0)
+      await AsyncStorage.multiRemove(["activeTemplates", "sets", "notes"])
+    else await AsyncStorage.setItem("activeTemplates", JSON.stringify(temps))
+  }
 
   const removeActiveTemplates = (templateId: string) => {
     try {
@@ -157,6 +160,8 @@ function useHome() {
     }
   }
 
+  const resetActiveTemplates = () => setActiveTemplates([])
+
   return {
     templates,
     loadingTemplates,
@@ -184,6 +189,7 @@ function useHome() {
     onSearchQueryChange,
     currentExercise,
     changeExercise,
+    resetActiveTemplates,
   }
 }
 

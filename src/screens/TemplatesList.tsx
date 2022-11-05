@@ -1,16 +1,14 @@
-import { useContext } from "react";
-import { Text, View, StyleSheet, SafeAreaView } from "react-native";
-import { sizes, styles, theme } from "utils/styles";
-import { Button, TemplateCard } from "components/index";
-import workoutRoutine from "context/workoutTemplates";
-import { useWorkoutPlan } from "hooks/useWorkoutPlan";
-import * as NavigationBar from "expo-navigation-bar";
-import { FlatList, TextInput } from "react-native-gesture-handler";
-import { STATUSBAR_HEIGHT } from "utils/constants";
-import { useNavigation } from "@react-navigation/native";
-import { WorkoutTemplate } from "utils/types";
+import { Text, View, StyleSheet, SafeAreaView } from "react-native"
+import { sizes, styles, theme } from "utils/styles"
+import { Button, TemplateCard } from "components/index"
+import { useTemplatesList } from "hooks/useTemplatesList"
+import * as NavigationBar from "expo-navigation-bar"
+import { FlatList, TextInput } from "react-native-gesture-handler"
+import { STATUSBAR_HEIGHT } from "utils/constants"
+import { useNavigation } from "@react-navigation/native"
+import { WorkoutTemplate } from "utils/types"
 
-const WorkoutPlan = () => {
+const TemplatesList = () => {
   const {
     templates,
     goBack,
@@ -19,11 +17,11 @@ const WorkoutPlan = () => {
     deleteTemplates,
     templateSearchQuery,
     onSearchQueryChange,
-  } = useWorkoutPlan();
+  } = useTemplatesList()
 
-  NavigationBar.setBackgroundColorAsync(theme.colors.background);
+  NavigationBar.setBackgroundColorAsync(theme.colors.background)
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const navigateToCustomizeTemplate = (item?: WorkoutTemplate) =>
     navigation.navigate({
@@ -31,7 +29,7 @@ const WorkoutPlan = () => {
       name: "CustomizeTemplate",
       // @ts-ignore
       params: { template: item },
-    });
+    })
 
   return (
     <SafeAreaView style={[styles.flex, stylesheet.mainWrapper]}>
@@ -60,6 +58,7 @@ const WorkoutPlan = () => {
         style={{
           marginVertical: sizes.SIZE_18,
         }}
+        contentContainerStyle={styles.flex}
         showsVerticalScrollIndicator={false}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}
@@ -71,8 +70,7 @@ const WorkoutPlan = () => {
                 justifyContent: "space-between",
                 backgroundColor: theme.colors.background,
               },
-            ]}
-          >
+            ]}>
             {templatesForRemoval.length > 0 && (
               <Button
                 mode="text"
@@ -81,8 +79,7 @@ const WorkoutPlan = () => {
                   marginHorizontal: sizes.SIZE_20,
                 }}
                 icon="trash-can"
-                onPress={deleteTemplates}
-              >
+                onPress={deleteTemplates}>
                 Delete
               </Button>
             )}
@@ -94,8 +91,7 @@ const WorkoutPlan = () => {
                 marginHorizontal: sizes.SIZE_20,
               }}
               icon="plus"
-              onPress={() => navigateToCustomizeTemplate(undefined)}
-            >
+              onPress={() => navigateToCustomizeTemplate(undefined)}>
               Add Template
             </Button>
           </View>
@@ -107,8 +103,7 @@ const WorkoutPlan = () => {
               templatesForRemoval.some((temp) => temp === item.id) && {
                 borderColor: theme.colors.danger,
               },
-            ]}
-          >
+            ]}>
             <TemplateCard
               key={item.id}
               onPress={() => navigateToCustomizeTemplate(item)}
@@ -119,6 +114,18 @@ const WorkoutPlan = () => {
             />
           </View>
         )}
+        ListEmptyComponent={() => (
+          <View style={[styles.flex, styles.center]}>
+            <Text
+              style={{
+                color: theme.colors.border,
+                fontSize: sizes.SIZE_14,
+                fontWeight: "bold",
+              }}>
+              Can't find any templates
+            </Text>
+          </View>
+        )}
       />
       <View style={[styles.rowCenter, stylesheet.buttonView]}>
         <Button mode="text" onPress={goBack} style={{ alignSelf: "flex-end" }}>
@@ -126,8 +133,8 @@ const WorkoutPlan = () => {
         </Button>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   mainWrapper: {
@@ -173,6 +180,6 @@ const stylesheet = StyleSheet.create({
     marginHorizontal: sizes.SIZE_40,
     marginTop: "auto",
   },
-});
+})
 
-export default WorkoutPlan;
+export default TemplatesList

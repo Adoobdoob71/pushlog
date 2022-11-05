@@ -1,29 +1,31 @@
-import { useNavigation } from "@react-navigation/native";
-import { FC } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { sizes, styles, theme } from "utils/styles";
+import { useNavigation } from "@react-navigation/native"
+import { FC, Dispatch, SetStateAction } from "react"
+import { Image, StyleSheet, Text, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { sizes, styles, theme } from "utils/styles"
 import {
   StyleProperty,
   MuscleCategory,
   ExerciseSet,
   Exercise,
-} from "utils/types";
-import Tag from "../Base/Tag";
+} from "utils/types"
+import Button from "../Base/Button"
+import Tag from "../Base/Tag"
 
 interface Props {
-  id?: string;
-  exerciseNumber: number;
-  name: string;
-  description?: string;
-  muscleCategories?: MuscleCategory[];
-  image?: string;
-  exerciseSets?: Promise<ExerciseSet[]>;
-  when?: Date;
-  onPress?: () => void;
-  onLongPress?: () => void;
-  exerciseData: Exercise;
-  style?: StyleProperty;
+  id?: string
+  exerciseNumber: number
+  name: string
+  description?: string
+  muscleCategories?: MuscleCategory[]
+  image?: string
+  exerciseSets?: Promise<ExerciseSet[]>
+  when?: Date
+  onPress?: () => void
+  onLongPress?: () => void
+  exerciseData: Exercise
+  sets?: ExerciseSet[]
+  style?: StyleProperty
 }
 
 const ExerciseCard: FC<Props> = ({
@@ -38,60 +40,130 @@ const ExerciseCard: FC<Props> = ({
   onPress,
   onLongPress,
   exerciseData,
+  sets,
   style,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const navigateToExerciseInfo = () =>
     /* @ts-ignore */
     navigation.navigate("ExerciseInfo", {
       exercise: exerciseData,
-    });
+    })
   return (
     <TouchableOpacity
       onLongPress={onLongPress}
-      onPress={onPress ? onPress : navigateToExerciseInfo}
-    >
-      <View style={[styles.rowCenter, style, stylesheet.exerciseBackground]}>
-        <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
-          <Text
-            style={stylesheet.exerciseName}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {name}
-          </Text>
-          <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
-            {muscleCategories.slice(0, 2).map(({ id, name }) => (
-              <Tag
-                key={id}
-                text={name}
-                backgroundColor={theme.colors.background_2}
-                style={{ marginEnd: sizes.SIZE_8 }}
-              />
-            ))}
-            {muscleCategories.length > 2 && (
-              <View style={stylesheet.tagNumberPlusWrapper}>
-                <Text style={stylesheet.tagNumberPlus}>
-                  {"+ " + `${muscleCategories.length - 2}`}
-                </Text>
-              </View>
-            )}
+      onPress={onPress ? onPress : navigateToExerciseInfo}>
+      <View style={[stylesheet.exerciseBackground, style]}>
+        <View style={styles.rowCenter}>
+          <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
+            <Text
+              style={stylesheet.exerciseName}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {name}
+            </Text>
+            <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
+              {muscleCategories.slice(0, 2).map(({ id, name }) => (
+                <Tag
+                  key={id}
+                  text={name}
+                  backgroundColor={
+                    sets ? theme.colors.background : theme.colors.background_2
+                  }
+                  style={{ marginEnd: sizes.SIZE_8 }}
+                />
+              ))}
+              {muscleCategories.length > 2 && (
+                <View
+                  style={[
+                    stylesheet.tagNumberPlusWrapper,
+                    { backgroundColor: sets && theme.colors.background },
+                  ]}>
+                  <Text style={stylesheet.tagNumberPlus}>
+                    {"+ " + `${muscleCategories.length - 2}`}
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
+          {image && (
+            <View
+              style={[
+                stylesheet.exerciseImageBackground,
+                { backgroundColor: sets && "transparent" },
+              ]}>
+              <Image
+                source={{ uri: image }}
+                resizeMode="contain"
+                style={stylesheet.exerciseImage}
+              />
+            </View>
+          )}
         </View>
-        {image && (
-          <View style={stylesheet.exerciseImageBackground}>
-            <Image
-              source={{ uri: image }}
-              resizeMode="contain"
-              style={stylesheet.exerciseImage}
-            />
+        {sets && (
+          <View style={styles.flex}>
+            {sets.map((item, index) => (
+              <Set {...item} setNumber={item.setNumber} />
+            ))}
           </View>
         )}
       </View>
     </TouchableOpacity>
-  );
-};
+  )
+}
+
+interface SetProps {
+  setNumber: number
+  weight: number
+  reps: number
+}
+
+const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
+  return (
+    <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
+      <View
+        style={[
+          stylesheet.inputBackground,
+          { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_10 },
+        ]}>
+        <Text
+          style={{
+            color: theme.colors.text,
+            fontSize: sizes.SIZE_12,
+            fontWeight: "bold",
+          }}>
+          {setNumber}
+        </Text>
+      </View>
+      <View
+        style={[
+          styles.flex,
+          stylesheet.inputBackground,
+          { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_6 },
+        ]}>
+        <Text style={stylesheet.textInput}>
+          {weight === 0 ? "Body" : weight}
+        </Text>
+      </View>
+      <View
+        style={[
+          styles.flex,
+          stylesheet.inputBackground,
+          { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_6 },
+        ]}>
+        <Text style={stylesheet.textInput}>{reps}</Text>
+      </View>
+      <Button
+        mode="text"
+        onPress={() => {}}
+        style={{ marginEnd: sizes.SIZE_12 }}
+        textColor={theme.colors.border}>
+        Note
+      </Button>
+    </View>
+  )
+}
 
 const stylesheet = StyleSheet.create({
   exerciseBackground: {
@@ -143,5 +215,16 @@ const stylesheet = StyleSheet.create({
     fontSize: sizes.SIZE_10,
     color: theme.colors.text,
   },
-});
-export default ExerciseCard;
+  inputBackground: {
+    backgroundColor: theme.colors.background_2,
+    borderRadius: sizes.SIZE_12,
+    marginEnd: sizes.SIZE_12,
+  },
+  textInput: {
+    textAlign: "center",
+    color: theme.colors.border,
+    fontSize: sizes.SIZE_12,
+    fontWeight: "bold",
+  },
+})
+export default ExerciseCard
