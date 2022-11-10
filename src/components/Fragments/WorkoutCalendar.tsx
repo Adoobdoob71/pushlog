@@ -135,17 +135,15 @@ const WorkoutCalendar: FC<Props> = ({
         withHandle={false}
         adjustToContentHeight
         modalStyle={{ backgroundColor: theme.colors.background }}
-        HeaderComponent={WorkoutDayHeaderComponent}>
-        <FlatList
-          data={chosenDaySessions.flatMap((session) =>
+        flatListProps={{
+          data: chosenDaySessions.flatMap((session) =>
             session.templates.flatMap((tem) => tem.exercises)
-          )}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => (
+          ),
+          showsVerticalScrollIndicator: false,
+          renderItem: ({ item, index }) => (
             <ExerciseCard
               {...item}
               sets={sets.filter((i) => {
-                // console.log(i)
                 return i.exerciseNumber === item.exerciseNumber
               })}
               key={index}
@@ -157,8 +155,8 @@ const WorkoutCalendar: FC<Props> = ({
               }}
               exerciseData={item}
             />
-          )}
-          ListEmptyComponent={() => (
+          ),
+          ListEmptyComponent: () => (
             <View
               style={[styles.flex, styles.center, { height: sizes.SIZE_120 }]}>
               <Text
@@ -170,9 +168,9 @@ const WorkoutCalendar: FC<Props> = ({
                 No records were found
               </Text>
             </View>
-          )}
-        />
-      </Modalize>
+          ),
+        }}
+        HeaderComponent={WorkoutDayHeaderComponent}></Modalize>
     </>
   )
 }

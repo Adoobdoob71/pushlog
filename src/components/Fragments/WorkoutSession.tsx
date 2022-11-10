@@ -9,6 +9,7 @@ import Button from "../Base/Button"
 import { useWorkoutSession } from "hooks/useWorkoutSession"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import IconButton from "../Base/IconButton"
+import Graph from "../Content/Graph"
 
 interface Props {
   workoutSessionModalRef: MutableRefObject<IHandles>
@@ -42,6 +43,7 @@ const WorkoutSession: FC<Props> = ({
     addSet,
     removeSet,
     submitSession,
+    exerciseHistory,
   } = useWorkoutSession(
     currentExercise,
     activeTemplates,
@@ -69,8 +71,12 @@ const WorkoutSession: FC<Props> = ({
   const activeExercise = exercises[currentExercise]
 
   const currentExerciseSets = sets.filter(
-    (item) => item.exerciseNumber === currentExercise
+    (item) => item.exerciseNumber === activeExercise.exerciseNumber
   )
+
+  const exerciseHistorySets = exerciseHistory?.sets
+    .filter((set) => set.exerciseNumber === activeExercise.exerciseNumber)
+    .sort((a, b) => a.when.getTime() - b.when.getTime())
 
   return (
     <Modalize
@@ -131,13 +137,15 @@ const WorkoutSession: FC<Props> = ({
           <Text style={stylesheet.activeExerciseName}>
             {activeExercise?.name}
           </Text>
-          <Text style={stylesheet.subtitle}>Sets</Text>
+          <Text style={[stylesheet.subtitle, { marginTop: sizes.SIZE_8 }]}>
+            Sets
+          </Text>
           {currentExerciseSets
             .sort((a, b) => a.setNumber - b.setNumber)
             .map((item, index) => (
               <Set
                 {...item}
-                setNumber={item.setNumber}
+                setNumber={index + 1}
                 setNote={setNote}
                 setReps={setReps}
                 setWeight={setWeight}
@@ -155,15 +163,74 @@ const WorkoutSession: FC<Props> = ({
             setReps={setReps}
             setWeight={setWeight}
           />
-          <View style={[styles.center, stylesheet.previousSetsView]}>
-            <Text
-              style={{
-                color: theme.colors.border,
-                fontSize: sizes.SIZE_12,
-                fontWeight: "bold",
-              }}>
-              No sets of this exercise have been recorded
-            </Text>
+
+          <Text
+            style={[stylesheet.subtitle, { marginVertical: sizes.SIZE_16 }]}>
+            Last Session
+          </Text>
+          <View
+            style={[
+              !exerciseHistory && styles.center,
+              stylesheet.previousSetsView,
+            ]}>
+            {exerciseHistory ? (
+              <>
+                <View
+                  style={[
+                    styles.flex,
+                    styles.rowCenter,
+                    {
+                      justifyContent: "space-around",
+                      marginBottom: sizes.SIZE_2,
+                    },
+                  ]}>
+                  <Text
+                    style={[
+                      stylesheet.subText,
+                      { color: theme.colors.primary },
+                    ]}>
+                    #
+                  </Text>
+                  <Text
+                    style={[
+                      stylesheet.subText,
+                      { color: theme.colors.primary },
+                    ]}>
+                    KG
+                  </Text>
+                  <Text
+                    style={[
+                      stylesheet.subText,
+                      { color: theme.colors.primary },
+                    ]}>
+                    Reps
+                  </Text>
+                </View>
+                {exerciseHistorySets.map((item, index) => (
+                  <View
+                    style={[
+                      styles.flex,
+                      styles.rowCenter,
+                      { justifyContent: "space-around" },
+                    ]}>
+                    <Text style={stylesheet.subText}>{index + 1}</Text>
+                    <Text style={stylesheet.subText}>
+                      {item.weight === 0 ? "Body" : item.weight}
+                    </Text>
+                    <Text style={stylesheet.subText}>{item.reps}</Text>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <Text
+                style={{
+                  color: theme.colors.border,
+                  fontSize: sizes.SIZE_12,
+                  fontWeight: "bold",
+                }}>
+                No sets of this exercise have been recorded
+              </Text>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -327,7 +394,6 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.border,
     fontSize: sizes.SIZE_14,
     fontWeight: "bold",
-    marginTop: sizes.SIZE_8,
   },
   inputBackground: {
     backgroundColor: theme.colors.background_2,
@@ -346,10 +412,16 @@ const stylesheet = StyleSheet.create({
   },
   previousSetsView: {
     backgroundColor: theme.colors.background_2,
-    height: sizes.SIZE_130,
-    alignSelf: "stretch",
+    height: sizes.SIZE_160,
     borderRadius: sizes.SIZE_12,
-    marginTop: sizes.SIZE_32,
+    paddingVertical: sizes.SIZE_12,
+  },
+  subText: {
+    color: theme.colors.border,
+    fontSize: sizes.SIZE_12,
+    fontWeight: "bold",
+    textAlign: "center",
+    width: sizes.SIZE_44,
   },
 })
 

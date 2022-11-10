@@ -3,7 +3,7 @@ import { Exercise, ExerciseSet, Session, WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import sqliteDB from "context/sqliteDB"
-import { WorkoutSession } from "database/schemas"
+import { WorkoutSession, ExerciseSet as Set } from "database/schemas"
 import { IHandles } from "react-native-modalize/lib/options"
 import moment from "moment"
 
@@ -18,8 +18,12 @@ function useWorkoutSession(
   const [reps, setReps] = useState(0)
   const [weight, setWeight] = useState(0)
   const [note, setNote] = useState("")
-
+  const [exerciseHistory, setExerciseHistory] = useState<WorkoutSession | null>(
+    null
+  )
   const { connector } = useContext(sqliteDB)
+
+  const activeExercise = exercises[currentExercise]
 
   useEffect(() => {
     AsyncStorage.getItem("sets").then((data) => {
@@ -29,6 +33,10 @@ function useWorkoutSession(
       if (data) setNote(JSON.parse(data))
     })
   }, [])
+
+  useEffect(() => {
+    loadExerciseHistory()
+  }, [currentExercise])
 
   const updateSets = async (newSets: ExerciseSet[]) =>
     await AsyncStorage.setItem("sets", JSON.stringify(newSets))
@@ -54,7 +62,7 @@ function useWorkoutSession(
             currentSets.filter(
               (item) => item.exerciseNumber === currentExercise
             ).length + 1,
-          exerciseNumber: exercises[currentExercise].exerciseNumber,
+          exerciseNumber: activeExercise.exerciseNumber,
           when: new Date(),
         },
       ]
@@ -64,6 +72,19 @@ function useWorkoutSession(
     setReps(0)
     setWeight(0)
     setNote("")
+  }
+
+  const loadExerciseHistory = async () => {
+    try {
+      const result = await connector?.getRepository(WorkoutSession).findOne({
+        where: {
+          sets: { exerciseNumber: activeExercise.exerciseNumber },
+        },
+      })
+      setExerciseHistory(result)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const removeSet = (index: number) => {
@@ -119,6 +140,7 @@ function useWorkoutSession(
     addSet,
     removeSet,
     submitSession,
+    exerciseHistory,
   }
 }
 

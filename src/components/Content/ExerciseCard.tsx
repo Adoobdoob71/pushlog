@@ -108,9 +108,9 @@ const ExerciseCard: FC<Props> = ({
           )}
         </View>
         {sets && (
-          <View style={styles.flex}>
+          <View style={[styles.flex, { padding: sizes.SIZE_12 }]}>
             {sets.map((item, index) => (
-              <Set {...item} setNumber={item.setNumber} />
+              <Set {...item} setNumber={index + 1} />
             ))}
           </View>
         )}
@@ -127,15 +127,25 @@ interface SetProps {
 
 const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
   return (
-    <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
+    <View
+      style={[
+        styles.rowCenter,
+        {
+          marginTop: sizes.SIZE_12,
+          alignSelf: "center",
+        },
+      ]}>
       <View
         style={[
           stylesheet.inputBackground,
-          { paddingHorizontal: sizes.SIZE_14, paddingVertical: sizes.SIZE_10 },
+          {
+            paddingHorizontal: sizes.SIZE_12,
+            paddingVertical: sizes.SIZE_5,
+          },
         ]}>
         <Text
           style={{
-            color: theme.colors.text,
+            color: theme.colors.border,
             fontSize: sizes.SIZE_12,
             fontWeight: "bold",
           }}>
@@ -160,11 +170,7 @@ const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
         ]}>
         <Text style={stylesheet.textInput}>{reps}</Text>
       </View>
-      <Button
-        mode="text"
-        onPress={() => {}}
-        style={{ marginEnd: sizes.SIZE_12 }}
-        textColor={theme.colors.border}>
+      <Button mode="text" onPress={() => {}} textColor={theme.colors.border}>
         Note
       </Button>
     </View>
@@ -176,13 +182,13 @@ const stylesheet = StyleSheet.create({
     backgroundColor: "#132831",
     borderRadius: sizes.SIZE_8,
     paddingVertical: sizes.SIZE_6,
-    paddingEnd: sizes.SIZE_10,
   },
   exerciseImageBackground: {
     backgroundColor: `${theme.colors.primary}30`,
     padding: sizes.SIZE_8,
     borderRadius: sizes.SIZE_8,
     marginStart: sizes.SIZE_20,
+    marginEnd: sizes.SIZE_10,
   },
   exerciseImage: {
     width: sizes.SIZE_70,
@@ -222,7 +228,7 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.text,
   },
   inputBackground: {
-    backgroundColor: theme.colors.background_2,
+    backgroundColor: theme.colors.background,
     borderRadius: sizes.SIZE_12,
     marginEnd: sizes.SIZE_12,
   },

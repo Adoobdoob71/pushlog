@@ -34,7 +34,7 @@ function useApp() {
     AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
     try {
       const dataSource = new DataSource({
-        database: "golasooo", // CHANGE NAME WHEN PRODUCTION IS ON!
+        database: "gorilla", // CHANGE NAME WHEN PRODUCTION IS ON!
         driver: require("expo-sqlite"),
         entities: [
           Workout,

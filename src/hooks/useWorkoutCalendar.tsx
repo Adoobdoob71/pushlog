@@ -26,6 +26,11 @@ function useWorkoutCalendar(
             moment().add(1, "day").toDate()
           ),
         },
+        order: {
+          sets: {
+            when: "ASC",
+          },
+        },
       })
       setSessions(result)
     } catch (error) {
