@@ -41,7 +41,7 @@ function useCustomizeTemplate() {
   const filterModalRef = useRef<Modalize>(null)
 
   const goBack = () =>
-    Alert.alert("Are you sure?", "Everything will be lost", [
+    Alert.alert("Are you sure?", "All changes will be lost", [
       { text: "Go back", onPress: () => {}, style: "cancel" },
       { text: "delete", onPress: () => navigation.goBack(), style: "default" },
     ])

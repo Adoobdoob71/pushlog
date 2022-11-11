@@ -53,6 +53,7 @@ const ExerciseCard: FC<Props> = ({
   return (
     <TouchableOpacity
       onLongPress={onLongPress}
+      activeOpacity={0.7}
       onPress={onPress ? onPress : navigateToExerciseInfo}>
       <View style={[stylesheet.exerciseBackground, style]}>
         <View style={styles.rowCenter}>
@@ -63,42 +64,38 @@ const ExerciseCard: FC<Props> = ({
               ellipsizeMode="tail">
               {name}
             </Text>
-            <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
-              {muscleCategories.slice(0, 2).map(({ id, name }) => (
-                <Tag
-                  key={id}
-                  text={name}
-                  backgroundColor={
-                    sets ? theme.colors.background : theme.colors.background_2
-                  }
-                  style={{ marginEnd: sizes.SIZE_8 }}
-                />
-              ))}
-              {muscleCategories.length > 2 && (
-                <View
-                  style={[
-                    stylesheet.tagNumberPlusWrapper,
-                    {
-                      backgroundColor: sets
-                        ? theme.colors.background
-                        : theme.colors.background_2,
-                    },
-                  ]}>
-                  <Text style={stylesheet.tagNumberPlus}>
-                    {"+ " + `${muscleCategories.length - 2}`}
-                  </Text>
-                </View>
-              )}
-            </View>
+            {muscleCategories.length !== 0 && (
+              <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
+                {muscleCategories.slice(0, 2).map(({ id, name }) => (
+                  <Tag
+                    key={id}
+                    text={name}
+                    backgroundColor={
+                      sets ? theme.colors.background : theme.colors.background_2
+                    }
+                    style={{ marginEnd: sizes.SIZE_8 }}
+                  />
+                ))}
+                {muscleCategories.length > 2 && (
+                  <View
+                    style={[
+                      stylesheet.tagNumberPlusWrapper,
+                      {
+                        backgroundColor: sets
+                          ? theme.colors.background
+                          : theme.colors.background_2,
+                      },
+                    ]}>
+                    <Text style={stylesheet.tagNumberPlus}>
+                      {"+ " + `${muscleCategories.length - 2}`}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            )}
           </View>
           {image && (
-            <View
-              style={[
-                stylesheet.exerciseImageBackground,
-                {
-                  backgroundColor: sets ? "transparent" : theme.colors.primary,
-                },
-              ]}>
+            <View style={[stylesheet.exerciseImageBackground]}>
               <Image
                 source={{ uri: image }}
                 resizeMode="contain"
@@ -131,7 +128,6 @@ const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
       style={[
         styles.rowCenter,
         {
-          marginTop: sizes.SIZE_12,
           alignSelf: "center",
         },
       ]}>
@@ -184,7 +180,7 @@ const stylesheet = StyleSheet.create({
     paddingVertical: sizes.SIZE_6,
   },
   exerciseImageBackground: {
-    backgroundColor: `${theme.colors.primary}30`,
+    backgroundColor: theme.colors.primary,
     padding: sizes.SIZE_8,
     borderRadius: sizes.SIZE_8,
     marginStart: sizes.SIZE_20,

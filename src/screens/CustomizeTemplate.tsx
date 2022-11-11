@@ -76,7 +76,7 @@ const CustomizeTemplate: FC = () => {
                 mode="text"
                 style={{
                   marginBottom: sizes.SIZE_8,
-                  marginHorizontal: sizes.SIZE_20,
+                  marginStart: sizes.SIZE_20,
                 }}
                 icon="trash-can"
                 onPress={deleteExercises}>

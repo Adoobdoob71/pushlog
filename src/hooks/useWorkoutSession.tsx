@@ -6,6 +6,7 @@ import sqliteDB from "context/sqliteDB"
 import { WorkoutSession, ExerciseSet as Set } from "database/schemas"
 import { IHandles } from "react-native-modalize/lib/options"
 import moment from "moment"
+import { Alert } from "react-native"
 
 function useWorkoutSession(
   currentExercise: number,
@@ -98,34 +99,75 @@ function useWorkoutSession(
   }
 
   const submitSession = async () => {
-    try {
-      if (sets.length === 0) throw ""
-      const newSession: Session = {
-        sets: sets,
-        templates: activeTemplates,
-        when: moment().toDate(),
-      }
-      const session = connector.manager.create(WorkoutSession, newSession)
-      await connector.manager.save(WorkoutSession, session)
-      Toast.show({
-        type: "success",
-        text1: "Amazing!",
-        text2: "You've finished your workout!",
-      })
-      workoutSessionModalRef.current.close()
-      await AsyncStorage.multiRemove(["sets", "activeTemplates"])
-      setSets([])
-      setWeight(0)
-      setReps(0)
-      setNote("")
-      resetActiveTemplates()
-    } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: "Uh oh...",
-        text2: "Something went wrong 😥",
-      })
-    }
+    Alert.alert("Are you sure?", "Are you really done?", [
+      { text: "Go back", onPress: () => {}, style: "cancel" },
+      {
+        text: "Yes!",
+        onPress: async () => {
+          try {
+            if (sets.length === 0) throw ""
+            const newSession: Session = {
+              sets: sets,
+              templates: activeTemplates,
+              when: moment().toDate(),
+            }
+            const session = connector.manager.create(WorkoutSession, newSession)
+            await connector.manager.save(WorkoutSession, session)
+            Toast.show({
+              type: "success",
+              text1: "Amazing!",
+              text2: "You've finished your workout!",
+            })
+            workoutSessionModalRef.current.close()
+            await AsyncStorage.multiRemove(["sets", "activeTemplates"])
+            setSets([])
+            setWeight(0)
+            setReps(0)
+            setNote("")
+            resetActiveTemplates()
+          } catch (error) {
+            Toast.show({
+              type: "error",
+              text1: "Uh oh...",
+              text2: "Something went wrong 😥",
+            })
+          }
+        },
+      },
+    ])
+  }
+
+  const quitWorkout = async () => {
+    Alert.alert("Are you sure?", "All changes will be lost", [
+      { text: "Go back", onPress: () => {}, style: "cancel" },
+      {
+        text: "Quit",
+        onPress: () => {
+          AsyncStorage.multiRemove(["sets", "activeTemplates", "note"])
+            .then(() => {
+              workoutSessionModalRef.current.close()
+              setNote("")
+              setReps(0)
+              setWeight(0)
+              setSets([])
+              resetActiveTemplates()
+              Toast.show({
+                type: "success",
+                text1: "Maybe you should rest",
+                text2: "Successfully quit workout",
+              })
+            })
+            .catch((error) => {
+              Toast.show({
+                type: "error",
+                text1: "Uh oh...",
+                text2: "Something went wrong 😥",
+              })
+            })
+        },
+        style: "default",
+      },
+    ])
   }
 
   return {
@@ -141,6 +183,7 @@ function useWorkoutSession(
     removeSet,
     submitSession,
     exerciseHistory,
+    quitWorkout,
   }
 }
 

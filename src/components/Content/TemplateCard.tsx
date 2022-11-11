@@ -44,7 +44,7 @@ const TemplateCard: FC<Props> = ({
       onPress={onPress ? onPress : navigateToCustomizeTemplate}
       onLongPress={onLongPress}
       activeOpacity={0.7}>
-      <View style={{ flex: 1.5 }}>
+      <View style={{ flex: 1 }}>
         <Text style={stylesheet.templateName}>{name}</Text>
         <Text style={stylesheet.templateDescription} numberOfLines={3}>
           {description}
@@ -67,13 +67,13 @@ const TemplateCard: FC<Props> = ({
         </View>
       </View>
       {exercises[0].image && (
-        <Image
-          source={{
-            uri: exercises[0].image,
-          }}
-          style={stylesheet.templateImage}
-          resizeMode="contain"
-        />
+        <View style={stylesheet.exerciseImageBackground}>
+          <Image
+            source={{ uri: exercises[0].image }}
+            resizeMode="contain"
+            style={stylesheet.templateImage}
+          />
+        </View>
       )}
     </TouchableOpacity>
   )
@@ -108,9 +108,14 @@ const stylesheet = StyleSheet.create({
     fontSize: sizes.SIZE_10,
     color: theme.colors.text,
   },
+  exerciseImageBackground: {
+    backgroundColor: theme.colors.primary,
+    padding: sizes.SIZE_5,
+    borderRadius: sizes.SIZE_8,
+  },
   templateImage: {
-    width: sizes.SIZE_90,
-    height: sizes.SIZE_90,
+    width: sizes.SIZE_70,
+    height: sizes.SIZE_70,
     flex: 1,
   },
 })

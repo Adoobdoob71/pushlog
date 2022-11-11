@@ -184,7 +184,6 @@ const ChooseTemplate: FC<Props> = ({
       <Animated.ScrollView
         showsHorizontalScrollIndicator={false}
         style={{
-          // marginTop: activeTemplates.length > 0 ? sizes.SIZE_10 : 0,
           marginBottom: marginAnim,
         }}
         horizontal>
@@ -261,7 +260,7 @@ const ChooseTemplate: FC<Props> = ({
                         fontSize: sizes.SIZE_14,
                         fontWeight: "bold",
                       }}>
-                      You haven't created any workout templates
+                      Can't find any workout templates
                     </Text>
                   </View>
                 )}
@@ -273,7 +272,7 @@ const ChooseTemplate: FC<Props> = ({
           )
         }
         panGestureComponentEnabled
-        modalHeight={HEIGHT * 0.75}
+        modalHeight={HEIGHT * 0.575}
         withHandle={false}
         modalStyle={{ backgroundColor: theme.colors.background }}
         HeaderComponent={TemplatesHeaderComponent}
@@ -319,7 +318,7 @@ const ChooseTemplate: FC<Props> = ({
 const stylesheet = StyleSheet.create({
   templateActive: {
     borderColor: "transparent",
-    borderWidth: sizes.SIZE_2,
+    borderLeftWidth: sizes.SIZE_3,
     borderRadius: sizes.SIZE_8,
     marginBottom: sizes.SIZE_18,
     marginHorizontal: sizes.SIZE_20,

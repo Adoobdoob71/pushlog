@@ -10,13 +10,20 @@ interface Props {
   onRemove?: () => void
   style?: StyleProperty
   backgroundColor?: string
+  onPress?: () => void
 }
 
-const Tag: FC<Props> = ({ text, onRemove, style, backgroundColor }) => {
+const Tag: FC<Props> = ({
+  text,
+  onRemove,
+  onPress,
+  style,
+  backgroundColor,
+}) => {
   return (
     <Animated.View style={style}>
       <TouchableOpacity
-        onPress={onRemove}
+        onPress={onRemove ? onRemove : onPress}
         activeOpacity={0.5}
         style={[
           styles.rowCenter,

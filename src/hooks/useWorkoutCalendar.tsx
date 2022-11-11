@@ -50,7 +50,6 @@ function useWorkoutCalendar(
           ...marked,
           [moment(session.when).format("YYYY-MM-DD")]: {
             marked: true,
-            dotColor: theme.colors.primary_3,
           },
         }
         return markedTemp

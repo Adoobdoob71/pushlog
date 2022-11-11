@@ -44,6 +44,7 @@ const WorkoutSession: FC<Props> = ({
     removeSet,
     submitSession,
     exerciseHistory,
+    quitWorkout,
   } = useWorkoutSession(
     currentExercise,
     activeTemplates,
@@ -60,8 +61,14 @@ const WorkoutSession: FC<Props> = ({
         </Text>
         <Button
           mode="text"
-          onPress={submitSession}
-          style={{ marginStart: "auto" }}>
+          textColor={theme.colors.danger}
+          style={{
+            marginStart: "auto",
+          }}
+          onPress={quitWorkout}>
+          Quit
+        </Button>
+        <Button mode="text" onPress={submitSession}>
           Finish
         </Button>
       </View>
@@ -71,11 +78,11 @@ const WorkoutSession: FC<Props> = ({
   const activeExercise = exercises[currentExercise]
 
   const currentExerciseSets = sets.filter(
-    (item) => item.exerciseNumber === activeExercise.exerciseNumber
+    (item) => item.exerciseNumber === activeExercise?.exerciseNumber
   )
 
   const exerciseHistorySets = exerciseHistory?.sets
-    .filter((set) => set.exerciseNumber === activeExercise.exerciseNumber)
+    .filter((set) => set.exerciseNumber === activeExercise?.exerciseNumber)
     .sort((a, b) => a.when.getTime() - b.when.getTime())
 
   return (
@@ -141,7 +148,7 @@ const WorkoutSession: FC<Props> = ({
             Sets
           </Text>
           {currentExerciseSets
-            .sort((a, b) => a.setNumber - b.setNumber)
+            .sort((a, b) => a.when?.getTime() - b.when?.getTime())
             .map((item, index) => (
               <Set
                 {...item}
@@ -212,7 +219,8 @@ const WorkoutSession: FC<Props> = ({
                       styles.flex,
                       styles.rowCenter,
                       { justifyContent: "space-around" },
-                    ]}>
+                    ]}
+                    key={index}>
                     <Text style={stylesheet.subText}>{index + 1}</Text>
                     <Text style={stylesheet.subText}>
                       {item.weight === 0 ? "Body" : item.weight}

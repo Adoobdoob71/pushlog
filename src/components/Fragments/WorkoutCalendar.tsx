@@ -1,11 +1,5 @@
 import { FC, MutableRefObject } from "react"
-import {
-  Text,
-  View,
-  StyleSheet,
-  InteractionManager,
-  ActivityIndicator,
-} from "react-native"
+import { Text, View, StyleSheet, ActivityIndicator } from "react-native"
 import { CalendarList, DateData } from "react-native-calendars"
 import { styles, theme, sizes } from "utils/styles"
 import { HEIGHT } from "utils/constants"
@@ -13,10 +7,10 @@ import { useWorkoutCalendar } from "hooks/useWorkoutCalendar"
 import { Modalize } from "react-native-modalize"
 import { IHandles } from "react-native-modalize/lib/options"
 import Button from "../Base/Button"
-import TemplateCard from "../Content/TemplateCard"
 import moment from "moment"
-import { FlatList, ScrollView } from "react-native-gesture-handler"
 import ExerciseCard from "../Content/ExerciseCard"
+import Tag from "../Base/Tag"
+import { ScrollView } from "react-native-gesture-handler"
 
 interface Props {
   calendarModalRef: MutableRefObject<IHandles>
@@ -36,6 +30,12 @@ const WorkoutCalendar: FC<Props> = ({
     workoutDayModalRef
   )
 
+  const chosenDaySessions = sessions.filter((session) =>
+    moment(session.when).isSame(chosenDay.dateString, "day")
+  )
+
+  const sets = chosenDaySessions.flatMap((session) => session.sets)
+
   const agendaTheme = {
     calendarBackground: theme.colors.background,
     todayTextColor: theme.colors.primary,
@@ -44,7 +44,7 @@ const WorkoutCalendar: FC<Props> = ({
     dayTextColor: theme.colors.border,
     textDisabledColor: theme.colors.card,
     agendaKnobColor: theme.colors.primary,
-    indicatorColor: theme.colors.primary,
+    indicatorColor: theme.colors.success,
     selectedDayBackgroundColor: theme.colors.primary,
     dotColor: theme.colors.primary,
     textDayFontWeight: "bold",
@@ -84,7 +84,7 @@ const WorkoutCalendar: FC<Props> = ({
         <Text style={stylesheet.workoutDayTitle}>
           {moment()
             .month(chosenDay.month - 1)
-            .format(`[${chosenDay.day}] MMM`)}
+            .format(`[${chosenDay.day}] MMMM`)}
         </Text>
         <Button
           mode="text"
@@ -93,14 +93,36 @@ const WorkoutCalendar: FC<Props> = ({
           Close
         </Button>
       </View>
+      <ScrollView horizontal>
+        <View
+          style={[
+            styles.rowCenter,
+            { marginHorizontal: sizes.SIZE_20, marginVertical: sizes.SIZE_8 },
+          ]}>
+          {chosenDaySessions.length !== 0 && (
+            <Text
+              style={{
+                color: theme.colors.primary,
+                fontSize: sizes.SIZE_12,
+                fontWeight: "bold",
+                marginEnd: sizes.SIZE_8,
+              }}>
+              Templates used:
+            </Text>
+          )}
+          {chosenDaySessions
+            .flatMap((session) => session.templates)
+            .map((tem) => (
+              <Tag
+                text={tem.name}
+                backgroundColor={theme.colors.background_2}
+                style={{ marginEnd: sizes.SIZE_8 }}
+              />
+            ))}
+        </View>
+      </ScrollView>
     </View>
   )
-
-  const chosenDaySessions = sessions.filter((session) =>
-    moment(session.when).isSame(chosenDay.dateString, "day")
-  )
-
-  const sets = chosenDaySessions.flatMap((session) => session.sets)
 
   return (
     <>
@@ -134,7 +156,9 @@ const WorkoutCalendar: FC<Props> = ({
         panGestureComponentEnabled
         withHandle={false}
         adjustToContentHeight
-        modalStyle={{ backgroundColor: theme.colors.background }}
+        modalStyle={{
+          backgroundColor: theme.colors.background,
+        }}
         flatListProps={{
           data: chosenDaySessions.flatMap((session) =>
             session.templates.flatMap((tem) => tem.exercises)
@@ -146,7 +170,7 @@ const WorkoutCalendar: FC<Props> = ({
               sets={sets.filter((i) => {
                 return i.exerciseNumber === item.exerciseNumber
               })}
-              key={index}
+              key={item.id}
               style={{
                 backgroundColor: theme.colors.card,
                 elevation: 0,
@@ -158,7 +182,7 @@ const WorkoutCalendar: FC<Props> = ({
           ),
           ListEmptyComponent: () => (
             <View
-              style={[styles.flex, styles.center, { height: sizes.SIZE_120 }]}>
+              style={[styles.flex, styles.center, { height: sizes.SIZE_150 }]}>
               <Text
                 style={{
                   color: theme.colors.border,
