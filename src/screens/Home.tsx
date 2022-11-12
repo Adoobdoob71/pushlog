@@ -1,19 +1,20 @@
-import { FC } from "react"
+import { FC, useContext } from "react"
 import { SafeAreaView, StyleSheet, Text, View } from "react-native"
 import { sizes, styles, theme } from "utils/styles"
 import { useHome } from "hooks/useHome"
 import {
   ChooseTemplate,
-  ExerciseCard,
   Header,
   IconButton,
   WorkoutSession,
   WorkoutCalendar,
+  TemplateCard,
 } from "components/index"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
 import { useNavigation } from "@react-navigation/native"
 import moment from "moment"
+import workoutSessions from "context/workoutSessions"
+import { WIDTH } from "utils/constants"
 
 const Home = () => {
   const homeHook = useHome(),
@@ -32,6 +33,8 @@ const Home = () => {
   const noTemplates = activeTemplates.length === 0
 
   const currentDay = moment().date()
+
+  const { sessions, loadingSessions } = useContext(workoutSessions)
 
   return (
     <SafeAreaView style={[styles.mainWrapper]}>
@@ -67,6 +70,36 @@ const Home = () => {
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
       <WorkoutSession {...homeHook} />
+      <View>
+        <Text
+          style={{
+            color: theme.colors.primary,
+            fontWeight: "bold",
+            fontSize: sizes.SIZE_20,
+            marginStart: sizes.SIZE_24,
+            marginTop: sizes.SIZE_24,
+            marginBottom: sizes.SIZE_6,
+          }}>
+          Today you've worked
+        </Text>
+        <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+          {sessions
+            .flatMap((item) => item.templates)
+            .map((item, index) => (
+              <TemplateCard
+                key={index}
+                {...item}
+                templateData={item}
+                tags={item.muscleCategories}
+                style={{
+                  marginHorizontal: sizes.SIZE_12,
+                  maxWidth: WIDTH * 0.8,
+                  marginVertical: sizes.SIZE_6,
+                }}
+              />
+            ))}
+        </ScrollView>
+      </View>
       <IconButton
         name={noTemplates ? "pencil" : "play"}
         color={theme.colors.text}

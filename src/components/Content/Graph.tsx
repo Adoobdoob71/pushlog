@@ -7,7 +7,7 @@ import { StyleProperty } from "utils/types"
 import { VictoryLine } from "victory-native"
 
 interface Props {
-  data: { x: number; y: number; weight: number; setNumber: number }[]
+  data: { x: number; y: number }[]
   style?: StyleProperty
 }
 
@@ -31,18 +31,6 @@ const Graph: FC<Props> = ({ data, style }) => {
   ]
   return data.length !== 0 ? (
     <View style={style}>
-      <View
-        style={[
-          styles.rowCenter,
-          {
-            alignSelf: "stretch",
-            paddingHorizontal: sizes.SIZE_56,
-            justifyContent: "space-around",
-          },
-        ]}>
-        <Text style={stylesheet.reps}>8 Reps</Text>
-        <Text style={stylesheet.weight}>40 Kgs</Text>
-      </View>
       <VictoryLine
         data={data}
         style={{
@@ -59,15 +47,7 @@ const Graph: FC<Props> = ({ data, style }) => {
           x: Math.max.apply(Math, xArr) + 200,
           y: Math.max.apply(Math, yArr) + 2,
         }}
-        events={[
-          {
-            target: "data",
-            eventHandlers: {
-              onGestureStart: () => console.log("LONG PRESS"),
-            },
-          },
-        ]}
-        height={HEIGHT * 0.35}
+        height={HEIGHT * 0.2}
         width={WIDTH}
         interpolation="natural"
         animate

@@ -4,7 +4,7 @@ import * as NavigationBar from "expo-navigation-bar"
 import { useFonts } from "expo-font"
 import { WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
-import { DataSource } from "typeorm"
+import { Between, DataSource } from "typeorm"
 import {
   Exercise,
   ExerciseSet,
@@ -13,11 +13,14 @@ import {
   WorkoutSession,
 } from "database/schemas"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import moment from "moment"
 
 function useApp() {
   const [templates, setTemplates] = useState<(WorkoutTemplate | null)[]>([])
   const [loadingTemplates, setLoadingTemplates] = useState(true)
   const [dbConnector, setDBConnector] = useState<DataSource | null>(null)
+  const [sessions, setSessions] = useState<WorkoutSession[]>([])
+  const [loadingSessions, setLoadingSessions] = useState(true)
 
   NavigationBar.setBackgroundColorAsync(theme.colors.background)
 
@@ -59,7 +62,10 @@ function useApp() {
   }, [])
 
   useEffect(() => {
-    if (dbConnector) readTemplates()
+    if (dbConnector) {
+      readTemplates()
+      getSessions()
+    }
   }, [dbConnector])
 
   const readTemplates = async () => {
@@ -144,6 +150,33 @@ function useApp() {
     }
   }
 
+  const getSessions = async () => {
+    try {
+      setLoadingSessions(true)
+      const result = await dbConnector?.getRepository(WorkoutSession).find({
+        where: {
+          when: Between(
+            moment().month(-1).startOf("month").toDate(),
+            moment().add(1, "day").toDate()
+          ),
+        },
+        order: {
+          sets: {
+            when: "ASC",
+          },
+        },
+      })
+      setSessions(result)
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Uh oh...",
+        text2: "Something went wrong 😥",
+      })
+    }
+    setLoadingSessions(false)
+  }
+
   return {
     templates,
     loadingTemplates,
@@ -152,6 +185,9 @@ function useApp() {
     modifyTemplate,
     loaded,
     dbConnector,
+    sessions,
+    loadingSessions,
+    getSessions,
   }
 }
 

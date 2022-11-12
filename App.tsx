@@ -8,6 +8,7 @@ import WorkoutRoutine from "context/workoutTemplates"
 import Toast, { BaseToast } from "react-native-toast-message"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import SqliteDB from "context/sqliteDB"
+import WorkoutSessions from "context/workoutSessions"
 
 export default function App() {
   const {
@@ -18,6 +19,9 @@ export default function App() {
     removeTemplate,
     loaded,
     dbConnector,
+    loadingSessions,
+    sessions,
+    getSessions,
   } = useApp()
 
   return loaded ? (
@@ -31,10 +35,13 @@ export default function App() {
             removeTemplate,
             loadingTemplates,
           }}>
-          <NavigationContainer theme={theme}>
-            <StatusBar style="light" translucent={true} animated />
-            <StackNavigator />
-          </NavigationContainer>
+          <WorkoutSessions.Provider
+            value={{ sessions, loadingSessions, refreshSessions: getSessions }}>
+            <NavigationContainer theme={theme}>
+              <StatusBar style="light" translucent={true} animated />
+              <StackNavigator />
+            </NavigationContainer>
+          </WorkoutSessions.Provider>
         </WorkoutRoutine.Provider>
       </SqliteDB.Provider>
       <Toast

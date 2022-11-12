@@ -25,10 +25,8 @@ const WorkoutCalendar: FC<Props> = ({
   updateChosenDay,
   chosenDay,
 }) => {
-  const { sessions, loading, markedDays, getSessions } = useWorkoutCalendar(
-    chosenDay,
-    workoutDayModalRef
-  )
+  const { sessions, loadingSessions, markedDays, refreshSessions } =
+    useWorkoutCalendar(chosenDay, workoutDayModalRef)
 
   const chosenDaySessions = sessions.filter((session) =>
     moment(session.when).isSame(chosenDay.dateString, "day")
@@ -130,20 +128,20 @@ const WorkoutCalendar: FC<Props> = ({
         ref={calendarModalRef}
         panGestureComponentEnabled
         withHandle={false}
-        onOpen={getSessions}
-        modalHeight={HEIGHT * 0.8}
+        onOpen={refreshSessions}
+        adjustToContentHeight
         modalStyle={{ backgroundColor: theme.colors.background }}
         HeaderComponent={WorkoutHistoryHeaderComponent}
         customRenderer={
-          loading ? (
-            <View style={[styles.flex, styles.center]}>
+          loadingSessions ? (
+            <View style={[{ height: sizes.SIZE_100 }, styles.center]}>
               <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
           ) : (
             <CalendarList
               // @ts-ignore
               theme={agendaTheme}
-              pastScrollRange={1}
+              pastScrollRange={0}
               futureScrollRange={0}
               markingType="dot"
               markedDates={markedDays}

@@ -175,17 +175,13 @@ const WorkoutSession: FC<Props> = ({
             style={[stylesheet.subtitle, { marginVertical: sizes.SIZE_16 }]}>
             Last Session
           </Text>
-          <View
-            style={[
-              !exerciseHistory && styles.center,
-              stylesheet.previousSetsView,
-            ]}>
+          <View style={stylesheet.previousSetsView}>
             {exerciseHistory ? (
               <>
                 <View
                   style={[
                     styles.flex,
-                    styles.rowCenter,
+                    styles.row,
                     {
                       justifyContent: "space-around",
                       marginBottom: sizes.SIZE_2,

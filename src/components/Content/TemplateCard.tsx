@@ -45,8 +45,16 @@ const TemplateCard: FC<Props> = ({
       onLongPress={onLongPress}
       activeOpacity={0.7}>
       <View style={{ flex: 1 }}>
-        <Text style={stylesheet.templateName}>{name}</Text>
-        <Text style={stylesheet.templateDescription} numberOfLines={3}>
+        <Text
+          style={stylesheet.templateName}
+          ellipsizeMode="tail"
+          numberOfLines={1}>
+          {name}
+        </Text>
+        <Text
+          style={stylesheet.templateDescription}
+          ellipsizeMode="tail"
+          numberOfLines={1}>
           {description}
         </Text>
         <View style={[styles.rowCenter, { marginTop: sizes.SIZE_12 }]}>
@@ -112,6 +120,7 @@ const stylesheet = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     padding: sizes.SIZE_5,
     borderRadius: sizes.SIZE_8,
+    marginStart: sizes.SIZE_12,
   },
   templateImage: {
     width: sizes.SIZE_70,
