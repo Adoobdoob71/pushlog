@@ -58,7 +58,6 @@ const TemplatesList = () => {
         style={{
           marginVertical: sizes.SIZE_18,
         }}
-        contentContainerStyle={styles.flex}
         showsVerticalScrollIndicator={false}
         stickyHeaderHiddenOnScroll
         stickyHeaderIndices={[0]}

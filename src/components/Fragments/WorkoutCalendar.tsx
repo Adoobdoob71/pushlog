@@ -91,7 +91,7 @@ const WorkoutCalendar: FC<Props> = ({
           Close
         </Button>
       </View>
-      <ScrollView horizontal>
+      <ScrollView showsHorizontalScrollIndicator={false} horizontal>
         <View
           style={[
             styles.rowCenter,

@@ -7,6 +7,7 @@ import { WorkoutSession, ExerciseSet as Set } from "database/schemas"
 import { IHandles } from "react-native-modalize/lib/options"
 import moment from "moment"
 import { Alert } from "react-native"
+import workoutSessions from "context/workoutSessions"
 
 function useWorkoutSession(
   currentExercise: number,
@@ -23,6 +24,7 @@ function useWorkoutSession(
     null
   )
   const { connector } = useContext(sqliteDB)
+  const { refreshSessions } = useContext(workoutSessions)
 
   const activeExercise = exercises[currentExercise]
 
@@ -61,7 +63,7 @@ function useWorkoutSession(
           note,
           setNumber:
             currentSets.filter(
-              (item) => item.exerciseNumber === currentExercise
+              (item) => item.exerciseNumber === activeExercise.exerciseNumber
             ).length + 1,
           exerciseNumber: activeExercise.exerciseNumber,
           when: new Date(),
@@ -87,11 +89,17 @@ function useWorkoutSession(
       console.error(error)
     }
   }
-
   const removeSet = (index: number) => {
-    let setsFilter = sets.filter((item) => item.setNumber !== index)
-    setsFilter = setsFilter.flatMap((item, index) => {
-      item.setNumber = index + 1
+    let setsFilter = sets.filter((item, setNumber) => {
+      if (activeExercise?.exerciseNumber !== item.exerciseNumber) return true
+      else return item.setNumber !== index
+    })
+    setsFilter.sort((a, b) => a.when.getTime() - b.when.getTime())
+    let count = 1
+    setsFilter.map((item) => {
+      if (item.exerciseNumber !== activeExercise?.exerciseNumber) return item
+      item.setNumber = count
+      count++
       return item
     })
     setSets(setsFilter)
@@ -125,6 +133,7 @@ function useWorkoutSession(
             setReps(0)
             setNote("")
             resetActiveTemplates()
+            refreshSessions()
           } catch (error) {
             Toast.show({
               type: "error",

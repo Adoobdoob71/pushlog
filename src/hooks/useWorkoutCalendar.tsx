@@ -14,7 +14,6 @@ function useWorkoutCalendar(
   workoutDayModalRef: MutableRefObject<IHandles>
 ) {
   const [markedDays, setMarkedDays] = useState({})
-  const { connector } = useContext(sqliteDB)
   const { sessions, loadingSessions, refreshSessions } =
     useContext(workoutSessions)
 

@@ -60,7 +60,7 @@ const ExerciseCard: FC<Props> = ({
           <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
             <Text
               style={stylesheet.exerciseName}
-              numberOfLines={1}
+              numberOfLines={2}
               ellipsizeMode="tail">
               {name}
             </Text>
@@ -105,7 +105,7 @@ const ExerciseCard: FC<Props> = ({
           )}
         </View>
         {sets && (
-          <View style={[styles.flex, { padding: sizes.SIZE_12 }]}>
+          <View style={{ padding: sizes.SIZE_12 }}>
             {sets.map((item, index) => (
               <Set {...item} setNumber={index + 1} />
             ))}
@@ -222,6 +222,7 @@ const stylesheet = StyleSheet.create({
   tagNumberPlus: {
     fontSize: sizes.SIZE_10,
     color: theme.colors.text,
+    fontWeight: "bold",
   },
   inputBackground: {
     backgroundColor: theme.colors.background,

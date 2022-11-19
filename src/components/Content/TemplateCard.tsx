@@ -68,7 +68,8 @@ const TemplateCard: FC<Props> = ({
           {tags.length > 2 && (
             <View style={stylesheet.tagNumberPlusWrapper}>
               <Text style={stylesheet.tagNumberPlus}>
-                {"+ " + `${tags.length - 2}`}
+                {"+ "}
+                {tags.length - 2}
               </Text>
             </View>
           )}
@@ -115,6 +116,7 @@ const stylesheet = StyleSheet.create({
   tagNumberPlus: {
     fontSize: sizes.SIZE_10,
     color: theme.colors.text,
+    fontWeight: "bold",
   },
   exerciseImageBackground: {
     backgroundColor: theme.colors.primary,

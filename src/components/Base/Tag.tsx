@@ -63,6 +63,7 @@ const stylesheet = StyleSheet.create({
   tagText: {
     fontSize: sizes.SIZE_10,
     color: theme.colors.text,
+    fontWeight: "bold",
   },
 })
 
