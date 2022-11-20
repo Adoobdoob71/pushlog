@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { HEIGHT, WIDTH } from "utils/constants"
 import { sizes, styles, theme } from "utils/styles"
 import { StyleProperty } from "utils/types"
-import { VictoryLine } from "victory-native"
+import { VictoryChart, VictoryLine } from "victory-native"
 
 interface Props {
   data: { x: number; y: number }[]
@@ -40,15 +40,15 @@ const Graph: FC<Props> = ({ data, style }) => {
           },
         }}
         minDomain={{
-          x: Math.min.apply(Math, xArr) - 200,
+          x: Math.min.apply(Math, xArr) - 1,
           y: Math.min.apply(Math, yArr) - 2,
         }}
         maxDomain={{
-          x: Math.max.apply(Math, xArr) + 200,
+          x: Math.max.apply(Math, xArr) + 1,
           y: Math.max.apply(Math, yArr) + 2,
         }}
         height={HEIGHT * 0.2}
-        width={WIDTH}
+        width={WIDTH * 0.8}
         interpolation="natural"
         animate
       />
@@ -103,7 +103,7 @@ const TimeToggle: FC<Props_2> = ({ time, activeTime, changeActiveTime }) => {
           stylesheet.timeToggleButton,
           {
             backgroundColor:
-              activeTime === time ? theme.colors.card : undefined,
+              activeTime === time ? theme.colors.background : undefined,
           },
         ]}>
         <Text style={stylesheet.timeToggleText}>{time}</Text>
@@ -118,7 +118,7 @@ const stylesheet = StyleSheet.create({
     paddingVertical: sizes.SIZE_5,
   },
   timeToggleText: {
-    color: theme.colors.text,
+    color: theme.colors.border,
     fontWeight: "bold",
     fontSize: sizes.SIZE_10,
   },

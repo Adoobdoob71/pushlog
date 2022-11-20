@@ -17,6 +17,8 @@ import {
   WorkoutCalendar,
   TemplateCard,
   ExerciseCard,
+  Graph,
+  BodyWeightTracking,
 } from "components/index"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
@@ -31,6 +33,8 @@ const Home = () => {
       activeTemplates,
       openCalendarModal,
       openWorkoutSessionModal,
+      bodyWeightRecords,
+      bodyWeightTrackingModalRef,
     } = homeHook
 
   const navigation = useNavigation()
@@ -84,9 +88,10 @@ const Home = () => {
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
       <WorkoutSession {...homeHook} />
+      <BodyWeightTracking {...homeHook} />
       <ScrollView style={styles.flex}>
         {loadingSessions ? (
-          <View style={[{ height: sizes.SIZE_200 }, styles.center]}>
+          <View style={[{ height: HEIGHT * 0.6 }, styles.center]}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         ) : (
@@ -127,7 +132,7 @@ const Home = () => {
                 <View
                   style={[
                     styles.center,
-                    { width: WIDTH, height: sizes.SIZE_70 },
+                    { width: WIDTH, height: sizes.SIZE_150 },
                   ]}>
                   <Text style={stylesheet.plainText}>
                     Perhaps today we rest?
@@ -147,26 +152,38 @@ const Home = () => {
               Exercises you've done
             </Text>
             <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-              {todaySessions
-                .flatMap((session) =>
-                  session.templates.flatMap((tem) => tem.exercises)
-                )
-                .map((item, index) => (
-                  <ExerciseCard
-                    {...item}
-                    sets={sets.filter((i) => {
-                      return i.exerciseNumber === item.exerciseNumber
-                    })}
-                    key={item.id}
-                    style={{
-                      backgroundColor: theme.colors.card,
-                      width: WIDTH * 0.85,
-                      elevation: 0,
-                      marginHorizontal: sizes.SIZE_12,
-                    }}
-                    exerciseData={item}
-                  />
-                ))}
+              {todaySessions.length !== 0 ? (
+                todaySessions
+                  .flatMap((session) =>
+                    session.templates.flatMap((tem) => tem.exercises)
+                  )
+                  .map((item, index) => (
+                    <ExerciseCard
+                      {...item}
+                      sets={sets.filter((i) => {
+                        return i.exerciseNumber === item.exerciseNumber
+                      })}
+                      key={item.id}
+                      style={{
+                        backgroundColor: theme.colors.card,
+                        width: WIDTH * 0.85,
+                        elevation: 0,
+                        marginHorizontal: sizes.SIZE_12,
+                      }}
+                      exerciseData={item}
+                    />
+                  ))
+              ) : (
+                <View
+                  style={[
+                    styles.center,
+                    { width: WIDTH, height: sizes.SIZE_150 },
+                  ]}>
+                  <Text style={stylesheet.plainText}>
+                    Haven't done any exercises
+                  </Text>
+                </View>
+              )}
             </ScrollView>
           </>
         )}
@@ -183,22 +200,50 @@ const Home = () => {
               }}>
               Charts
             </Text>
-            <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+            <ScrollView
+              style={{ marginBottom: sizes.SIZE_52 }}
+              showsHorizontalScrollIndicator={false}
+              horizontal>
+              <TouchableOpacity
+                onPress={() => bodyWeightTrackingModalRef.current.open()}
+                activeOpacity={0.7}>
+                <View
+                  style={[
+                    stylesheet.cardView,
+                    bodyWeightRecords.length === 0 && styles.center,
+                  ]}>
+                  {bodyWeightRecords.length !== 0 ? (
+                    <Graph
+                      data={bodyWeightRecords
+                        .filter(
+                          (item) => moment().diff(item.when, "month") <= 2
+                        )
+                        .map((item) => {
+                          return { x: item.when.getTime(), y: item.weight }
+                        })}
+                    />
+                  ) : (
+                    <Text style={stylesheet.plainText}>Not enough data</Text>
+                  )}
+                </View>
+              </TouchableOpacity>
               <View
                 style={[
-                  stylesheet.cardView,
-                  { marginBottom: sizes.SIZE_24 },
-                ]}></View>
-              <View
-                style={[
-                  stylesheet.cardView,
-                  { marginBottom: sizes.SIZE_24 },
-                ]}></View>
-              <View
-                style={[
-                  stylesheet.cardView,
-                  { marginBottom: sizes.SIZE_24, marginEnd: sizes.SIZE_12 },
-                ]}></View>
+                  styles.center,
+                  { height: sizes.SIZE_200, width: sizes.SIZE_70 },
+                ]}>
+                <IconButton
+                  name="plus"
+                  onPress={() => {}}
+                  size={sizes.SIZE_24}
+                  style={{
+                    backgroundColor: `${theme.colors.primary}45`,
+                    padding: sizes.SIZE_4,
+                    borderRadius: sizes.SIZE_8,
+                  }}
+                  color={theme.colors.primary}
+                />
+              </View>
             </ScrollView>
           </>
         )}

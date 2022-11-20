@@ -58,6 +58,12 @@ interface ExerciseSet {
   when?: Date
 }
 
+interface BodyWeight {
+  id?: string
+  weight: number
+  when: Date
+}
+
 export {
   WorkoutTemplate,
   Exercise,
@@ -65,6 +71,7 @@ export {
   TagType,
   Session,
   ExerciseSet,
+  BodyWeight,
 }
 
 // navigation types

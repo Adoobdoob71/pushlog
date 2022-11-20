@@ -6,6 +6,7 @@ import { WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import { Between, DataSource } from "typeorm"
 import {
+  BodyWeight,
   Exercise,
   ExerciseSet,
   MuscleCategory,
@@ -34,7 +35,7 @@ function useApp() {
   })
 
   useEffect(() => {
-    AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
+    // AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
     try {
       const dataSource = new DataSource({
         database: "gorilla", // CHANGE NAME WHEN PRODUCTION IS ON!
@@ -45,6 +46,7 @@ function useApp() {
           MuscleCategory,
           WorkoutSession,
           ExerciseSet,
+          BodyWeight,
         ],
         synchronize: true, // DISABLE WHEN PRODUCTION IS ON!
         type: "expo",

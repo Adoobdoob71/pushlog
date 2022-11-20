@@ -152,3 +152,15 @@ export class ExerciseSet {
   })
   workoutSession: WorkoutSession
 }
+
+@Entity()
+export class BodyWeight {
+  @PrimaryGeneratedColumn("uuid")
+  id: string
+
+  @Column()
+  weight: number
+
+  @CreateDateColumn()
+  when: Date
+}
