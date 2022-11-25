@@ -231,6 +231,10 @@ const WorkoutSession: FC<Props> = ({
                   color: theme.colors.border,
                   fontSize: sizes.SIZE_12,
                   fontWeight: "bold",
+                  height: "100%",
+                  width: "100%",
+                  textAlign: "center",
+                  textAlignVertical: "center",
                 }}>
                 No sets of this exercise have been recorded
               </Text>

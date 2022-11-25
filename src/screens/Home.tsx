@@ -62,12 +62,8 @@ const Home = () => {
           right={
             <View style={styles.rowCenter}>
               <IconButton
-                name="chart-timeline-variant-shimmer"
-                style={{ marginStart: "auto" }}
-              />
-              <IconButton
                 name="cog"
-                style={{ marginStart: sizes.SIZE_16 }}
+                style={{ marginStart: "auto" }}
                 onPress={goToSettings}
               />
             </View>

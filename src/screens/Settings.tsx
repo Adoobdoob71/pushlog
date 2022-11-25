@@ -19,12 +19,12 @@ const Settings = () => {
       <Header title="Settings" backButton />
       <ListGroup groupTitle="Workouts">
         <ListItem
-          icon="restart"
+          icon="dumbbell"
           title="Reconfigure workouts"
-          description="Choose what workouts you want to do"
+          description="Edit your workout templates"
           onPress={navigateToWorkoutPlan}
         />
-        <ListItem
+        {/* <ListItem
           icon="delete"
           title="Clean Slate"
           description="Delete all progress from the app"
@@ -33,7 +33,7 @@ const Settings = () => {
           icon="robot-happy"
           title="Something"
           description="Happy robot!"
-        />
+        /> */}
       </ListGroup>
     </SafeAreaView>
   )

@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   Animated,
 } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
 import { sizes, styles, theme } from "utils/styles"
 import Tag from "../Base/Tag"
 import Button from "../Base/Button"
@@ -288,25 +287,27 @@ const ChooseTemplate: FC<Props> = ({
               <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
           ) : (
-            <FlatGrid
-              data={muscles}
-              renderItem={({ item, index }) => (
-                <MuscleButton
-                  {...item}
-                  active={activeMuscleFilters.includes(item.id)}
-                  onPress={() => toggleMuscleFilter(item.id)}
-                  key={index}
-                  style={{
-                    height: sizes.SIZE_70,
-                    paddingHorizontal: 0,
-                  }}
-                />
-              )}
-              spacing={10}
-              key={1}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-            />
+            <Animated.View>
+              <FlatGrid
+                data={muscles}
+                renderItem={({ item, index }) => (
+                  <MuscleButton
+                    {...item}
+                    active={activeMuscleFilters.includes(item.id)}
+                    onPress={() => toggleMuscleFilter(item.id)}
+                    key={index}
+                    style={{
+                      height: sizes.SIZE_70,
+                      paddingHorizontal: 0,
+                    }}
+                  />
+                )}
+                spacing={10}
+                key={1}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+              />
+            </Animated.View>
           )
         }
         HeaderComponent={FilterHeaderComponent}

@@ -1,5 +1,5 @@
 import React, { FC, useContext } from "react"
-import { View, StyleSheet, Text, TextInput } from "react-native"
+import { View, StyleSheet, Text, TextInput, Animated } from "react-native"
 import { sizes, styles, theme } from "utils/styles"
 import { IHandles } from "react-native-modalize/lib/options"
 import { Modalize } from "react-native-modalize"
@@ -8,6 +8,8 @@ import Button from "../Base/Button"
 import { useBodyWeightTracking } from "hooks/useBodyWeightTracking"
 import Graph from "../Content/Graph"
 import { BodyWeight } from "../../utils/types"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import moment from "moment"
 
 interface Props {
   bodyWeightTrackingModalRef: React.MutableRefObject<IHandles>
@@ -44,15 +46,25 @@ const BodyWeightTracking: FC<Props> = ({
       panGestureComponentEnabled
       HeaderComponent={HeaderComponent}
       modalHeight={HEIGHT * 0.65}>
-      <View>
-        <TextInput
-          value={weight.toString()}
-          style={stylesheet.input}
-          selectionColor={theme.colors.primary}
-          onChangeText={(value) =>
-            setWeight(value === "" ? 0 : parseFloat(value))
-          }
-        />
+      <Animated.ScrollView>
+        <View style={[styles.rowCenter, { marginTop: sizes.SIZE_24 }]}>
+          <TextInput
+            value={weight === 0 ? "" : weight.toString()}
+            style={[stylesheet.input, { marginLeft: "auto" }]}
+            placeholder="lbs"
+            placeholderTextColor={theme.colors.border}
+            selectionColor={theme.colors.primary}
+            onChangeText={(value) =>
+              setWeight(value === "" ? 0 : parseFloat(value))
+            }
+          />
+          <Button
+            mode="text"
+            style={{ marginRight: "auto", marginLeft: sizes.SIZE_24 }}
+            onPress={() => {}}>
+            Record
+          </Button>
+        </View>
         {bodyWeightRecords.length !== 0 ? (
           <Graph
             data={bodyWeightRecords.map((item) => {
@@ -61,11 +73,67 @@ const BodyWeightTracking: FC<Props> = ({
           />
         ) : (
           <View style={[styles.center, stylesheet.graphCard]}>
-            <Text style={{ color: "#FFF" }}>Not enough records</Text>
+            <Text style={{ color: theme.colors.border, fontWeight: "bold" }}>
+              Not enough records
+            </Text>
           </View>
         )}
-      </View>
+        {[
+          {
+            weight: 78,
+            when: new Date(),
+            id: "",
+          },
+          {
+            weight: 78,
+            when: new Date(),
+            id: "",
+          },
+          {
+            weight: 78,
+            when: new Date(),
+            id: "",
+          },
+          {
+            weight: 78,
+            when: new Date(),
+            id: "",
+          },
+        ].map((item) => (
+          <BWRecord {...item} />
+        ))}
+        <View style={{ height: sizes.SIZE_28 }}></View>
+      </Animated.ScrollView>
     </Modalize>
+  )
+}
+
+interface BWRecordProps {
+  weight: number
+  when: Date
+}
+
+const BWRecord: FC<BWRecordProps> = ({ weight, when }) => {
+  return (
+    <View
+      style={[
+        styles.flex,
+        styles.rowCenter,
+        { marginHorizontal: sizes.SIZE_24, marginTop: sizes.SIZE_32 },
+      ]}>
+      <Text
+        style={{
+          color: theme.colors.text,
+          fontWeight: "bold",
+          fontSize: sizes.SIZE_18,
+          flex: 1,
+        }}>
+        {weight} lbs
+      </Text>
+      <Text style={[stylesheet.plainText, { fontSize: sizes.SIZE_14 }]}>
+        {moment(when).format("MMM DD")}
+      </Text>
+    </View>
   )
 }
 
@@ -89,9 +157,9 @@ const stylesheet = StyleSheet.create({
     borderRadius: sizes.SIZE_8,
     color: theme.colors.text,
     fontSize: sizes.SIZE_24,
+    fontWeight: "bold",
     width: WIDTH * 0.3,
     paddingVertical: sizes.SIZE_12,
-    marginTop: sizes.SIZE_32,
     alignSelf: "center",
     textAlign: "center",
   },
@@ -110,6 +178,10 @@ const stylesheet = StyleSheet.create({
     borderRadius: sizes.SIZE_8,
     alignSelf: "center",
     marginTop: sizes.SIZE_32,
+  },
+  plainText: {
+    color: theme.colors.border,
+    fontWeight: "bold",
   },
 })
 

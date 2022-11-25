@@ -1,43 +1,44 @@
-import React, { FC } from "react";
+import React, { FC } from "react"
 import {
   View,
   StyleSheet,
   Text,
   TextInput,
   ActivityIndicator,
-} from "react-native";
-import { sizes, styles, theme } from "utils/styles";
-import { Exercise } from "utils/types";
-import ExerciseCard from "../Content/ExerciseCard";
-import Button from "../Base/Button";
-import MuscleButton from "../Base/MuscleButton";
+  Animated,
+} from "react-native"
+import { sizes, styles, theme } from "utils/styles"
+import { Exercise } from "utils/types"
+import ExerciseCard from "../Content/ExerciseCard"
+import Button from "../Base/Button"
+import MuscleButton from "../Base/MuscleButton"
 
-import { HEIGHT } from "utils/constants";
-import { Modalize } from "react-native-modalize";
-import { IHandles } from "react-native-modalize/lib/options";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { AnimatedFlashList } from "@shopify/flash-list";
-import { FlatGrid } from "react-native-super-grid";
+import { HEIGHT } from "utils/constants"
+import { Modalize } from "react-native-modalize"
+import { IHandles } from "react-native-modalize/lib/options"
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons"
+import { AnimatedFlashList } from "@shopify/flash-list"
+import { FlatGrid } from "react-native-super-grid"
 
 interface Props {
-  exerciseSearch: string;
-  changeExerciseQuery: (value: string) => void;
-  navigateToExerciseInfo: (exercise: Exercise) => void;
-  addExercise: (newExercise: Exercise) => Promise<void>;
-  exerciseModalRef: React.MutableRefObject<IHandles>;
-  filterModalRef: React.MutableRefObject<IHandles>;
-  openFilterModal: () => void;
-  loading: boolean;
-  exercises: Exercise[];
+  exerciseSearch: string
+  changeExerciseQuery: (value: string) => void
+  navigateToExerciseInfo: (exercise: Exercise) => void
+  addExercise: (newExercise: Exercise) => Promise<void>
+  exerciseModalRef: React.MutableRefObject<IHandles>
+  filterModalRef: React.MutableRefObject<IHandles>
+  openFilterModal: () => void
+  loading: boolean
+  exercises: Exercise[]
   muscles: {
-    id: number;
-    name: string;
-    nameEn: string;
-    isFront: boolean;
-    image: string;
-  }[];
-  activeMuscleFilters: number[];
-  toggleMuscleFilter: (id: number) => void;
+    id: number
+    name: string
+    nameEn: string
+    isFront: boolean
+    image: string
+  }[]
+  activeMuscleFilters: number[]
+  toggleMuscleFilter: (id: number) => void
 }
 
 const ChooseExercise: FC<Props> = ({
@@ -63,8 +64,7 @@ const ChooseExercise: FC<Props> = ({
         <Button
           mode="text"
           onPress={() => exerciseModalRef.current.close()}
-          style={{ marginStart: "auto" }}
-        >
+          style={{ marginStart: "auto" }}>
           Close
         </Button>
       </View>
@@ -72,15 +72,13 @@ const ChooseExercise: FC<Props> = ({
         style={[
           styles.rowCenter,
           { paddingVertical: sizes.SIZE_16, paddingHorizontal: sizes.SIZE_24 },
-        ]}
-      >
+        ]}>
         <View
           style={[
             styles.flex,
             styles.rowCenter,
             stylesheet.bottomSheetSearchBar,
-          ]}
-        >
+          ]}>
           <MaterialCommunityIcons
             name="magnify"
             color={theme.colors.border}
@@ -101,7 +99,7 @@ const ChooseExercise: FC<Props> = ({
         </Button>
       </View>
     </View>
-  );
+  )
   const renderItem = ({ item }) => (
     <ExerciseCard
       {...item}
@@ -113,7 +111,7 @@ const ChooseExercise: FC<Props> = ({
         marginHorizontal: sizes.SIZE_18,
       }}
     />
-  );
+  )
 
   const FilterHeaderComponent = (
     <View style={[{ paddingTop: sizes.SIZE_8, paddingBottom: sizes.SIZE_6 }]}>
@@ -124,13 +122,12 @@ const ChooseExercise: FC<Props> = ({
         <Button
           mode="text"
           onPress={() => filterModalRef.current.close()}
-          style={{ marginStart: "auto" }}
-        >
+          style={{ marginStart: "auto" }}>
           Close
         </Button>
       </View>
     </View>
-  );
+  )
 
   return (
     <>
@@ -182,8 +179,7 @@ const ChooseExercise: FC<Props> = ({
         withHandle={false}
         adjustToContentHeight
         HeaderComponent={FilterHeaderComponent}
-        modalStyle={{ backgroundColor: theme.colors.background }}
-      ></Modalize>
+        modalStyle={{ backgroundColor: theme.colors.background }}></Modalize>
       <Modalize
         ref={filterModalRef}
         withHandle={false}
@@ -195,33 +191,34 @@ const ChooseExercise: FC<Props> = ({
               <ActivityIndicator size="large" color={theme.colors.primary} />
             </View>
           ) : (
-            <FlatGrid
-              data={muscles}
-              renderItem={({ item, index }) => (
-                <MuscleButton
-                  {...item}
-                  active={activeMuscleFilters.includes(item.id)}
-                  onPress={() => toggleMuscleFilter(item.id)}
-                  key={index}
-                  style={{
-                    height: sizes.SIZE_70,
-                    paddingHorizontal: 0,
-                  }}
-                />
-              )}
-              spacing={10}
-              key={1}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-            />
+            <Animated.View>
+              <FlatGrid
+                data={muscles}
+                renderItem={({ item, index }) => (
+                  <MuscleButton
+                    {...item}
+                    active={activeMuscleFilters.includes(item.id)}
+                    onPress={() => toggleMuscleFilter(item.id)}
+                    key={index}
+                    style={{
+                      height: sizes.SIZE_70,
+                      paddingHorizontal: 0,
+                    }}
+                  />
+                )}
+                spacing={10}
+                key={1}
+                keyExtractor={(item) => item.id.toString()}
+                showsVerticalScrollIndicator={false}
+              />
+            </Animated.View>
           )
         }
         HeaderComponent={FilterHeaderComponent}
-        modalStyle={{ backgroundColor: theme.colors.background }}
-      ></Modalize>
+        modalStyle={{ backgroundColor: theme.colors.background }}></Modalize>
     </>
-  );
-};
+  )
+}
 
 const stylesheet = StyleSheet.create({
   bottomSheetTitle: {
@@ -244,6 +241,6 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.text,
     fontSize: sizes.SIZE_12,
   },
-});
+})
 
-export default ChooseExercise;
+export default ChooseExercise
