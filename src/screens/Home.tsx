@@ -86,13 +86,13 @@ const Home = () => {
         />
         <TouchableOpacity onPress={openCalendarModal} activeOpacity={0.5}>
           <View style={[styles.rowCenter, stylesheet.weekView]}>
-            <WeekDay day="Sunday" currentDay={currentDay} />
-            <WeekDay day="Monday" currentDay={currentDay} />
-            <WeekDay day="Tuesday" currentDay={currentDay} />
-            <WeekDay day="Wednesday" currentDay={currentDay} />
-            <WeekDay day="Thursday" currentDay={currentDay} />
-            <WeekDay day="Friday" currentDay={currentDay} />
-            <WeekDay day="Saturday" currentDay={currentDay} />
+            <WeekDay day="Sunday" currentDay={currentDay} key="Sunday" />
+            <WeekDay day="Monday" currentDay={currentDay} key="Monday" />
+            <WeekDay day="Tuesday" currentDay={currentDay} key="Tuesday" />
+            <WeekDay day="Wednesday" currentDay={currentDay} key="Wednesday" />
+            <WeekDay day="Thursday" currentDay={currentDay} key="Thursday" />
+            <WeekDay day="Friday" currentDay={currentDay} key="Friday" />
+            <WeekDay day="Saturday" currentDay={currentDay} key="Saturday" />
           </View>
         </TouchableOpacity>
       </View>
@@ -127,7 +127,7 @@ const Home = () => {
                   .flatMap((item) => item.templates)
                   .map((item, index) => (
                     <TemplateCard
-                      key={index}
+                      key={item.id}
                       {...item}
                       templateData={item}
                       tags={item.muscleCategories}

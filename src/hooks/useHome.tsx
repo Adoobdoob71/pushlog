@@ -174,7 +174,7 @@ function useHome() {
 
   const loadBodyWeightRecords = async () => {
     try {
-      const records = await connector.getRepository(BodyWeight).find({
+      const records = await connector?.getRepository(BodyWeight).find({
         where: {
           when: Between(
             moment().month(-6).startOf("month").toDate(),
@@ -185,7 +185,7 @@ function useHome() {
           when: "ASC",
         },
       })
-      setBodyWeightRecords(records)
+      setBodyWeightRecords(records ?? [])
     } catch (error) {
       Toast.show({
         type: "error",

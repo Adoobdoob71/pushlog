@@ -1,4 +1,10 @@
-import { MutableRefObject, useContext, useEffect, useState } from "react"
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { Exercise, ExerciseSet, Session, WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -8,6 +14,7 @@ import { IHandles } from "react-native-modalize/lib/options"
 import moment from "moment"
 import { Alert } from "react-native"
 import workoutSessions from "context/workoutSessions"
+import AnimatedLottieView from "lottie-react-native"
 
 function useWorkoutSession(
   currentExercise: number,
@@ -27,6 +34,8 @@ function useWorkoutSession(
   const { refreshSessions } = useContext(workoutSessions)
 
   const activeExercise = exercises[currentExercise]
+
+  const confettiRef = useRef<AnimatedLottieView>(null)
 
   useEffect(() => {
     AsyncStorage.getItem("sets").then((data) => {
@@ -136,6 +145,7 @@ function useWorkoutSession(
             setNote("")
             resetActiveTemplates()
             refreshSessions()
+            confettiRef.current?.play()
           } catch (error) {
             Toast.show({
               type: "error",
@@ -195,6 +205,7 @@ function useWorkoutSession(
     submitSession,
     exerciseHistory,
     quitWorkout,
+    confettiRef,
   }
 }
 

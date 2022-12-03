@@ -38,7 +38,7 @@ function useApp() {
     // AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
     try {
       const dataSource = new DataSource({
-        database: "prodTesting", // CHANGE NAME WHEN PRODUCTION IS ON! development_db = "gorilla"
+        database: "gorilla", // CHANGE NAME WHEN PRODUCTION IS ON! development_db = "gorilla"
         driver: require("expo-sqlite"),
         entities: [
           Workout,
@@ -55,6 +55,7 @@ function useApp() {
         setDBConnector(con)
       })
     } catch (error) {
+      console.error(error)
       Toast.show({
         type: "error",
         text1: "Uh oh...",
@@ -170,6 +171,7 @@ function useApp() {
       })
       setSessions(result)
     } catch (error) {
+      console.error(error)
       Toast.show({
         type: "error",
         text1: "Uh oh...",

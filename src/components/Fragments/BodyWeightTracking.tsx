@@ -52,7 +52,6 @@ const BodyWeightTracking: FC<Props> = ({
             value={weight === 0 ? "" : weight.toString()}
             style={[stylesheet.input, { marginLeft: "auto" }]}
             placeholder="lbs"
-            keyboardType="numeric"
             placeholderTextColor={theme.colors.border}
             selectionColor={theme.colors.primary}
             onChangeText={(value) =>
@@ -80,7 +79,7 @@ const BodyWeightTracking: FC<Props> = ({
           </View>
         )}
         {bodyWeightRecords.map((item) => (
-          <BWRecord {...item} />
+          <BWRecord {...item} key={item.id} />
         ))}
         <View style={{ height: sizes.SIZE_28 }}></View>
       </Animated.ScrollView>

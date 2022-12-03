@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TextInput, View } from "react-native"
 import { Modalize } from "react-native-modalize"
 import { IHandles } from "react-native-modalize/lib/options"
 import { sizes, styles, theme } from "utils/styles"
-import { HEIGHT } from "utils/constants"
+import { HEIGHT, WIDTH } from "utils/constants"
 import { WorkoutTemplate, Exercise } from "utils/types"
 import Button from "../Base/Button"
 import { useWorkoutSession } from "hooks/useWorkoutSession"
@@ -45,6 +45,7 @@ const WorkoutSession: FC<Props> = ({
     submitSession,
     exerciseHistory,
     quitWorkout,
+    confettiRef,
   } = useWorkoutSession(
     currentExercise,
     activeTemplates,

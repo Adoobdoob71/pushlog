@@ -110,9 +110,10 @@ const WorkoutCalendar: FC<Props> = ({
           )}
           {chosenDaySessions
             .flatMap((session) => session.templates)
-            .map((tem) => (
+            .map((item) => (
               <Tag
-                text={tem.name}
+                text={item.name}
+                key={item.id}
                 backgroundColor={theme.colors.background_2}
                 style={{ marginEnd: sizes.SIZE_8 }}
               />

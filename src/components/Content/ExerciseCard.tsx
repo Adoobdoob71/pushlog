@@ -107,7 +107,7 @@ const ExerciseCard: FC<Props> = ({
         {sets && (
           <View style={{ padding: sizes.SIZE_12 }}>
             {sets.map((item, index) => (
-              <Set {...item} setNumber={index + 1} />
+              <Set {...item} key={item.id} setNumber={index + 1} />
             ))}
           </View>
         )}
