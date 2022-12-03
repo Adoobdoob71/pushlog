@@ -252,7 +252,12 @@ const ChooseTemplate: FC<Props> = ({
                 getItemType={(item) => typeof item}
                 keyExtractor={(_item, index) => index.toString()}
                 ListEmptyComponent={() => (
-                  <View style={[styles.flex, styles.center]}>
+                  <View
+                    style={[
+                      { height: HEIGHT * 0.4 },
+                      styles.flex,
+                      styles.center,
+                    ]}>
                     <Text
                       style={{
                         color: theme.colors.border,

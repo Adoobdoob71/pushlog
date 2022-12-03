@@ -39,6 +39,8 @@ function useWorkoutSession(
 
   useEffect(() => {
     loadExerciseHistory()
+    setWeight(0)
+    setReps(0)
   }, [currentExercise])
 
   const updateSets = async (newSets: ExerciseSet[]) =>
