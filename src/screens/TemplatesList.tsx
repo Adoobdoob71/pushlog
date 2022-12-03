@@ -4,7 +4,7 @@ import { Button, TemplateCard } from "components/index"
 import { useTemplatesList } from "hooks/useTemplatesList"
 import * as NavigationBar from "expo-navigation-bar"
 import { FlatList, TextInput } from "react-native-gesture-handler"
-import { STATUSBAR_HEIGHT } from "utils/constants"
+import { HEIGHT, STATUSBAR_HEIGHT } from "utils/constants"
 import { useNavigation } from "@react-navigation/native"
 import { WorkoutTemplate } from "utils/types"
 
@@ -114,7 +114,7 @@ const TemplatesList = () => {
           </View>
         )}
         ListEmptyComponent={() => (
-          <View style={[styles.flex, styles.center]}>
+          <View style={[{ height: HEIGHT * 0.4 }, styles.flex, styles.center]}>
             <Text
               style={{
                 color: theme.colors.border,

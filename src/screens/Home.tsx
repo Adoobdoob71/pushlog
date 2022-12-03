@@ -1,4 +1,4 @@
-import { FC, useContext } from "react"
+import { FC, useContext, useEffect, useRef } from "react"
 import {
   ActivityIndicator,
   FlatList,
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Animated,
 } from "react-native"
 import { sizes, styles, theme } from "utils/styles"
 import { useHome } from "hooks/useHome"
@@ -54,8 +55,22 @@ const Home = () => {
 
   const sets = todaySessions.flatMap((session) => session.sets)
 
+  const fadeAnim = useRef(new Animated.Value(0)).current
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start()
+  }
+
+  useEffect(() => {
+    fadeIn()
+  }, [])
+
   return (
-    <SafeAreaView style={[styles.mainWrapper]}>
+    <Animated.View style={[styles.mainWrapper, { opacity: fadeAnim }]}>
       <View style={{ backgroundColor: theme.colors.card }}>
         <Header
           left={<Text style={stylesheet.headerTitle}>PUSHLOG</Text>}
@@ -252,7 +267,7 @@ const Home = () => {
         text={activeTemplates.length === 0 ? undefined : "Workout"}
         fab
       />
-    </SafeAreaView>
+    </Animated.View>
   )
 }
 
