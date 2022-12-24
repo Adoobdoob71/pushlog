@@ -54,8 +54,8 @@ const Button: FC<Props> = ({
           <MaterialCommunityIcons
             name={icon}
             color={color}
-            style={{ marginEnd: sizes.SIZE_6 }}
-            size={sizes.SIZE_14}
+            style={{ marginEnd: sizes.SIZE_8 }}
+            size={sizes.SIZE_16}
           />
         )}
         <Text

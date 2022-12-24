@@ -7,7 +7,6 @@ import {
 } from "react"
 import { Exercise, ExerciseSet, Session, WorkoutTemplate } from "utils/types"
 import Toast from "react-native-toast-message"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import sqliteDB from "context/sqliteDB"
 import { WorkoutSession, ExerciseSet as Set } from "database/schemas"
 import { IHandles } from "react-native-modalize/lib/options"
@@ -38,22 +37,10 @@ function useWorkoutSession(
   const confettiRef = useRef<AnimatedLottieView>(null)
 
   useEffect(() => {
-    AsyncStorage.getItem("sets").then((data) => {
-      if (data) setSets(JSON.parse(data))
-    })
-    AsyncStorage.getItem("note").then((data) => {
-      if (data) setNote(JSON.parse(data))
-    })
-  }, [])
-
-  useEffect(() => {
     loadExerciseHistory()
     setWeight(0)
     setReps(0)
   }, [currentExercise])
-
-  const updateSets = async (newSets: ExerciseSet[]) =>
-    await AsyncStorage.setItem("sets", JSON.stringify(newSets))
 
   const addSet = () => {
     if (reps === 0) {
@@ -80,7 +67,6 @@ function useWorkoutSession(
           when: new Date(),
         },
       ]
-      updateSets(newSets)
       return newSets
     })
     setReps(0)
@@ -114,7 +100,6 @@ function useWorkoutSession(
       return item
     })
     setSets(setsFilter)
-    updateSets(setsFilter)
   }
 
   const submitSession = async () => {
@@ -138,7 +123,6 @@ function useWorkoutSession(
               text2: "You've finished your workout!",
             })
             workoutSessionModalRef.current.close()
-            await AsyncStorage.multiRemove(["sets", "activeTemplates"])
             setSets([])
             setWeight(0)
             setReps(0)
@@ -164,27 +148,12 @@ function useWorkoutSession(
       {
         text: "Quit",
         onPress: () => {
-          AsyncStorage.multiRemove(["sets", "activeTemplates", "note"])
-            .then(() => {
-              workoutSessionModalRef.current.close()
-              setNote("")
-              setReps(0)
-              setWeight(0)
-              setSets([])
-              resetActiveTemplates()
-              Toast.show({
-                type: "success",
-                text1: "Maybe you should rest",
-                text2: "Successfully quit workout",
-              })
-            })
-            .catch((error) => {
-              Toast.show({
-                type: "error",
-                text1: "Uh oh...",
-                text2: "Something went wrong 😥",
-              })
-            })
+          workoutSessionModalRef.current.close()
+          setNote("")
+          setReps(0)
+          setWeight(0)
+          setSets([])
+          resetActiveTemplates()
         },
         style: "default",
       },

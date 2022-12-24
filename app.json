@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "pushlog",
+    "name": "PushLog",
     "slug": "pushlog",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
-      "backgroundColor": "#1a2f38"
+      "backgroundColor": "#264653"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,7 +23,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#1a2f38"
+        "backgroundColor": "#264653"
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.pushlog"

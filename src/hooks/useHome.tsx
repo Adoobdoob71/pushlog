@@ -5,7 +5,6 @@ import Toast from "react-native-toast-message"
 import workoutTemplates from "context/workoutTemplates"
 import { Modalize } from "react-native-modalize"
 import { getMuscles } from "api/functions"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import sqliteDB from "context/sqliteDB"
 import { BodyWeight } from "../database/schemas"
 import { Between } from "typeorm"
@@ -113,18 +112,6 @@ function useHome() {
     setLoadingMuscles(false)
   }
 
-  useEffect(() => {
-    AsyncStorage.getItem("activeTemplates").then((data) => {
-      if (data) setActiveTemplates(JSON.parse(data))
-    })
-  }, [])
-
-  const updateTemps = async (temps: WorkoutTemplate[]) => {
-    if (temps.length === 0)
-      await AsyncStorage.multiRemove(["activeTemplates", "sets", "notes"])
-    else await AsyncStorage.setItem("activeTemplates", JSON.stringify(temps))
-  }
-
   const removeActiveTemplates = (templateId: string) => {
     try {
       const exists = activeTemplates.some((item) => item.id === templateId)
@@ -133,7 +120,6 @@ function useHome() {
         (item) => item.id !== templateId
       )
       setActiveTemplates(filteredTemplates)
-      updateTemps(filteredTemplates)
       Toast.show({
         type: "success",
         text1: "Great!",
@@ -153,7 +139,6 @@ function useHome() {
       const exists = activeTemplates.some((item) => item.id === newTemplate.id)
       if (exists) return
       setActiveTemplates((activeTemplates) => {
-        updateTemps([...activeTemplates, newTemplate])
         return [...activeTemplates, newTemplate]
       })
       Toast.show({

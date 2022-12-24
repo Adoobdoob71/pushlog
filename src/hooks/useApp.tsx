@@ -13,7 +13,6 @@ import {
   Workout,
   WorkoutSession,
 } from "database/schemas"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import moment from "moment"
 
 function useApp() {
@@ -35,7 +34,6 @@ function useApp() {
   })
 
   useEffect(() => {
-    // AsyncStorage.clear() // REMOVE WHEN PRODUCTION IS ON!
     try {
       const dataSource = new DataSource({
         database: "gorilla", // CHANGE NAME WHEN PRODUCTION IS ON! development_db = "gorilla"

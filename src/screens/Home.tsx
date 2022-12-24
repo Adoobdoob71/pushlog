@@ -1,8 +1,6 @@
 import { FC, useContext, useEffect, useRef } from "react"
 import {
   ActivityIndicator,
-  FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   View,
@@ -20,6 +18,7 @@ import {
   ExerciseCard,
   Graph,
   BodyWeightTracking,
+  Button,
 } from "components/index"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
@@ -49,28 +48,24 @@ const Home = () => {
 
   const { sessions, loadingSessions } = useContext(workoutSessions)
 
-  const todaySessions = sessions.filter((session) =>
-    moment(session.when).isSame(new Date(), "day")
-  )
+  const lastSession = sessions[sessions.length - 1]
 
-  const sets = todaySessions.flatMap((session) => session.sets)
+  // const fadeAnim = useRef(new Animated.Value(0)).current
 
-  const fadeAnim = useRef(new Animated.Value(0)).current
+  // const fadeIn = () => {
+  //   Animated.timing(fadeAnim, {
+  //     toValue: 1,
+  //     duration: 500,
+  //     useNativeDriver: true,
+  //   }).start()
+  // }
 
-  const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start()
-  }
-
-  useEffect(() => {
-    fadeIn()
-  }, [])
+  // useEffect(() => {
+  //   fadeIn()
+  // }, [])
 
   return (
-    <Animated.View style={[styles.mainWrapper, { opacity: fadeAnim }]}>
+    <View style={[styles.mainWrapper]}>
       <View style={{ backgroundColor: theme.colors.card }}>
         <Header
           left={<Text style={stylesheet.headerTitle}>PUSHLOG</Text>}
@@ -116,29 +111,27 @@ const Home = () => {
                 marginTop: sizes.SIZE_24,
                 marginBottom: sizes.SIZE_6,
               }}>
-              Today you've worked
+              Your last workout consisted of
             </Text>
             <ScrollView
               style={styles.flex}
               showsHorizontalScrollIndicator={false}
               horizontal>
-              {todaySessions.length !== 0 ? (
-                todaySessions
-                  .flatMap((item) => item.templates)
-                  .map((item, index) => (
-                    <TemplateCard
-                      key={item.id}
-                      {...item}
-                      templateData={item}
-                      tags={item.muscleCategories}
-                      style={{
-                        marginHorizontal: sizes.SIZE_12,
-                        width: WIDTH * 0.825,
-                        marginTop: sizes.SIZE_6,
-                        elevation: 0,
-                      }}
-                    />
-                  ))
+              {lastSession !== null ? (
+                lastSession.templates.map((item, index) => (
+                  <TemplateCard
+                    key={item.id}
+                    {...item}
+                    templateData={item}
+                    tags={item.muscleCategories}
+                    style={{
+                      marginHorizontal: sizes.SIZE_12,
+                      width: WIDTH * 0.825,
+                      marginTop: sizes.SIZE_6,
+                      elevation: 0,
+                    }}
+                  />
+                ))
               ) : (
                 <View
                   style={[
@@ -157,21 +150,19 @@ const Home = () => {
                 fontWeight: "bold",
                 fontSize: sizes.SIZE_20,
                 marginStart: sizes.SIZE_24,
-                marginTop: sizes.SIZE_32,
+                marginTop: sizes.SIZE_24,
                 marginBottom: sizes.SIZE_12,
               }}>
               Exercises you've done
             </Text>
             <ScrollView showsHorizontalScrollIndicator={false} horizontal>
-              {todaySessions.length !== 0 ? (
-                todaySessions
-                  .flatMap((session) =>
-                    session.templates.flatMap((tem) => tem.exercises)
-                  )
+              {lastSession !== null ? (
+                lastSession.templates
+                  .flatMap((tem) => tem.exercises)
                   .map((item, index) => (
                     <ExerciseCard
                       {...item}
-                      sets={sets.filter((i) => {
+                      sets={lastSession.sets.filter((i) => {
                         return i.exerciseNumber === item.exerciseNumber
                       })}
                       key={item.id}
@@ -198,76 +189,23 @@ const Home = () => {
             </ScrollView>
           </>
         )}
-        {!loadingSessions && (
-          <>
-            <Text
-              style={{
-                color: theme.colors.primary,
-                fontWeight: "bold",
-                fontSize: sizes.SIZE_20,
-                marginStart: sizes.SIZE_24,
-                marginTop: sizes.SIZE_24,
-                marginBottom: sizes.SIZE_12,
-              }}>
-              Charts
-            </Text>
-            <ScrollView
-              style={{ marginBottom: sizes.SIZE_52 }}
-              showsHorizontalScrollIndicator={false}
-              horizontal>
-              <TouchableOpacity
-                onPress={() => bodyWeightTrackingModalRef.current.open()}
-                activeOpacity={0.7}>
-                <View
-                  style={[
-                    stylesheet.cardView,
-                    bodyWeightRecords.length === 0 && styles.center,
-                  ]}>
-                  {bodyWeightRecords.length !== 0 ? (
-                    <Graph
-                      data={bodyWeightRecords
-                        .filter(
-                          (item) => moment().diff(item.when, "month") <= 2
-                        )
-                        .map((item) => {
-                          return { x: item.when.getTime(), y: item.weight }
-                        })}
-                    />
-                  ) : (
-                    <Text style={stylesheet.plainText}>Not enough data</Text>
-                  )}
-                </View>
-              </TouchableOpacity>
-              <View
-                style={[
-                  styles.center,
-                  { height: sizes.SIZE_200, width: sizes.SIZE_70 },
-                ]}>
-                <IconButton
-                  name="plus"
-                  onPress={() => {}}
-                  size={sizes.SIZE_24}
-                  style={{
-                    backgroundColor: `${theme.colors.primary}45`,
-                    padding: sizes.SIZE_4,
-                    borderRadius: sizes.SIZE_8,
-                  }}
-                  color={theme.colors.primary}
-                />
-              </View>
-            </ScrollView>
-          </>
-        )}
+        <Button
+          mode="text"
+          icon={noTemplates ? "dumbbell" : "play"}
+          onPress={noTemplates ? openTemplatesModal : openWorkoutSessionModal}
+          style={{ marginVertical: sizes.SIZE_24 }}>
+          {noTemplates ? "Start a Workout" : "Continue the Workout"}
+        </Button>
       </ScrollView>
-      <IconButton
+      {/* <IconButton
         name={noTemplates ? "pencil" : "play"}
         color={theme.colors.text}
         onPress={noTemplates ? openTemplatesModal : openWorkoutSessionModal}
         size={sizes.SIZE_24}
         text={activeTemplates.length === 0 ? undefined : "Workout"}
         fab
-      />
-    </Animated.View>
+      /> */}
+    </View>
   )
 }
 
