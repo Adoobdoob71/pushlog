@@ -13,7 +13,6 @@ import { IHandles } from "react-native-modalize/lib/options"
 import moment from "moment"
 import { Alert } from "react-native"
 import workoutSessions from "context/workoutSessions"
-import AnimatedLottieView from "lottie-react-native"
 
 function useWorkoutSession(
   currentExercise: number,
@@ -25,7 +24,6 @@ function useWorkoutSession(
   const [sets, setSets] = useState<ExerciseSet[]>([])
   const [reps, setReps] = useState(0)
   const [weight, setWeight] = useState(0)
-  const [note, setNote] = useState("")
   const [exerciseHistory, setExerciseHistory] = useState<WorkoutSession | null>(
     null
   )
@@ -33,8 +31,6 @@ function useWorkoutSession(
   const { refreshSessions } = useContext(workoutSessions)
 
   const activeExercise = exercises[currentExercise]
-
-  const confettiRef = useRef<AnimatedLottieView>(null)
 
   useEffect(() => {
     loadExerciseHistory()
@@ -58,7 +54,7 @@ function useWorkoutSession(
         {
           reps,
           weight,
-          note,
+          note: "",
           setNumber:
             currentSets.filter(
               (item) => item.exerciseNumber === activeExercise.exerciseNumber
@@ -71,7 +67,6 @@ function useWorkoutSession(
     })
     setReps(0)
     setWeight(0)
-    setNote("")
   }
 
   const loadExerciseHistory = async () => {
@@ -126,10 +121,8 @@ function useWorkoutSession(
             setSets([])
             setWeight(0)
             setReps(0)
-            setNote("")
             resetActiveTemplates()
             refreshSessions()
-            confettiRef.current?.play()
           } catch (error) {
             Toast.show({
               type: "error",
@@ -149,7 +142,6 @@ function useWorkoutSession(
         text: "Quit",
         onPress: () => {
           workoutSessionModalRef.current.close()
-          setNote("")
           setReps(0)
           setWeight(0)
           setSets([])
@@ -167,14 +159,11 @@ function useWorkoutSession(
     setReps,
     weight,
     setWeight,
-    note,
-    setNote,
     addSet,
     removeSet,
     submitSession,
     exerciseHistory,
     quitWorkout,
-    confettiRef,
   }
 }
 

@@ -1,11 +1,5 @@
-import { FC, useContext, useEffect, useRef } from "react"
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-  Animated,
-} from "react-native"
+import { FC, useContext } from "react"
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native"
 import { sizes, styles, theme } from "utils/styles"
 import { useHome } from "hooks/useHome"
 import {
@@ -16,9 +10,6 @@ import {
   WorkoutCalendar,
   TemplateCard,
   ExerciseCard,
-  Graph,
-  BodyWeightTracking,
-  Button,
 } from "components/index"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { useNavigation } from "@react-navigation/native"
@@ -33,14 +24,12 @@ const Home = () => {
       activeTemplates,
       openCalendarModal,
       openWorkoutSessionModal,
-      bodyWeightRecords,
-      bodyWeightTrackingModalRef,
     } = homeHook
 
   const navigation = useNavigation()
 
   // @ts-ignore
-  const goToSettings = () => navigation.navigate({ name: "Settings" })
+  const goToTemplatesList = () => navigation.navigate({ name: "TemplatesList" })
 
   const noTemplates = activeTemplates.length === 0
 
@@ -50,20 +39,6 @@ const Home = () => {
 
   const lastSession = sessions[sessions.length - 1]
 
-  // const fadeAnim = useRef(new Animated.Value(0)).current
-
-  // const fadeIn = () => {
-  //   Animated.timing(fadeAnim, {
-  //     toValue: 1,
-  //     duration: 500,
-  //     useNativeDriver: true,
-  //   }).start()
-  // }
-
-  // useEffect(() => {
-  //   fadeIn()
-  // }, [])
-
   return (
     <View style={[styles.mainWrapper]}>
       <View style={{ backgroundColor: theme.colors.card }}>
@@ -72,9 +47,9 @@ const Home = () => {
           right={
             <View style={styles.rowCenter}>
               <IconButton
-                name="cog"
+                name="notebook-outline"
                 style={{ marginStart: "auto" }}
-                onPress={goToSettings}
+                onPress={goToTemplatesList}
               />
             </View>
           }
@@ -94,7 +69,6 @@ const Home = () => {
       <ChooseTemplate {...homeHook} />
       <WorkoutCalendar {...homeHook} />
       <WorkoutSession {...homeHook} />
-      <BodyWeightTracking {...homeHook} />
       <ScrollView style={styles.flex}>
         {loadingSessions ? (
           <View style={[{ height: HEIGHT * 0.6 }, styles.center]}>
@@ -165,6 +139,7 @@ const Home = () => {
                       sets={lastSession.sets.filter((i) => {
                         return i.exerciseNumber === item.exerciseNumber
                       })}
+                      showSetsDefault={true}
                       key={item.id}
                       style={{
                         backgroundColor: theme.colors.card,
@@ -189,22 +164,15 @@ const Home = () => {
             </ScrollView>
           </>
         )}
-        <Button
-          mode="text"
-          icon={noTemplates ? "dumbbell" : "play"}
-          onPress={noTemplates ? openTemplatesModal : openWorkoutSessionModal}
-          style={{ marginVertical: sizes.SIZE_24 }}>
-          {noTemplates ? "Start a Workout" : "Continue the Workout"}
-        </Button>
       </ScrollView>
-      {/* <IconButton
+      <IconButton
         name={noTemplates ? "pencil" : "play"}
         color={theme.colors.text}
         onPress={noTemplates ? openTemplatesModal : openWorkoutSessionModal}
         size={sizes.SIZE_24}
         text={activeTemplates.length === 0 ? undefined : "Workout"}
         fab
-      /> */}
+      />
     </View>
   )
 }

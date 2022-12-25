@@ -3,13 +3,12 @@ import { Image, StyleSheet, Text, TextInput, View } from "react-native"
 import { Modalize } from "react-native-modalize"
 import { IHandles } from "react-native-modalize/lib/options"
 import { sizes, styles, theme } from "utils/styles"
-import { HEIGHT, WIDTH } from "utils/constants"
+import { HEIGHT } from "utils/constants"
 import { WorkoutTemplate, Exercise } from "utils/types"
 import Button from "../Base/Button"
 import { useWorkoutSession } from "hooks/useWorkoutSession"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import IconButton from "../Base/IconButton"
-import Graph from "../Content/Graph"
 
 interface Props {
   workoutSessionModalRef: MutableRefObject<IHandles>
@@ -34,8 +33,6 @@ const WorkoutSession: FC<Props> = ({
   const {
     sets,
     setSets,
-    note,
-    setNote,
     reps,
     setReps,
     weight,
@@ -45,7 +42,6 @@ const WorkoutSession: FC<Props> = ({
     submitSession,
     exerciseHistory,
     quitWorkout,
-    confettiRef,
   } = useWorkoutSession(
     currentExercise,
     activeTemplates,
@@ -154,7 +150,6 @@ const WorkoutSession: FC<Props> = ({
               <Set
                 {...item}
                 setNumber={index + 1}
-                setNote={setNote}
                 setReps={setReps}
                 setWeight={setWeight}
                 removeSet={removeSet}
@@ -163,11 +158,9 @@ const WorkoutSession: FC<Props> = ({
           <Set
             reps={reps}
             weight={weight}
-            note={note}
             setNumber={currentExerciseSets.length + 1}
             add
             addSet={addSet}
-            setNote={setNote}
             setReps={setReps}
             setWeight={setWeight}
           />
@@ -251,24 +244,20 @@ interface SetProps {
   setNumber: number
   weight: number
   reps: number
-  note?: string
   add?: boolean
   setReps: Dispatch<SetStateAction<number>>
   setWeight: Dispatch<SetStateAction<number>>
-  setNote: Dispatch<SetStateAction<string>>
   addSet?: () => void
   removeSet?: (index: number) => void
 }
 
 const Set: FC<SetProps> = ({
-  note,
   reps,
   setNumber,
   weight,
   add,
   setReps,
   setWeight,
-  setNote,
   addSet,
   removeSet,
 }) => {
@@ -340,13 +329,6 @@ const Set: FC<SetProps> = ({
           selectionColor={theme.colors.primary_3}
         />
       </View>
-      <Button
-        mode="text"
-        onPress={() => {}}
-        style={{ marginEnd: sizes.SIZE_12 }}
-        textColor={theme.colors.border}>
-        Note
-      </Button>
       <IconButton
         style={[
           stylesheet.addButton,

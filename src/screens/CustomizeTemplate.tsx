@@ -15,7 +15,6 @@ const CustomizeTemplate: FC = () => {
       handleDescription,
       handleName,
       openExerciseModal,
-      openFilterModal,
       navigateToExerciseInfo,
       toggleExerciseForRemoval,
       exercisesForRemoval,

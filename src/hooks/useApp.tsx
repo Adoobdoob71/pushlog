@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { theme } from "utils/styles"
 import * as NavigationBar from "expo-navigation-bar"
 import { useFonts } from "expo-font"

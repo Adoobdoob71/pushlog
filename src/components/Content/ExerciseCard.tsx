@@ -1,7 +1,5 @@
-import { useNavigation } from "@react-navigation/native"
-import { FC, Dispatch, SetStateAction } from "react"
+import { FC, useState } from "react"
 import { Image, StyleSheet, Text, View } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
 import { sizes, styles, theme } from "utils/styles"
 import {
   StyleProperty,
@@ -9,7 +7,7 @@ import {
   ExerciseSet,
   Exercise,
 } from "utils/types"
-import Button from "../Base/Button"
+import IconButton from "../Base/IconButton"
 import Tag from "../Base/Tag"
 
 interface Props {
@@ -25,6 +23,7 @@ interface Props {
   onLongPress?: () => void
   exerciseData: Exercise
   sets?: ExerciseSet[]
+  showSetsDefault?: boolean
   style?: StyleProperty
 }
 
@@ -37,33 +36,35 @@ const ExerciseCard: FC<Props> = ({
   image,
   exerciseSets,
   when,
-  onPress,
-  onLongPress,
   exerciseData,
   sets,
+  showSetsDefault,
   style,
 }) => {
-  const navigation = useNavigation()
+  const [showSets, setShowSets] = useState(showSetsDefault)
 
-  const navigateToExerciseInfo = () =>
-    /* @ts-ignore */
-    navigation.navigate("ExerciseInfo", {
-      exercise: exerciseData,
-    })
   return (
-    <TouchableOpacity
-      onLongPress={onLongPress}
-      activeOpacity={0.7}
-      onPress={onPress ? onPress : navigateToExerciseInfo}>
+    <View>
       <View style={[stylesheet.exerciseBackground, style]}>
         <View style={styles.rowCenter}>
           <View style={[styles.column, stylesheet.exerciseTextWrapper]}>
-            <Text
-              style={stylesheet.exerciseName}
-              numberOfLines={2}
-              ellipsizeMode="tail">
-              {name}
-            </Text>
+            <View style={styles.rowCenter}>
+              {sets && (
+                <IconButton
+                  name={showSets ? "chevron-up" : "chevron-down"}
+                  color={theme.colors.primary}
+                  onPress={() => setShowSets(!showSets)}
+                  style={{ marginEnd: sizes.SIZE_12 }}
+                  size={sizes.SIZE_18}
+                />
+              )}
+              <Text
+                style={stylesheet.exerciseName}
+                numberOfLines={2}
+                ellipsizeMode="tail">
+                {name}
+              </Text>
+            </View>
             {muscleCategories.length !== 0 && (
               <View style={[styles.rowCenter, { marginTop: sizes.SIZE_8 }]}>
                 {muscleCategories.slice(0, 2).map(({ id, name }) => (
@@ -104,7 +105,7 @@ const ExerciseCard: FC<Props> = ({
             </View>
           )}
         </View>
-        {sets && (
+        {showSets && sets && (
           <View style={{ padding: sizes.SIZE_12 }}>
             {sets.map((item, index) => (
               <Set {...item} key={item.id} setNumber={index + 1} />
@@ -112,7 +113,7 @@ const ExerciseCard: FC<Props> = ({
           </View>
         )}
       </View>
-    </TouchableOpacity>
+    </View>
   )
 }
 
@@ -129,6 +130,7 @@ const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
         styles.rowCenter,
         {
           alignSelf: "center",
+          marginTop: sizes.SIZE_8,
         },
       ]}>
       <View
@@ -166,9 +168,6 @@ const Set: FC<SetProps> = ({ reps, setNumber, weight }) => {
         ]}>
         <Text style={stylesheet.textInput}>{reps}</Text>
       </View>
-      <Button mode="text" onPress={() => {}} textColor={theme.colors.border}>
-        Note
-      </Button>
     </View>
   )
 }
@@ -234,6 +233,11 @@ const stylesheet = StyleSheet.create({
     color: theme.colors.border,
     fontSize: sizes.SIZE_12,
     fontWeight: "bold",
+  },
+  subtitle: {
+    color: theme.colors.primary,
+    fontWeight: "bold",
+    fontSize: sizes.SIZE_10,
   },
 })
 export default ExerciseCard
